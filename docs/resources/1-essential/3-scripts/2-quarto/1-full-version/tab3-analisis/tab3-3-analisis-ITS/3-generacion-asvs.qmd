@@ -1,0 +1,1045 @@
+---
+title: "Metagenomic Report"
+
+include-in-header:
+  text: |
+    <link rel="shortcut icon" href="../../../../../1-images/icons/favicon.svg"/>
+    <link rel="icon" type="image/x-icon" href="../../../../../1-images/icons/favicon.ico">
+
+params:
+  project_path: ""
+  metagenomic_type: ""
+  report_version: ""
+---
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{=html}
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        ¡Hola! Soy <strong>Geni</strong>, el asistente inteligente de <strong>GenoScribe</strong>.  
+        Estoy aquí para ayudarte a explorar de forma interactiva el contenido de este informe bioinformático.
+      </p>
+
+      <p>
+        Cuando me haces una pregunta, primero intento reconocer si coincide con alguno de los patrones o expresiones que conozco.  
+        Si encuentro una coincidencia, te responderé directamente con una respuesta predefinida, diseñada para ser rápida, clara e incluso un poco ingeniosa.  
+        Si no reconozco el patrón, entonces activo mis herramientas de búsqueda: genero representaciones vectoriales (embeddings) y busco los fragmentos más relevantes entre varios documentos —incluyendo el propio informe, archivos PDF y HTML externos, y sesiones de preguntas y respuestas (QA).  
+        A partir de esa información, creo un resumen que intenta ofrecerte una respuesta coherente y útil basada en el contenido existente.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es experimental. No utilizo grandes modelos de lenguaje, por lo que algunas respuestas pueden ser aproximadas o incompletas.  
+        El objetivo principal es facilitar una visualización rápida, comprensible y reproducible de la información contenida en los documentos, permitiendo una exploración más dinámica del informe.
+      </p>
+
+      <p>
+        Actualmente, los resultados pueden variar en precisión, ya que empleo modelos ligeros y locales para asegurar que la aplicación funcione en cualquier entorno sin necesidad de servidores externos.  
+        Sin embargo, la estructura del sistema está preparada para mejorar notablemente su rendimiento en el futuro mediante la integración con modelos más avanzados o APIs externas.  
+        Para comenzar, simplemente escribe tu pregunta en el campo inferior y deja que yo me encargue del resto. ¡Prometo poner todo mi código en ello!
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta..."/>
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+```
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Incluir Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 3: ANÁLISIS | 3. GENERACIÓN DE ASVs Y TABLA DE ABUNDANCIA -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{r}
+# Cargar librerías
+library(glue)
+library(fs)
+library(stringr)
+library(dplyr)
+
+
+# Rutas clave
+ruta_qmd <- getwd()
+ruta_metagenomic_pipeline <- file.path("..", "..", "..", "..", "..", "..", "..")
+nombre_proyecto <- basename(params$project_path)
+
+
+# Rutas de resultados Nextflow
+ruta_nextflow_results <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results")
+ruta_proyecto_relativa <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results", "1-project-data", nombre_proyecto)
+
+
+# Rutas de la carpeta Def
+ruta_Def_ITS <- file.path(params$project_path, "Resultados", "Def_ITS")
+ruta_Def_ITS_relativa <- file.path(ruta_proyecto_relativa, "Resultados", "Def_ITS")
+
+
+# Rutas del archivo de metadatos
+ruta_Def_ITS_sample_metadata <- file.path(ruta_Def_ITS, "sample-metadata.tsv")
+ruta_Def_ITS_sample_metadata_relativa <- file.path(ruta_Def_ITS_relativa, "sample-metadata.tsv")
+```
+
+
+<div class="informe-titulo-tab">
+  <h1>Pestaña</h1>
+  <h2>Análisis TS bioinformático completo</h2>
+</div>
+
+<div class="informe-titulo-seccion-unique">
+  <h1>Sección 3</h1>
+  <h2>Generación de ASVs y tabla de abundancia</h2>
+</div>
+
+<div class="flecha-abajo">
+  ▼
+</div>
+
+
+<div class="informe-resumen">
+  <h2>Resumen</h2>
+
+  <p>
+    En esta tercera sección se describe el proceso de <strong>generación de ASVs (Amplicon Sequence Variants)</strong> y la construcción de la correspondiente <strong>tabla de abundancia</strong>, pasos fundamentales que constituyen el núcleo de cualquier análisis metagenómico basado en amplicones. A partir de los datos depurados en fases previas (control de calidad, demultiplexación y corrección de errores mediante DADA2), se obtienen las secuencias finales que servirán de base para caracterizar la composición microbiana de las muestras.
+  </p>
+
+  <p>
+    Este bloque se organiza en tres apartados que permiten comprender con detalle la lógica del flujo de trabajo y el papel de cada resultado:
+  </p>
+
+  <ul>
+    <li>
+      <strong>3.1 Concepto y obtención de ASVs</strong> <strong>&rArr;</strong> se introduce qué son las ASVs, cómo difieren de los OTUs clásicos y por qué aportan mayor resolución taxonómica. Se explica el procedimiento mediante el cual QIIME2 (a través de DADA2) genera estas secuencias únicas corrigiendo errores de secuenciación y eliminando quimeras.
+    </li>
+
+    <li>
+      <strong>3.2 Secuencias representativas</strong> <strong>&rArr;</strong> se presentan las secuencias contenidas en <code>rep-seqs.qza</code> (o <code>rep-seqs.qzv</code>), examinando su distribución de longitudes y la diversidad de variantes detectadas. Estas secuencias servirán de referencia para la posterior asignación taxonómica y para relacionarlas con la abundancia en cada muestra.
+    </li>
+
+    <li>
+      <strong>3.3 Tabla de abundancia de ASVs</strong> <strong>&rArr;</strong> se detalla la extracción de la matriz de abundancia desde <code>table.qza</code> (subsección 3.3.1), que contiene la frecuencia de cada ASV en las muestras, y la exploración de los archivos de resumen y visualización contenidos en <code>table.qzv</code> (subsección 3.3.2). Se explica cómo estos recursos permiten verificar la cobertura de secuenciación, explorar la frecuencia global de ASVs y acceder a visualizaciones interactivas mediante <code>index.html</code>.
+    </li>
+  </ul>
+
+  <p>
+    Los resultados de esta sección incluyen tanto <code>artefactos .qza</code> como sus visualizaciones en <code>.qzv</code>. Para facilitar la interpretación, se muestran tablas interactivas en R con métricas resumidas (como número total de lecturas por muestra y frecuencia de cada ASV) y se integran <code>iframe</code> con los archivos <code>index.html</code> para acceder a la visualización dinámica de la matriz de abundancia.
+  </p>
+
+  <p>
+    En conjunto, esta sección proporciona una visión clara y estructurada de las variantes de secuencia y de su distribución entre muestras, preparando el terreno para los análisis de <a href="4-diversidad.html#tab3-seccion4" class="normalink">diversidad microbiana</a> que se abordarán en la siguiente sección, incluyendo diversidad alfa y beta y su interpretación biológica.
+  </p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo-toc">
+  Tabla de contenidos de esta sección
+</div>
+
+<div class="toc">
+  <ul>
+    <li>
+      <a href="#tab3-seccion3">
+        3<span>.</span> Generación de ASVs y tabla de abundancia
+      </a>
+      <ul>
+        <li>
+          <a href="#tab3-seccion3.1">
+            3.1. Concepto y obtención de ASVs
+          </a>
+        </li>
+        <li>
+          <a href="#tab3-seccion3.2">
+            3.2. Secuencias representativas
+          </a>
+        </li>
+        <li>
+          <a href="#tab3-seccion3.3">
+            3.3. Tabla de abundancia de ASVs
+          </a>
+          <ul>
+            <li>
+              <a href="#tab3-seccion3.3.1">
+                3.3.1. Extracción de la matriz de abundancia desde table.qza
+              </a>
+            </li>
+            <li>
+              <a href="#tab3-seccion3.3.2.">
+                3.3.2. Exploración de los resultados en table.qzv
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<!-- REDACCIÓN -->
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+
+<div style="height: 25px; background-color: transparent;"></div>
+
+<div class="titulo1" id="tab3-seccion3">
+  3<span>.</span> Alineamiento de las lecturas contra el genoma de referencia
+</div>
+
+<p>
+  Tras completar el proceso de control de calidad y la depuración de las lecturas mediante QIIME2, el siguiente paso clave en el análisis consiste en la <strong>generación de variantes de secuencia de amplicón (ASVs)</strong> y la construcción de una <strong>tabla de abundancia</strong>. Este procedimiento es esencial porque traduce los datos de secuenciación en entidades biológicas interpretables, permitiendo cuantificar con precisión qué variantes de secuencia están presentes en cada muestra y con qué frecuencia.
+</p>
+
+<p>
+  En este bloque, se aborda cómo se obtienen estas unidades representativas a través del proceso de <em>denoising</em> y eliminación de errores, se presentan las <strong>secuencias representativas</strong> que servirán como base para la asignación taxonómica y se organiza la información en una matriz de abundancia que resume la presencia de cada ASV en las distintas muestras. 
+</p>
+
+<p>
+  De esta forma, los resultados aquí expuestos constituyen el <strong>núcleo central</strong> sobre el que se sustentan las fases posteriores del análisis, como el estudio de la diversidad alfa y beta o la caracterización taxonómica de la comunidad microbiana. 
+  A continuación, en el siguiente apartado, se profundizará en el <strong>concepto y obtención de ASVs</strong>, explicando con detalle qué representan y cómo se generan en el contexto de este análisis.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion3.1">
+  3.1. Concepto y obtención de ASVs
+</div>
+
+<p>
+  En el análisis metagenómico basado en amplicones, las <strong>Amplicon Sequence Variants (ASVs)</strong> representan la unidad fundamental de información. Cada ASV corresponde a una secuencia única inferida tras corregir los errores de secuenciación, lo que permite una resolución mucho mayor que la ofrecida por los <strong>OTUs</strong> tradicionales, que agrupan lecturas según un umbral de similitud arbitrario, típicamente del 97%. Mientras que los OTUs dependen de la elección del umbral y del método de clustering, las ASVs son reproducibles entre experimentos y plataformas siempre que se emplee el mismo flujo de trabajo, lo que posibilita comparaciones precisas y consistentes.
+</p>
+
+<p>
+  La obtención de ASVs se basa en un proceso de corrección de errores y eliminación de artefactos que transforma las lecturas depuradas (ya filtradas tras el control de calidad y la eliminación de primers/adaptadores) en un conjunto de secuencias exactas. Usando herramientas como <strong>DADA2</strong> dentro de QIIME2, el flujo de trabajo general incluye la modelización del error de la plataforma, la dereplicación de lecturas idénticas, la inferencia de variantes biológicas reales, la fusión de lecturas emparejadas y la eliminación de quimeras generadas durante la PCR. El resultado final de este proceso es un conjunto de ASVs y la correspondiente tabla de abundancia, que reflejan la frecuencia de cada variante en cada muestra.
+</p>
+
+<p>
+  La construcción de estas tablas es fundamental, ya que constituyen la base para el cálculo de métricas de diversidad alfa y beta, comparaciones estadísticas entre condiciones experimentales y posteriores asignaciones taxonómicas. Las ASVs permiten identificar variantes que difieren incluso en un solo nucleótido, posibilitando un análisis más fino y preciso de la composición microbiana, así como la detección de biomarcadores y la realización de análisis filogenéticos.
+</p>
+
+<p>
+  En términos prácticos, nos hemos centrado en los archivos <code>.qzv</code> generados por QIIME2 para extraer la información relevante sobre las ASVs. Estos archivos permiten explorar de forma interactiva la distribución de lecturas, la longitud de las secuencias y su prevalencia entre muestras. Para obtener los datos y visualizaciones, se ha realizado un descompresionado controlado de los <code>.qzv</code>, accediendo a archivos como <code>sequences.fasta</code>, <code>sample-frequency-detail.csv</code>, <code>feature-frequency-detail.csv</code> y los respectivos <code>index.html</code> contenidos en su interior.
+</p>
+
+<p>
+  Este enfoque permite reportar de manera clara y concisa indicadores clave como el número total de ASVs detectadas, la retención de lecturas tras cada paso del denoising, la distribución de longitudes de las secuencias, la abundancia relativa y la prevalencia de cada ASV. Además, facilita la inspección detallada de las secuencias y la verificación de los resultados obtenidos, garantizando la reproducibilidad y la trazabilidad del análisis.
+</p>
+
+<p>
+  En conjunto, centrarse en los archivos <code>.qzv</code> proporciona una visión completa y precisa de las variantes de secuencia presentes en las muestras, combinando tablas resumidas con visualización interactiva. Esta base es sólida para los análisis posteriores de <a href="4-diversidad.html#tab3-seccion4" class="normalink">diversidad microbiana</a> y la interpretación biológica de los resultados. Los detalles concretos de los resultados se presentan en los siguientes apartados.
+</p>
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion3.2">
+  3.2. Secuencias representativas
+</div>
+
+```{r}
+# Definir ruta del archivo .qzv
+ruta_rep_seqs_qzv_relativa <- file.path(ruta_Def_ITS_relativa, "rep-seqs.qzv")
+ruta_rep_seqs_qzv <- file.path(ruta_Def_ITS, "rep-seqs.qzv")
+
+# Definir ruta del archivo .qza
+ruta_rep_seqs_qza_relativa <- file.path(ruta_Def_ITS_relativa, "rep-seqs.qza")
+ruta_rep_seqs_qza <- file.path(ruta_Def_ITS, "rep-seqs.qza")
+
+# Definir ruta de salida para el unzip
+ruta_Def_ITS_unzip <- file.path(ruta_Def_ITS_relativa, "unzip")
+ruta_unzip_rep_seqs <- file.path(ruta_Def_ITS_unzip, "rep-seqs")
+
+# Crear carpeta de salida si no existe
+if (!dir.exists(ruta_Def_ITS_unzip)) dir.create(ruta_Def_ITS_unzip, recursive = TRUE)
+
+# Solo hacer unzip si el archivo existe
+if (file.exists(ruta_rep_seqs_qzv_relativa)) {
+  # Usando system2 para llamar a unzip desde R
+  system2("unzip", args = c("-o", shQuote(ruta_rep_seqs_qzv_relativa),
+                            "-d", shQuote(ruta_unzip_rep_seqs)))
+} else {
+  message("⚠️ El archivo rep-seqs.qzv no existe. Se omite el unzip.")
+}
+```
+
+```{r}
+# Comprobar que el unzip se ha realizado
+if (dir.exists(ruta_unzip_rep_seqs)) {
+  
+  # Listar subcarpetas dentro de la carpeta unzip (solo 1er nivel)
+  subcarpetas <- list.dirs(ruta_unzip_rep_seqs, recursive = FALSE, full.names = TRUE)
+  
+  if (length(subcarpetas) == 0) {
+    stop("No se encontró ninguna subcarpeta dentro de ", ruta_unzip_rep_seqs)
+  }
+  
+  # Tomamos la primera subcarpeta (la aleatoria generada por QIIME2)
+  carpeta_random <- subcarpetas[1]
+  
+  # Ruta a 'data'
+  ruta_data <- file.path(carpeta_random, "data")
+  
+  # Archivos dentro de 'data'
+  ruta_sequences_fasta <- file.path(ruta_data, "sequences.fasta")
+  ruta_index_html <- file.path(ruta_data, "index.html")
+  
+  # Comprobar que existen
+  if (!file.exists(ruta_sequences_fasta)) message("⚠️ sequences.fasta no encontrado")
+  if (!file.exists(ruta_index_html)) message("⚠️ index.html no encontrado")
+  
+} else {
+  message("⚠️ Carpeta de unzip no encontrada. No se puede acceder a los archivos.")
+}
+```
+
+<p>
+  En esta subsección se analizan en detalle las <strong>secuencias representativas</strong> obtenidas tras la generación de ASVs, que constituyen la unidad básica para caracterizar la diversidad microbiana de cada muestra. Para ello, se parte del archivo <code>rep-seqs.qzv</code> generado por QIIME2, que combina tanto los datos de secuencias finales como las visualizaciones interactivas asociadas. Estas visualizaciones permiten explorar aspectos clave como la longitud de los amplicones, la abundancia de cada variante y su prevalencia entre muestras, lo que facilita detectar posibles secuencias atípicas o artefactos antes de proceder a los análisis posteriores.
+</p>
+
+<p>
+  El primer paso consiste en descomprimir el archivo <code>.qzv</code> para acceder a su contenido interno. QIIME2 genera carpetas con nombres aleatorios que incluyen la información de las secuencias y la visualización. Dentro de estas carpetas se encuentran dos elementos esenciales: 
+  <code>sequences.fasta</code>, que contiene todas las secuencias representativas detectadas, y 
+  <code>index.html</code>, que ofrece una visualización interactiva de los resultados. Esta organización permite un acceso reproducible a los datos y facilita la integración de los mismos en informes automatizados.
+</p>
+
+<p>
+  Cabe mencionar que el archivo <code>sequences.fasta</code> contiene los mismos datos que la matriz que obtendríamos leyendo el propio artefacto <code>rep-seqs.qza</code> mediante el paquete <strong>qiime2R</strong>, cargándolo con la función <code>read_qza()</code> y luego accediento a los datos crudos mediante el elemento <code>$data</code>.
+</p>
+
+<p>
+  Dicho esto, las rutas de los archivos <code>rep-seqs.qzv</code> y <code>rep-seqs.qza</code> se pueden encontrar en los siguientes directorios:
+</p>
+
+```{r, results="asis"}
+if (file.exists(ruta_rep_seqs_qzv)) {
+cat(glue::glue('
+<code>{ruta_rep_seqs_qzv}</code>
+'), sep = "\n")
+
+} else {
+cat(glue::glue('
+<div class="alert-warning alert-box">
+<i class="fa-solid fa-triangle-exclamation"></i>
+<b>Advertencia</b><br>
+El archivo <code>rep-seqs.qzv</code> no existe en la ruta especificada:<br>
+<code>{ruta_rep_seqs_qzv}</code>.
+</div>
+'), sep = "\n")
+}
+```
+
+```{r, results="asis"}
+if (file.exists(ruta_rep_seqs_qza)) {
+cat(glue::glue('
+<code>{ruta_rep_seqs_qza}</code>
+'), sep = "\n")
+
+} else {
+cat(glue::glue('
+<div class="alert-warning alert-box">
+  <i class="fa-solid fa-triangle-exclamation"></i>
+  <b>Advertencia</b><br>
+  El archivo <code>rep-seqs.qza</code> no existe en la ruta especificada:<br>
+  <code>{ruta_rep_seqs_qza}</code>.
+</div>
+'), sep = "\n")
+}
+```
+
+<p>
+  Una vez extraído el contenido, se construye una <strong>tabla interactiva</strong> en R a partir del archivo <code>sequences.fasta</code>. Esta tabla resume para cada ASV su identificador (<em>Feature ID</em>), la longitud de la secuencia y la propia secuencia nucleotídica. La longitud de la secuencia permite evaluar si los amplicones cumplen con el tamaño esperado del marcador (por ejemplo, V3-V4 del TS), y detectar secuencias truncadas o extendidas que podrían indicar errores de secuenciación o quimeras no eliminadas.
+</p>
+
+<p>
+  Además, para facilitar la interpretación y visualización rápida de patrones, cada nucleótido se colorea según su tipo (<span style='color: #2ECC71'>A</span>, <span style='color: #E74C3C'>T</span>, <span style='color: #F1C40F'>G</span>, <span style='color: #3498DB'>C</span> y <span style='color: #7F8C8D'>N</span>). Esta codificación cromática permite identificar motivos conservados, regiones variables y posibles errores, y ofrece una manera intuitiva de explorar las secuencias sin necesidad de inspeccionarlas manualmente una a una. La tabla presenta un subconjunto representativo de secuencias para ilustrar la diversidad y extensión de los ASVs obtenidos, pero incluye todas las variantes en el archivo completo, accesible a través del enlace proporcionado.
+</p>
+
+<p>
+  Para quienes deseen revisar todas las secuencias generadas, se proporciona un enlace justo debajo de esta tabla que permite abrir el archivo <code>sequences.fasta</code> completo en una nueva pestaña del navegador. Esto garantiza que cualquier usuario pueda verificar la totalidad de los datos y facilita la validación externa de los resultados, un paso crucial en la generación de informes reproducibles y auditables.
+</p>
+
+```{r}
+# Leer el archivo y mostrar tabla interactiva
+if (file.exists(ruta_sequences_fasta)) {
+  # Leer el archivo generado al descomprimir
+  library(Biostrings)
+  library(DT)
+  library(htmltools)
+
+  # Leer el archivo fasta
+  seqs <- readDNAStringSet(ruta_sequences_fasta)
+
+  # Crear data.frame con ID, longitud y secuencia
+  seqs_df <- data.frame(
+    Feature_ID = names(seqs),
+    Sequence_Length = width(seqs),
+    Sequence = as.character(seqs),
+    stringsAsFactors = FALSE,
+    row.names = NULL
+  )
+
+  # Tomar solo las primeras 20 filas
+  seqs_subset_df <- head(seqs_df, 100)
+
+  # Definir colores
+  nuc_colors <- list(
+    A = "#2ECC71",  # verde
+    T = "#E74C3C",  # rojo
+    G = "#F1C40F",  # amarillo
+    C = "#3498DB",  # azul
+    N = "#7F8C8D"   # gris
+  )
+
+  # Función para colorear secuencia
+  color_seq <- function(seq) {
+    paste0(
+      sapply(strsplit(seq, "")[[1]], function(nt) {
+        color <- nuc_colors[[nt]]
+        if (is.null(color)) color <- "black"
+        sprintf("<span style='color:%s'>%s</span>", color, nt)
+      }),
+      collapse = ""
+    )
+  }
+
+  # Aplicar colores a la columna Sequence
+  seqs_subset_df$Sequence <- sapply(seqs_subset_df$Sequence, color_seq)
+
+  # Tabla interactiva de metadatos
+  library(DT)
+  htmltools::div(
+    class = "scroll-y-max-500",
+    DT::datatable(
+      seqs_subset_df,
+      escape = FALSE,
+      options = list(
+        scrollX = TRUE,
+        paging = FALSE,
+        lengthChange = FALSE,
+        language = list(
+          url = '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+        )
+      ),
+      class = 'stripe hover compact'
+    )
+  )
+  
+} else {
+  cat(glue::glue('
+  cat("Archivo "sequences.fasta" no encontrado. Verifica la ruta.")
+  '), sep = "\n")
+}
+```
+
+```{r, results='asis'}
+if (file.exists(ruta_sequences_fasta)) {
+
+  cat(glue::glue('
+  <div style="display: flex; justify-content: center; gap: 25px;">
+    <a href="{ruta_sequences_fasta}" 
+      target="_blank" 
+      class="boton-file">
+      <i class="fa-solid fa-file-lines"></i> Visualizar archivo completo en una pestaña nueva
+    </a>
+
+    <a href="{ruta_sequences_fasta}" 
+      download="{basename(ruta_sequences_fasta)}" 
+      class="boton-file-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo
+    </a>
+  </div>
+  '), sep = "\n")
+}
+```
+
+<p>
+  Paralelamente, se incrusta el <code>index.html</code> en un <code>iframe</code> dentro del informe Quarto. Esta visualización interactiva ofrece varias ventajas: permite inspeccionar dinámicamente la distribución de longitudes de las ASVs, explorar la abundancia de cada secuencia en las muestras, identificar posibles secuencias raras o atípicas y navegar por los gráficos generados automáticamente por QIIME2. El <code>iframe</code> proporciona un entorno visual completo sin necesidad de abrir software adicional, mientras que un enlace adicional permite abrir el informe en una nueva pestaña para explorar todas las funcionalidades interactivas.
+</p>
+
+```{r, results='asis'}
+# Generar iframe para Quarto si existe index.html
+if (file.exists(ruta_index_html)) {
+
+  cat(glue::glue('
+  <div class="iframe-container">
+    <iframe src="{ruta_index_html}" frameborder="0" style="height: 700px;"></iframe>
+  </div>
+
+  <p style="text-align:center;">
+    <a href="{ruta_index_html}" 
+      target="_blank" 
+      class="boton-iframe">
+      <i class="fa-solid fa-file-lines"></i> Abrir informe en una pestaña nueva
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  En conjunto, esta subsección ofrece una visión exhaustiva y detallada de las secuencias representativas obtenidas. La combinación de tablas resumidas, secuencias coloreadas y visualizaciones interactivas no solo facilita la inspección de los resultados, sino que también garantiza la trazabilidad y la reproducibilidad del análisis. Esta base de secuencias representativas es fundamental para los pasos siguientes, incluyendo la construcción de la tabla de abundancia y la asignación taxonómica, que se desarrollarán en el siguiente apartado.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion3.3">
+  3.3. Tabla de abundancia de ASVs
+</div>
+
+<p>
+  Una vez generadas las secuencias representativas (<code>rep-seqs.qza</code>), el siguiente paso clave consiste en construir la <strong>matriz de abundancia de ASVs</strong>. Esta matriz constituye el núcleo del análisis de microbiomas, ya que resume cuántas veces aparece cada variante de secuencia (<em>Amplicon Sequence Variant</em>, ASV) en cada muestra del estudio. 
+</p>
+
+<p>
+  La estructura de esta matriz es muy sencilla en su forma pero de enorme importancia analítica:
+</p>
+
+<ul>
+  <li>
+    <strong>Filas</strong> <strong>&rArr;</strong> cada fila corresponde a una ASV única, identificada mediante un hash alfanumérico (por ejemplo, <code>5d6d41bab35d14a56fad08d8a468f6f9</code>). Este identificador está asociado a la secuencia representativa almacenada en el archivo <code>rep-seqs.qza</code>.
+  </li>
+  <li>
+    <strong>Columnas</strong> <strong>&rArr;</strong> cada columna representa una muestra individual incluida en el estudio (por ejemplo, <code>NGS001-23_TS_41</code>, <code>NGS001-23_TS_42</code>, etc.).
+  </li>
+  <li>
+    <strong>Valores</strong> <strong>&rArr;</strong> las celdas contienen los recuentos absolutos de secuencias, es decir, el número de veces que una determinada ASV fue detectada en una muestra concreta.
+  </li>
+</ul>
+
+<p>
+  Gracias a esta estructura, la matriz de abundancia se convierte en el punto de partida para la mayoría de los análisis posteriores de microbioma. Entre sus aplicaciones principales destacan:
+</p>
+
+<ul>
+  <li>
+    El cálculo de métricas de <strong>diversidad alfa</strong>, que permiten evaluar la riqueza (número de ASVs) y la equidad (distribución de abundancias) dentro de cada muestra.
+  </li>
+  <li>
+    El análisis de <strong>diversidad beta</strong>, destinado a comparar la composición de comunidades entre diferentes muestras o condiciones experimentales.
+  </li>
+  <li>
+    La <strong>asignación taxonómica</strong> de las ASVs y la posterior elaboración de perfiles taxonómicos que muestran la composición relativa de cada comunidad microbiana.
+  </li>
+  <li>
+    La aplicación de <strong>métodos estadísticos</strong> que permiten detectar diferencias significativas en la abundancia de ASVs o taxones entre grupos de estudio.
+  </li>
+</ul>
+
+<p>
+  En QIIME2, esta información se gestiona a través de dos tipos de archivos complementarios:
+</p>
+
+<ul>
+  <li>
+    <code>table.qza</code> <strong>&rArr;</strong> contiene la <strong>matriz real de abundancia</strong> en formato <code>.biom</code> (Biological Observation Matrix). Este archivo almacena los datos crudos que se utilizarán en cálculos estadísticos y análisis de diversidad.
+  </li>
+  <li>
+    <code>table.qzv</code> <strong>&rArr;</strong> constituye un archivo de <strong>visualización interactiva</strong>, que incluye representaciones gráficas, tablas derivadas y una interfaz web (<code>index.html</code>) para explorar fácilmente la distribución de abundancias en las diferentes muestras.
+  </li>
+</ul>
+
+<p>
+  En resumen, la matriz de abundancia de ASVs es la pieza central del análisis metagenómico: ofrece una visión cuantitativa de las comunidades microbianas y alimenta tanto la exploración visual como los análisis estadísticos más avanzados que se desarrollarán en las secciones posteriores.
+</p>
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo3" id="tab3-seccion3.3.1">
+  3.3.1. Extracción de la matriz de abundancia desde `table.qza`
+</div>
+
+```{r}
+# Cargar paquete qiime2R
+library(qiime2R)
+
+# Definir ruta al archivo table.qza
+ruta_table_qza <- file.path(ruta_Def_ITS, "table.qza")
+ruta_table_qza_relativa <- file.path(ruta_Def_ITS_relativa, "table.qza")
+```
+
+<p>
+  La <strong>matriz de abundancia de ASVs</strong> contiene los datos crudos sobre cuántas veces se detecta cada ASV en cada muestra. Esta matriz constituye la base de todos los análisis de diversidad, rarefacción, asignación taxonómica y comparaciones estadísticas. En QIIME2, se almacena en <code>table.qza</code>, un artefacto que mantiene toda la información completa sin resumir. El archivo <code>table.qzv</code> asociado solo proporciona representaciones resumidas y visualizaciones de esta misma matriz (tablas resumen, gráficos y HTML), y se abordará en la siguiente subsección.
+</p>
+
+<p>
+  El artefacto <code>table.qza</code> se encuentra en el directorio de trabajo definido para los resultados de QIIME2, normalmente bajo la ruta especificada en:
+</p>
+
+```{r, results="asis"}
+if (file.exists(ruta_table_qza)) {
+  cat(glue::glue('
+<code>{ruta_table_qza}</code>
+'), sep = "\n")
+} else {
+  cat(glue::glue('
+<div class="alert-warning alert-box">
+  <i class="fa-solid fa-triangle-exclamation"></i>
+  <b>Advertencia</b><br>
+  El archivo <code>table.qzv</code> no existe en la ruta especificada:<br>
+  <code>{ruta_table_qza}</code>.
+</div>
+'), sep = "\n")
+}
+```
+
+<p>
+  Para importar la matriz de abundancia en R se utiliza el paquete <strong>qiime2R</strong>. La función <code>read_qza()</code> carga el artefacto y permite acceder a los datos crudos mediante el elemento <code>$data</code>, donde cada fila corresponde a un ASV y cada columna a una muestra.
+</p>
+
+<p>
+  La matriz extraída representa la información completa de abundancia, mientras que los archivos dentro de <code>table.qzv</code> solo muestran resúmenes o gráficos derivados:
+</p>
+
+<ul>
+  <li><code>feature-frequency-detail.csv</code> <strong>&rArr;</strong> resumen de la frecuencia total de cada ASV en todas las muestras.</li>
+  <li><code>sample-frequency-detail.csv</code> <strong>&rArr;</strong> resumen del número total de lecturas por muestra.</li>
+  <li><code>index.html</code> y gráficos PDF/PNG <strong>&rArr;</strong> visualizaciones interactivas de la matriz y sus distribuciones.</li>
+</ul>
+
+<p>
+  A continuación mostramos dicha matriz de abundancia obtenida a partir de <code>table.qza</code>, la cuál, puede relacionarse con las secuencias representativas de <code>rep-seqs.qza</code>, permitiendo análisis integrados de abundancia, diversidad y asignación taxonómica.:
+</p>
+
+```{r}
+# Leer el archivo y mostrar tabla interactiva
+if (file.exists(ruta_table_qza)) {
+  library(qiime2R)
+
+  # Leer el artefacto
+  feature_table <- read_qza(ruta_table_qza)
+
+  # Extraer la matriz de abundancia real
+  matriz_abundancia <- feature_table$data
+
+  # Tabla interactiva
+  library(DT)
+  library(htmltools)
+  htmltools::div(
+    class = "scroll-y-max-500",
+    DT::datatable(
+      matriz_abundancia,
+      options = list(
+        scrollX = TRUE,
+        paging = FALSE,
+        lengthChange = FALSE,
+        language = list(
+          url = '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+        )
+      ),
+      class = 'stripe hover compact'
+    )
+  )
+  
+} else {
+  cat(glue::glue('
+  cat("Archivo "{ruta_table_qza}" no encontrado. Verifica la ruta.")
+  '), sep = "\n")
+}
+```
+
+```{r, results='asis'}
+if (file.exists(ruta_table_qza_relativa)) {
+
+  cat(glue::glue('
+  <p style="text-align:center;">
+    <a href="{ruta_table_qza_relativa}"
+      download="{basename(ruta_table_qza_relativa)}" 
+      class="boton-file-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo "table.qza"
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  Con esta matriz es posible realizar filtrados, rarefacción, cálculos de diversidad alfa/beta y visualizaciones personalizadas, asegurando trazabilidad y reproducibilidad. Esto se tratará en las próximas secciones.
+</p>
+
+<p>
+  Una vez detallado esto, en la siguiente subsección se abordará cómo explorar los archivos de <code>table.qzv</code> como resúmenes y visualizaciones de la matriz de abundancia.
+</p>
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo3" id="tab3-seccion3.3.2">
+  3.3.2. Exploración de los resultados en `table.qzv`
+</div>
+
+```{r}
+# Definir ruta del archivo .qzv
+ruta_table_qzv_relativa <- file.path(ruta_Def_ITS_relativa, "table.qzv")
+ruta_table_qzv <- file.path(ruta_Def_ITS, "table.qzv")
+
+# Definir ruta de salida para el unzip
+ruta_Def_ITS_unzip <- file.path(ruta_Def_ITS_relativa, "unzip")
+ruta_unzip_table <- file.path(ruta_Def_ITS_unzip, "table")
+
+# Crear carpeta de salida si no existe
+if (!dir.exists(ruta_Def_ITS_unzip)) dir.create(ruta_Def_ITS_unzip, recursive = TRUE)
+
+# Solo hacer unzip si el archivo existe
+if (file.exists(ruta_table_qzv_relativa)) {
+  # Usando system2 para llamar a unzip desde R
+  system2("unzip", args = c("-o", shQuote(ruta_table_qzv_relativa),
+                            "-d", shQuote(ruta_unzip_table)))
+} else {
+  message("⚠️ El archivo table.qzv no existe. Se omite el unzip.")
+}
+```
+
+```{r}
+# Comprobar que el unzip se ha realizado
+if (dir.exists(ruta_unzip_table)) {
+  
+  # Listar subcarpetas dentro de la carpeta unzip (solo 1er nivel)
+  subcarpetas <- list.dirs(ruta_unzip_table, recursive = FALSE, full.names = TRUE)
+  
+  if (length(subcarpetas) == 0) {
+    stop("No se encontró ninguna subcarpeta dentro de ", ruta_unzip_table)
+  }
+  
+  # Tomamos la primera subcarpeta (la aleatoria generada por QIIME2)
+  carpeta_random <- subcarpetas[1]
+  
+  # Ruta a 'data'
+  ruta_data <- file.path(carpeta_random, "data")
+  
+  # Archivos dentro de 'data'
+  ruta_feature_freq_csv <- file.path(ruta_data, "feature-frequency-detail.csv")
+  ruta_sample_freq_csv <- file.path(ruta_data, "sample-frequency-detail.csv")
+  ruta_index_html <- file.path(ruta_data, "index.html")
+  
+  # Comprobar que existen
+  if (!file.exists(ruta_feature_freq_csv)) message("⚠️ feature-frequency-detail.csv no encontrado")
+  if (!file.exists(ruta_sample_freq_csv)) message("⚠️ sample-frequency-detail.csv no encontrado")
+  if (!file.exists(ruta_index_html)) message("⚠️ index.html no encontrado")
+  
+} else {
+  message("⚠️ Carpeta de unzip no encontrada. No se puede acceder a los archivos.")
+}
+```
+
+<p>
+  Tras haber extraído y visualizado la matriz de abundancia en la sección anterior, esta subsección se centra en la exploración de los recursos contenidos en <code>table.qzv</code>, que proporcionan resúmenes y visualizaciones complementarias de la información de abundancia sin necesidad de manipular directamente la matriz cruda.
+</p>
+
+<p>
+  El archivo <code>table.qzv</code> es un artefacto comprimido que contiene datos cuantitativos de abundancia, así como recursos adicionales que facilitan la inspección y validación de los resultados. Dicho archivo se encuentra en el siguiente directorio:
+</p>
+
+```{r, results="asis"}
+if (file.exists(ruta_table_qzv)) {
+  cat(glue::glue('
+<code>{ruta_table_qzv}</code>
+'), sep = "\n")
+} else {
+  cat(glue::glue('
+<div class="alert-warning alert-box">
+  <i class="fa-solid fa-triangle-exclamation"></i>
+  <b>Advertencia</b><br>
+  El archivo <code>table.qzv</code> no existe en la ruta especificada:<br>
+  <code>{ruta_table_qzv}</code>.
+</div>
+'), sep = "\n")
+}
+```
+
+<p>
+  A continuación, se procede a descomprimir <code>table.qzv</code> para así poder acceder a sus archivos internos, entre los que destacan:
+</p>
+
+<ul>
+  <li>
+    <code>feature-frequency-detail.csv</code> <strong>&rArr;</strong> tabla que indica cuántas veces aparece cada ASV en el conjunto de todas las muestras. Cada fila corresponde a un identificador único (hash) de ASV y su frecuencia asociada refleja la abundancia global de esa variante.
+  </li>
+  <li>
+    <code>sample-frequency-detail.csv</code> <strong>&rArr;</strong> tabla que resume el número total de lecturas asignadas a cada muestra, permitiendo evaluar la profundidad de secuenciación y detectar posibles muestras con baja cobertura.
+  </li>
+  <li>
+    <code>index.html</code> <strong>&rArr;</strong> visualización interactiva de la matriz de abundancia, equivalente a lo que se observa al cargar el archivo en <a href="https://view.qiime2.org" class="normalink" target="_blank">QIIME2 View</a>. Esta interfaz facilita la exploración gráfica de los datos mediante tablas dinámicas, gráficos de barras y paneles de búsqueda y filtrado.
+  </li>
+</ul>
+
+<p>
+  Una vez descomprimido, se procede a explorar dichos archivos internos. El primer recurso a explorar es <code>sample-frequency-detail.csv</code>. Este archivo resume el número total de lecturas por muestra y proporciona una visión inicial de la cobertura de secuenciación. Su análisis es clave para:
+</p>
+
+<ul>
+  <li>Identificar muestras con un número de lecturas muy bajo que podrían requerir exclusión o revisión.</li>
+  <li>Comparar la profundidad de secuenciación entre grupos experimentales.</li>
+  <li>Detectar desequilibrios que puedan sesgar los análisis posteriores.</li>
+</ul>
+
+<p>
+  A continuación, se presenta la tabla interactiva que permite inspeccionar estos datos de manera clara y ordenada. Además, se incluye un enlace de descarga al archivo original para garantizar la reproducibilidad:
+</p>
+
+```{r}
+# Leer el archivo y mostrar tabla interactiva
+if (file.exists(ruta_sample_freq_csv)) {
+  # Leer el archivo generado al descomprimir
+  library(readr)
+  sample_freq <- read_csv(ruta_sample_freq_csv, show_col_types = FALSE)
+  colnames(sample_freq) <- c("Sample ID", "Frequency")
+
+  # Tabla interactiva
+  library(DT)
+  htmltools::div(
+    class = "scroll-y-max-500",
+    DT::datatable(
+      sample_freq,
+      options = list(
+        scrollX = TRUE,
+        paging = FALSE,
+        lengthChange = FALSE,
+        language = list(
+          url = '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+        )
+      ),
+      class = 'stripe hover compact'
+    )
+  )
+  
+} else {
+  cat(glue::glue('
+  cat("Archivo "{ruta_sample_freq_csv}" no encontrado. Verifica la ruta.")
+  '), sep = "\n")
+}
+```
+
+```{r, results='asis'}
+if (file.exists(ruta_sample_freq_csv)) {
+
+  cat(glue::glue('
+  <p style="text-align:center;">
+    <a href="{ruta_sample_freq_csv}" 
+      download="{basename(ruta_sample_freq_csv)}" 
+      class="boton-file-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo "sample-frequency-detail.csv"
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  El siguiente archivo clave es <code>feature-frequency-detail.csv</code>. En él, cada fila corresponde a un ASV único identificado mediante un hash, y la columna de frecuencia refleja el número total de lecturas asignadas a esa variante en el conjunto de todas las muestras. Su utilidad principal radica en:
+</p>
+
+<ul>
+  <li>Explorar la distribución relativa de los ASVs, identificando cuáles son dominantes o minoritarios.</li>
+  <li>Evaluar la representatividad de las secuencias detectadas en el estudio.</li>
+  <li>Corroborar la consistencia entre la matriz de abundancia y las secuencias representativas generadas previamente.</li>
+</ul>
+
+<p>
+  A continuación, se muestra la tabla interactiva con los datos de <code>feature-frequency-detail.csv</code>, junto con un enlace de descarga del archivo completo:
+</p>
+
+```{r}
+# Leer el archivo y mostrar tabla interactiva
+if (file.exists(ruta_feature_freq_csv)) {
+  # Leer el archivo generado al descomprimir
+  library(readr)
+  feature_freq <- read_csv(ruta_feature_freq_csv, show_col_types = FALSE)
+  colnames(feature_freq) <- c("Feature ID", "Frequency")
+  
+  # Tabla interactiva
+  library(DT)
+  htmltools::div(
+    class = "scroll-y-max-500",
+    DT::datatable(
+      feature_freq,
+      options = list(
+        scrollX = TRUE,
+        paging = FALSE,
+        lengthChange = FALSE,
+        language = list(
+          url = '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+        )
+      ),
+      class = 'stripe hover compact'
+    )
+  )
+  
+} else {
+  cat(glue::glue('
+  cat("Archivo "{ruta_feature_freq_csv}" no encontrado. Verifica la ruta.")
+  '), sep = "\n")
+}
+```
+
+```{r, results='asis'}
+if (file.exists(ruta_feature_freq_csv)) {
+
+  cat(glue::glue('
+  <p style="text-align:center;">
+    <a href="{ruta_feature_freq_csv}" 
+      download="{basename(ruta_feature_freq_csv)}" 
+      class="boton-file-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo "feature-frequency-detail.csv"
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  Finalmente, el archivo <code>index.html</code> proporciona una visualización dinámica de la matriz de abundancia. Esta interfaz reproduce lo que se observa al abrir <code>table.qzv</code> en QIIME2 View y permite:
+</p>
+
+<ul>
+  <li>Examinar de manera interactiva la presencia y abundancia relativa de los ASVs en cada muestra.</li>
+  <li>Detectar patrones, outliers o muestras con lecturas atípicas.</li>
+  <li>Explorar los datos a través de gráficos y herramientas de filtrado que enriquecen la interpretación.</li>
+</ul>
+
+<p>
+  En el informe, este archivo puede incrustarse directamente como un <code>iframe</code> o abrirse en una nueva pestaña del navegador para aprovechar todas sus funcionalidades:
+</p>
+
+```{r, results='asis'}
+# Generar iframe para Quarto si existe index.html
+if (file.exists(ruta_index_html)) {
+
+  cat(glue::glue('
+  <div class="iframe-container">
+    <iframe src="{ruta_index_html}" frameborder="0" style="height: 700px;"></iframe>
+  </div>
+
+  <p style="text-align:center;">
+    <a href="{ruta_index_html}" target="_blank" class="boton-iframe">
+      <i class="fa-solid fa-file-lines"></i> Abrir informe en una pestaña nueva
+    </a>
+  </p>
+
+  <div style="height: 15px; background-color: transparent;"></div>
+  '), sep = "\n")
+}
+```
+
+<p>
+  En conjunto, estos archivos complementan la matriz de abundancia ya mostrada, ofreciendo resúmenes y visualizaciones que mejoran la accesibilidad y comprensión de los datos. Esto asegura la trazabilidad, accesibilidad y reproducibilidad de los datos, y deja preparado el escenario para abordar en las siguientes secciones la asignación <strong>taxonómica y filogenia</strong> (<a href="4-taxonimia-filogenia.html#tab3-seccion4" class="normalink">sección 4</a>), el análisis <strong>diferencial de abundancia</strong> (<a href="5-diversidad-diferencial.html#tab3-seccion5" class="normalink">sección 5</a>) y el análisis de la <strong>diversidad microbiana</strong> (<a href="6-diversidad-microbiana.html#tab3-seccion6" class="normalink">sección 6</a>), que incluirá tanto la diversidad alfa (riqueza y equidad) como la diversidad beta (comparación entre comunidades).
+</p>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../../4-javascript/chatbot.js"></script>

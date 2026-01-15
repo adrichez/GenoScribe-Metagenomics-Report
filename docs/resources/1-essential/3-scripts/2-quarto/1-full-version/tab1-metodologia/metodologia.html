@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Metagenomic Report</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../../">
+<script src="../../../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../../site_libs/quarto-html/quarto-syntax-highlighting-54c8f25464f32f8783bd446cee98020d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../../site_libs/bootstrap/bootstrap-c27fce070f9e1faf5b65ec12c04f7688.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="shortcut icon" href="../../../../1-images/icons/favicon.svg">
+<link rel="icon" type="image/x-icon" href="../../../../1-images/icons/favicon.ico">
+
+
+<link rel="stylesheet" href="../../../../../../resources/1-essential/3-scripts/3-css/styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../../../../../../index.html">
+    <span class="navbar-title"><img class="brand-logo" src="../../../../../../resources/1-essential/1-images/icons/ipbln.png"> <a class="brand-text" href="https://www.ipb.csic.es/servicios/Bioinformatica/index.html">IPBLN</a></span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../index.html"> <i class="bi bi-house" role="img">
+</i> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab1-metodologia/metodologia.html" aria-current="page"> <i class="bi bi-wrench" role="img">
+</i> 
+<span class="menu-text">Metodología</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab2-resumen/tab2-1-resumen-16S/resumen.html"> <i class="bi bi-clipboard-data" role="img">
+</i> 
+<span class="menu-text">Resumen 16S</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-análisis-16s" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-bar-chart" role="img">
+</i> 
+ <span class="menu-text">Análisis 16S</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-análisis-16s">    
+        <li>
+    <a class="dropdown-item" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/0-contexto.html">
+ <span class="dropdown-text">➤ Introducción contextual</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/1-revision-inicial.html">
+ <span class="dropdown-text">1. Revisión inicial de muestras y metadatos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/2-control-calidad.html">
+ <span class="dropdown-text">2. Control de calidad y preprocesamiento</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/3-generacion-asvs.html">
+ <span class="dropdown-text">3. Generación de ASVs y tabla de abundancia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/4-taxonomia-filogenia.html">
+ <span class="dropdown-text">4. Asignación taxonómica y filogenia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/5-analisis-diferencial.html">
+ <span class="dropdown-text">5. Análisis diferencial de abundancia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/6-diversidad-microbiana.html">
+ <span class="dropdown-text">6. Diversidad microbiana</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/7-prediccion-funcional.html">
+ <span class="dropdown-text">7. Predicción funcional</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/8-conclusiones.html">
+ <span class="dropdown-text">8. Conclusiones y perspectivas</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-layout-custom page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+<!-- main -->
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Metagenomic Report</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        ¡Hola! Soy <strong>Geni</strong>, el asistente inteligente de <strong>GenoScribe</strong>.  
+        Estoy aquí para ayudarte a explorar de forma interactiva el contenido de este informe bioinformático.
+      </p>
+
+      <p>
+        Cuando me haces una pregunta, primero intento reconocer si coincide con alguno de los patrones o expresiones que conozco.  
+        Si encuentro una coincidencia, te responderé directamente con una respuesta predefinida, diseñada para ser rápida, clara e incluso un poco ingeniosa.  
+        Si no reconozco el patrón, entonces activo mis herramientas de búsqueda: genero representaciones vectoriales (embeddings) y busco los fragmentos más relevantes entre varios documentos —incluyendo el propio informe, archivos PDF y HTML externos, y sesiones de preguntas y respuestas (QA).  
+        A partir de esa información, creo un resumen que intenta ofrecerte una respuesta coherente y útil basada en el contenido existente.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es experimental. No utilizo grandes modelos de lenguaje, por lo que algunas respuestas pueden ser aproximadas o incompletas.  
+        El objetivo principal es facilitar una visualización rápida, comprensible y reproducible de la información contenida en los documentos, permitiendo una exploración más dinámica del informe.
+      </p>
+
+      <p>
+        Actualmente, los resultados pueden variar en precisión, ya que empleo modelos ligeros y locales para asegurar que la aplicación funcione en cualquier entorno sin necesidad de servidores externos.  
+        Sin embargo, la estructura del sistema está preparada para mejorar notablemente su rendimiento en el futuro mediante la integración con modelos más avanzados o APIs externas.  
+        Para comenzar, simplemente escribe tu pregunta en el campo inferior y deja que yo me encargue del resto. ¡Prometo poner todo mi código en ello!
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta...">
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!-- Incluir Font Awesome -->
+<p><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"></p>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 1: METODOLOGÍA -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<div class="informe-titulo-tab-unique">
+<h1>
+Pestaña
+</h1>
+<h2>
+Metodología y Herramientas
+</h2>
+</div>
+<div class="flecha-abajo">
+<p>▼</p>
+</div>
+<div class="informe-resumen">
+<p>
+Esta pestaña tiene un carácter eminentemente técnico y documenta cómo se ha generado el informe, qué datos se han utilizado, qué herramientas han intervenido y cómo se ha organizado el flujo de trabajo. Su finalidad es que cualquier persona que consulte este informe pueda comprender los procedimientos realizados, verificar los resultados y, si lo desea, reproducir el análisis completo con exactitud.
+</p>
+<p>
+Durante la elaboración del informe, el usuario puede seleccionar uno o varios marcadores:
+</p>
+<ul>
+<li>
+<strong>16S rRNA</strong> <strong>⇒</strong> para la identificación de bacterias y arqueas, ampliamente usado en microbiomas ambientales y clínicos.
+</li>
+<li>
+<strong>18S rRNA</strong> <strong>⇒</strong> para caracterizar eucariotas, como protozoos y hongos, complementando o sustituyendo al 16S según el estudio.
+</li>
+<li>
+<strong>ITS (Internal Transcribed Spacer)</strong> <strong>⇒</strong> región altamente variable utilizada principalmente para la identificación de hongos a nivel de género y especie.
+</li>
+</ul>
+<p>
+Los datos del informe provienen de dos etapas principales:
+</p>
+<ul>
+<li>
+<strong>Control de calidad inicial</strong> <strong>⇒</strong> realizado con <strong>miARma‑Seq</strong> (<em>Eduardo Andrés-León et al.</em>), procesando los archivos <code>FASTQ</code> y generando reportes de calidad mediante <em>FastQC</em> y <em>MultiQC</em>.
+</li>
+<li>
+<strong>Análisis metagenómico</strong> <strong>⇒</strong> llevado a cabo con <strong>QIIME2</strong>, procesando los marcadores seleccionados, realizando denoising con <em>DADA2</em>, generando tablas de abundancia y métricas de diversidad, así como predicciones funcionales con <em>PICRUSt2</em> y análisis estadístico en <em>R</em> mediante <em>MetagenomeSeq</em> y <em>ALDEx2</em>.
+</li>
+</ul>
+<p>
+Una vez obtenidos los resultados, <strong>Nextflow</strong> organiza los datos y prepara los archivos de configuración que sirven como interfaz con <strong>Quarto</strong>:
+</p>
+<ul>
+<li>
+<code>params.yml</code> <strong>⇒</strong> contiene parámetros específicos de la ejecución, rutas, opciones de visualización, marcador analizado y versión del informe.
+</li>
+<li>
+<code>_quarto.yml</code> <strong>⇒</strong> define la estructura del informe, incluyendo plantillas, pestañas, secciones y rutas internas, generado mediante <code>yaml_generator.py</code>.
+</li>
+</ul>
+<p>
+Cuando todos los procesos previos han finalizado, Nextflow invoca <code>quarto render</code>, generando el informe HTML final en la carpeta <code>report/</code>. Este flujo asegura que el documento refleje de manera completa, consistente y reproducible todos los resultados.
+</p>
+<p>
+Gracias a esta arquitectura modular:
+</p>
+<ul>
+<li>
+Cada etapa (control de calidad, análisis metagenómico, análisis estadístico, generación del informe) puede ejecutarse de forma independiente o conjunta.
+</li>
+<li>
+Se permite combinar diferentes marcadores según las necesidades del estudio sin comprometer la trazabilidad ni la reproducibilidad.
+</li>
+<li>
+Se facilita la verificación y reconstrucción del informe en el futuro con los mismos datos y parámetros.
+</li>
+</ul>
+<p>
+Además, esta pestaña incluye referencias a manuales, repositorios y documentación complementaria, accesibles mediante tarjetas de información. Para cualquier duda o soporte adicional, los datos de contacto se encuentran en la pestaña de inicio.
+</p>
+</div>
+<div style="height: 15px; background-color: transparent;">
+
+</div>
+<div class="titulo-toc">
+<p>Tabla de contenidos de esta pestaña</p>
+</div>
+<div class="toc">
+<ul>
+<li>
+<a href="#tab1-seccion1">1<span>.</span> Workflows y herramientas empleadas en la generación de resultados</a>
+<ul>
+<li>
+<a href="#tab1-seccion1.1">1.1. Workflow empleado con miARma-Seq (control de calidad)</a>
+</li>
+<li>
+<a href="#tab1-seccion1.2">1.2. Workflow empleado con QIIME 2 (análisis metagenómico)</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#tab1-seccion2">2<span>.</span> Estructura de los datos y resultados generados</a>
+</li>
+<li>
+<a href="#tab1-seccion3">3<span>.</span> Generación automatizada del informe</a>
+<ul>
+<li>
+<a href="#tab1-seccion3.1">3.1. Estructura del directorio de ejecución</a>
+</li>
+<li>
+<a href="#tab1-seccion3.2">3.2. Integración de Nextflow y Quarto</a>
+</li>
+<li>
+<a href="#tab1-seccion3.3">3.3. Configuración del archivo _quarto.yml y params.yml</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#tab1-seccion4">4<span>.</span> Manuales, repositorios y documentación complementaria</a>
+</li>
+</ul>
+</div>
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<!-- REDACCIÓN -->
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab1-seccion1" class="titulo2">
+<p>1<span>.</span> Workflows y herramientas empleadas en la generación de resultados</p>
+</div>
+<p>
+El proceso de análisis metagenómico llevado a cabo en este estudio se sustenta en la combinación de dos herramientas principales: <strong>miARma-Seq</strong> y <strong>QIIME 2</strong>. Ambas se emplean de forma complementaria para garantizar la calidad de los datos y obtener resultados biológicamente interpretables sobre la composición microbiana de las muestras analizadas.
+</p>
+<p>
+En una primera fase, <strong>miARma-Seq</strong> se utilizó para realizar el <strong>control de calidad</strong> de los archivos <code>FASTQ</code> originales. Este módulo evalúa la integridad de las lecturas y filtra aquellas que no cumplen con los criterios de calidad establecidos, asegurando que las secuencias que pasan a las etapas posteriores sean adecuadas para el análisis metagenómico. Aunque miARma-Seq fue concebido originalmente como un pipeline para estudios de <em>RNA-Seq</em>, su estructura modular y configurable mediante archivos <code>.ini</code> permite su adaptación a distintos tipos de datos, como los de amplicones 16S, 18S o ITS.
+</p>
+<p>
+En la segunda fase, los datos procesados fueron analizados mediante <strong>QIIME 2</strong> (<em>Quantitative Insights Into Microbial Ecology</em>), una de las plataformas más consolidadas para el estudio de comunidades microbianas a partir de secuencias de amplicones. QIIME 2 ofrece un flujo de trabajo reproducible que abarca desde la importación y desmultiplexado de las lecturas hasta la generación de métricas de diversidad, la asignación taxonómica y la visualización de resultados.
+</p>
+<p>
+En conjunto, estos dos workflows proporcionan una estrategia robusta y reproducible: <strong>miARma-Seq</strong> garantiza la calidad y limpieza de las lecturas crudas, mientras que <strong>QIIME 2</strong> permite profundizar en la composición y diversidad microbiana de las muestras. En los siguientes apartados se describen ambos pipelines en detalle, incluyendo su configuración, principales etapas de ejecución y resultados obtenidos.
+</p>
+<div style="height: 15x; background-color: transparent;">
+
+</div>
+<div id="tab1-seccion1.1" class="titulo3">
+<p>1.1. Workflow empleado con miARma-Seq (control de calidad)</p>
+</div>
+<p>
+La herramienta <strong>miARma‑Seq</strong> es un pipeline integral diseñado para análisis de RNA‑Seq (mRNA, miRNA y circRNA), desarrollado por <em>Eduardo Andrés‑León et al</em>. Incluye múltiples módulos que permiten procesar datos crudos de manera modular y reproducible:
+</p>
+<ol>
+<li>
+<strong>Control de calidad inicial</strong> <strong>⇒</strong> Evaluación de archivos <code>FASTQ</code> mediante <em>FastQC</em>, con generación de reportes individuales y resúmenes globales usando <em>MultiQC</em>, permitiendo detectar adaptadores, sesgos de composición y problemas de calidad por posición.
+</li>
+<li>
+<strong>Recorte de lecturas</strong> <strong>⇒</strong> Eliminación de adaptadores y bases de baja calidad mediante <em>Cutadapt</em> o <em>Reaper</em>, optimizando los datos antes de alineamiento.
+</li>
+<li>
+<strong>Alineamiento</strong> <strong>⇒</strong> Mapeo contra genomas de referencia usando alineadores como <em>HISAT2</em>, <em>STAR</em>, <em>Bowtie</em> o <em>BWA</em>, dependiendo del tipo de RNA.
+</li>
+<li>
+<strong>Cuantificación</strong> <strong>⇒</strong> Conteo de genes o isoformas con <em>featureCounts</em>, detección de circRNAs con <em>CIRI</em> y cuantificación de miRNAs con <em>miRDeep2</em>.
+</li>
+<li>
+<strong>Análisis diferencial</strong> <strong>⇒</strong> Identificación de genes o miRNAs diferencialmente expresados mediante <em>edgeR</em> o <em>NOISeq</em>, según el diseño experimental.
+</li>
+<li>
+<strong>Análisis funcional</strong> <strong>⇒</strong> Predicción de interacciones miRNA‑mRNA, correlaciones inversas de expresión y análisis de enriquecimiento funcional (GO, KEGG).
+</li>
+</ol>
+<p>
+Aunque <strong>miARma‑Seq</strong> ofrece un conjunto completo de módulos para análisis de RNA‑Seq, en este informe únicamente se ha utilizado el <strong>módulo de control de calidad (QC)</strong> para los archivos <code>FASTQ</code> de nuestro análisis metagenómico. Este paso es fundamental para asegurar que las lecturas crudas de los marcadores seleccionados (16S, 18S, ITS) sean de alta calidad antes de ser procesadas con <strong>QIIME2</strong> o cualquier otro pipeline de análisis.
+</p>
+<p>
+Toda la documentación de miARma‑Seq y su repositorio oficial están disponibles en <a href="https://github.com/eandresleon/miARma-seq" class="normalink" target="_blank">GitHub</a>, donde se pueden consultar todos los módulos, parámetros y ejemplos de uso. A continuación se muestra de forma esquemática el workflow completo de la herramienta:
+</p>
+<div class="box-images">
+<p><img src="../../../../1-images/tab1-metodologia/miARma_Seq_workflow.png" alt="Pipeline completo de miARma-Seq" style="width: 850px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../1-images/tab1-metodologia/miARma_Seq_workflow.png" target="_blank" class="boton-image"> <i class="fa-solid fa-sitemap"></i> Visualizar workflow en una página nueva </a></p>
+<p><a href="../../../../1-images/tab1-metodologia/miARma_Seq_workflow.png" download="miARma_Seq_workflow.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<p>
+Para garantizar <strong>reproducibilidad</strong> y <strong>modularidad</strong>, <code>miARma‑Seq</code> utiliza un archivo de configuración con extensión <code>.ini</code>. Este archivo es esencial, ya que contiene todos los parámetros necesarios para ejecutar cada módulo del pipeline sin necesidad de introducir comandos complejos en la línea de comandos. En el contexto de este informe de metagenómica, el archivo <code>.ini</code> está configurado únicamente para activar el <strong>módulo de control de calidad</strong>, aunque puede modificarse para ejecutar alineamiento, cuantificación o análisis diferencial si se requiere.
+</p>
+<p>
+Así, para este informe, el archivo <code>.ini</code> utilizado se encuentra en el siguiente directorio:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Analisis/miARma_workflow.ini</code>.
+</p>
+<p>
+Como se ha comentado anteriormene, este archivo configura únicamente el módulo de control de calidad, pero se puede consultar la estructura completa que incluiría alineamiento, cuantificación y análisis diferencial si se trabajase con RNA‑Seq. Dicho archivo lo podemos visualizar mediante el siguiente <code>iframe</code> o para más detalle, en una pestaña nueva haciendo click en el botón que se encuentra justo debajo. Además, también podemos descargar dicho archivo en el caso de que fuera necesario mediante el botón específico ubicado justo al lado (para que dicho botón de descarga funcione se debe de abrir el informe (<code>index.html</code>) mediante un servidor para activar las funciones de javascript, tal y como se ha indicado en la pestaña de inicio).
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/miARma_workflow.txt" frameborder="0" style="height: 500px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/miARma_workflow.txt" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Ver archivo completo en una nueva página </a></p>
+<p><a href="../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_workflow.ini" download="miARma_workflow.ini" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo </a></p>
+</div>
+<p>
+Un archivo <code>.ini</code> está organizado en secciones bien definidas, como <code>[General]</code>, <code>[QC]</code>, <code>[Aligner]</code>, <code>[ReadCount]</code>, cada una dedicada a un módulo específico del pipeline. En cada sección se definen parámetros clave, incluyendo:
+</p>
+<ul>
+<li>
+Rutas de entrada y salida de los archivos.
+</li>
+<li>
+Tipo de datos a procesar (por ejemplo, RNA, metagenómica).
+</li>
+<li>
+Número de hilos o núcleos a utilizar.
+</li>
+<li>
+Herramientas específicas a emplear en cada paso.
+</li>
+<li>
+Criterios estadísticos o filtros de calidad aplicados.
+</li>
+</ul>
+<p>
+</p><p>La ejecución de este pipeline en un entorno de <strong>High-Performance Computing (HPC)</strong> se realiza mediante un archivo de script <code>.sh</code>, que automatiza la carga de módulos, la asignación de recursos (como memoria y núcleos) y la ejecución de miARma‑Seq con el archivo de configuración <code>.ini</code>.</p>
+Así, para este informe, el script empleado se encuentra en el siguiente directorio:
+<p></p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Analisis/Slurm.sh</code>.
+</p>
+<p>
+Y podemos visualizarlo de forma similar mediante el siguiente <code>iframe</code>, así como prodecer con su respectiva descarga.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/Slurm.txt" frameborder="0" style="height: 500px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/Slurm.txt" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Ver archivo completo en una nueva página </a></p>
+<p><a href="../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/Slurm.sh" download="Slurm.sh" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo </a></p>
+</div>
+<p>
+Gracias a esta estructura, es posible ejecutar de manera reproducible el control de calidad de cualquier conjunto de archivos <code>FASTQ</code>, y en futuras extensiones del análisis metagenómico se podrían activar otros módulos del pipeline para incluir alineamiento, cuantificación o análisis diferencial, integrando así un flujo de trabajo completo y modular.
+</p>
+<p>
+Para más información sobre miARma‑Seq y su pipeline completo, se puede consultar el repositorio oficial en <a href="https://github.com/eandresleon/miARma-seq" class="normalink" target="_blank">GitHub: miARma‑Seq</a>.
+</p>
+<div style="height: 15x; background-color: transparent;">
+
+</div>
+<div id="tab1-seccion1.2" class="titulo3">
+<p>1.2. Workflow empleado con QIIME 2 (análisis metagenómico)</p>
+</div>
+<p>
+<strong>QIIME2</strong> es una plataforma especializada para análisis de metagenómica de amplicones, especialmente del marcador 16S, con un enfoque modular, reproducible y documentado. Su flujo de trabajo incluye múltiples etapas que permiten procesar, filtrar y analizar las secuencias de manera rigurosa, integrando herramientas estadísticas y visualización avanzada.
+</p>
+<ol>
+<li>
+<strong>Secuencias crudas (.fastq)</strong> <strong>⇒</strong> Se importan los archivos de secuenciación sin procesar, que contienen todas las lecturas de ADN de las muestras.
+</li>
+<li>
+<strong>Validación del archivo de metadatos</strong> <strong>⇒</strong> Se comprueba que la información de cada muestra (por ejemplo, grupos experimentales) esté correctamente formateada y consistente con los datos de secuenciación.
+</li>
+<li>
+<strong>Importación de secuencias</strong> <strong>⇒</strong> Conversión de los archivos <code>.fastq</code> al formato nativo de QIIME2, que permite la ejecución de los siguientes pasos del pipeline.
+</li>
+<li>
+<strong>Demultiplexing</strong> <strong>⇒</strong> Separación de lecturas por muestra utilizando los índices o códigos de barras, asignando cada secuencia a su muestra de origen.
+</li>
+<li>
+<strong>Filtrado de calidad, eliminación de quimeras y desreplicación</strong> <strong>⇒</strong> Se eliminan secuencias de baja calidad y quiméricas (artefactos de PCR), y se generan secuencias únicas (ASVs, Amplicon Sequence Variants) que representan las variantes biológicas reales.
+</li>
+<li>
+<strong>Asignación taxonómica</strong> <strong>⇒</strong> Cada ASV se clasifica en niveles taxonómicos (especie, género, familia, etc.) usando bases de referencia.
+</li>
+<li>
+<strong>Entrenamiento de la base de datos</strong> <strong>⇒</strong> Se entrena un clasificador de aprendizaje automático con bases de referencia (como SILVA o Greengenes) para mejorar la precisión de la asignación taxonómica.
+</li>
+<li>
+<strong>Visualización de la taxonomía</strong> <strong>⇒</strong> Se generan gráficos que muestran la composición microbiana de cada muestra y del conjunto de datos.
+</li>
+<li>
+<strong>Creación de árbol filogenético</strong> <strong>⇒</strong> Se construye un árbol filogenético que representa las relaciones evolutivas entre los ASVs, esencial para análisis de diversidad basados en distancia filogenética.
+</li>
+<li>
+<strong>Análisis de diversidad alfa y beta</strong> <strong>⇒</strong> Cálculo de métricas de diversidad alfa (dentro de cada muestra) y beta (entre muestras) para comparar la riqueza, uniformidad y composición de las comunidades microbianas.
+</li>
+<li>
+<strong>Exportación de resultados</strong> <strong>⇒</strong> Las tablas de ASVs, la asignación taxonómica y las métricas de diversidad se exportan a formatos compatibles con R u otros programas, facilitando análisis estadísticos, visualizaciones avanzadas y predicciones funcionales.
+</li>
+</ol>
+<p>
+Mediante la siguiente imagen podemos observar de forma más visual el workflow completo descrito anteriormente y seguido con esta herramienta:
+</p>
+<div class="box-images">
+<p><img src="../../../../1-images/tab1-metodologia/qiime2_workflow.png" alt="Pipeline completo de Qiime 2" style="width: 850px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../1-images/tab1-metodologia/qiime2_workflow.png" target="_blank" class="boton-image"> <i class="fa-solid fa-sitemap"></i> Visualizar workflow en una página nueva </a></p>
+<p><a href="../../../../1-images/tab1-metodologia/qiime2_workflow.png" download="qiime2_workflow.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<p>
+El uso combinado de <strong>QIIME2</strong> y <strong>R</strong> permite un análisis completo y reproducible, integrando diversidad, funcionalidad y estadística avanzada. La documentación oficial de QIIME2 está disponible en <a href="https://qiime2.org/" target="_blank" class="normalink">https://qiime2.org/</a>.
+</p>
+<p>
+En conjunto, ambos pipelines (<strong>miARma‑Seq</strong> para control de calidad y <strong>QIIME2</strong> para análisis metagenómico) se integran mediante <strong>Nextflow</strong> para generar un informe reproducible en <strong>Quarto</strong>. Esto asegura trazabilidad, modularidad y claridad en la interpretación de los resultados.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab1-seccion2" class="titulo2">
+<p>2<span>.</span> Estructura de los datos y resultados generados</p>
+</div>
+<p>
+Una vez completadas las fases de <strong>control de calidad</strong> (<em>miARma-Seq</em>) y <strong>análisis metagenómico</strong> (<em>QIIME 2</em>), los resultados obtenidos se organizan en una <strong>estructura de directorios</strong> que sirve como base para la generación de este informe automatizado. Esta estructura define la ubicación de los archivos intermedios, los resultados finales y los metadatos asociados a cada etapa del análisis, garantizando la trazabilidad y la reproducibilidad del flujo de trabajo completo.
+</p>
+<p>
+Esta sección, al igual que el resto de esta pestaña dedicada a la metodología del desarrollo de este informe, tiene un propósito puramente técnico y está pensada como una referencia interna para el usuario que generó el informe. Su objetivo es facilitar la comprensión y el recuerdo de cómo estaban organizados los datos de salida del proyecto, de modo que, pasado un tiempo, sea posible <strong>revisar rápidamente la estructura de resultados</strong> sin necesidad de volver al entorno de análisis original.
+</p>
+<p>
+A continuación se muestra la ruta del directorio principal donde se encuentran los datos y resultados generados para este proyecto:
+</p>
+<p><code>/workspace/data/03-EXT-25-Metagenomic</code></p>
+<p>
+A continuación se muestra la estructura completa de dicho directorio. Esta representación permite visualizar los archivos y subcarpetas que se emplearon como base para la construcción del informe:
+</p>
+<div class="box-files">
+<ul>
+<li class="file-folder">
+<a href="../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis" target="_blank">Analisis</a>
+</li>
+<li class="file-folder">
+<a href="../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Documentacion" target="_blank">Documentacion</a>
+</li>
+<li class="file-folder">
+<a href="../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados" target="_blank">Resultados</a>
+</li>
+</ul>
+</div>
+<p style="text-align:center;">
+<a href="../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic" target="_blank" class="boton-files"> <i class="fa-solid fa-folder-open"></i> Explorar los archivos de la carpeta “03-EXT-25-Metagenomic” aquí </a>
+</p>
+<p>
+Tras visualizar la estructura de forma interactiva, se presenta a continuación un desglose detallado de las carpetas y archivos generados durante el análisis de metagenómico. Esta organización está diseñada para facilitar la reproducibilidad del análisis, la trazabilidad de los resultados y su interpretación posterior.
+</p>
+<div class="items">
+<ul>
+<li>
+<strong><code>03-EXT-25-Metagenomic/Analisis/reads/16S/</code></strong> <strong>⇒</strong> Contiene los <strong>archivos de lectura crudos</strong> (<code>FASTQ</code>) de todas las muestras de 16S, preparados para su procesamiento con QIIME2. Aquí se mantiene la correspondencia entre los identificadores de las muestras y sus archivos de lectura, garantizando la trazabilidad desde los datos originales hasta los resultados finales.
+</li>
+<li>
+<strong><code>03-EXT-25-Metagenomic/Resultados/Def_(16S/18S/ITS)/</code></strong> <strong>⇒</strong> Carpeta principal que agrupa los <strong>resultados procesados</strong> por QIIME2 y los análisis de predicción funcional de las comunidades microbianas. Su contenido se organiza de forma modular:
+<ul>
+<li>
+<strong><code>core-metrics-results/</code></strong> <strong>→</strong> Contiene archivos <code>.qzv</code> generados por QIIME2 con métricas de diversidad alfa y beta, composición microbiana y análisis de distancia entre muestras. Estos ficheros pueden visualizarse interactivamente mediante <a href="https://view.qiime2.org/" target="_blank" class="normalink">QIIME2 View</a> o dentro de este informe.
+</li>
+<li>
+<strong><code>sample-metadata.tsv</code></strong> <strong>→</strong> Archivo de metadatos de las muestras, incluyendo información sobre tipo de muestra, condición experimental, replicados y otros atributos relevantes. Este archivo es fundamental para realizar análisis estadísticos y comparativos precisos.
+</li>
+<li>
+<strong><code>exported/</code></strong> <strong>→</strong> Contiene resultados de <strong>abundancia diferencial</strong> exportados para análisis complementarios en R o Excel. La organización interna incluye subcarpetas por nivel taxonómico (<code>genero/</code>, <code>familia/</code>), cada una con:
+<ul>
+<li>
+Archivos <code>.xlsx</code> con los resultados estadísticos de las comparaciones entre grupos.
+</li>
+<li>
+Gráficos tipo <em>volcano</em> que destacan los organismos más y menos abundantes, facilitando la interpretación rápida de los cambios significativos.
+</li>
+</ul>
+</li>
+<li>
+<strong>Resultados de predicción funcional (PICRUSt / Pycrust)</strong> <strong>→</strong> Archivos ubicados directamente en <code>Resultados/Def_(16S/18S/ITS)/</code> que contienen nombres indicativos como <code>MetagenomeSeq</code>, <code>glm_test_p_values</code> o <code>pca_p_0,05_all</code>. Estos ficheros permiten evaluar la potencial funcionalidad de las comunidades microbianas, identificando rutas metabólicas o funciones asociadas a los organismos más abundantes.
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>
+Esta organización clara y modular no solo facilita la generación automática del informe, sino que también garantiza que todos los datos y resultados sean fácilmente localizables, interpretables y reutilizables. Es especialmente útil para la documentación de proyectos de largo plazo, revisiones posteriores o colaboración entre diferentes miembros del equipo de análisis.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab1-seccion3" class="titulo2">
+<p>3<span>.</span> Generación automatizada del informe</p>
+</div>
+<p>
+Una vez obtenidos los datos procesados mediante los workflows de <strong>miARma‑Seq</strong> (control de calidad) y <strong>QIIME2</strong> (análisis metagenómico) y mostrada la estructura del directorio en el cuál se encuentran los resultados generados a partir de todo el proceso de análisis, el siguiente paso consiste en la <strong>generación automatizada del informe final</strong>. Esta sección tiene como objetivo documentar de manera clara y reproducible todo el proceso mediante el cual se construye el informe, detallando la organización de los archivos de ejecución, la integración de herramientas y la configuración utilizada.
+</p>
+<p>
+En particular, se abordarán los siguientes aspectos:
+</p>
+<ul>
+<li>
+<strong>3.1. Estructura del directorio de ejecución</strong> <strong>⇒</strong> Se mostrará la ubicación y organización de los archivos y carpetas desde los cuales se ejecuta el pipeline, incluyendo los scripts de Nextflow y los archivos asociados de Quarto. Esto permite al usuario técnico entender dónde se encuentran los datos, resultados intermedios y archivos de configuración necesarios para generar el informe.
+</li>
+<li>
+<strong>3.2. Integración de Nextflow y Quarto</strong> <strong>⇒</strong> Se explicará cómo se ha utilizado <code>Nextflow</code> para automatizar la ejecución de Quarto y la generación del informe final, describiendo el rol de los scripts principales (<code>main.nf</code>) y cómo se coordinan las distintas etapas del pipeline.
+</li>
+<li>
+<strong>3.3. Configuración del archivo <code>_quarto.yml</code> y <code>params.yml</code></strong> <strong>⇒</strong> Se mostrarán los archivos de configuración que permiten reproducir el informe exacto, incluyendo rutas de entrada, parámetros de análisis y opciones de visualización. Esta documentación asegura que cualquier usuario técnico pueda regenerar el informe con los mismos resultados en el futuro, garantizando trazabilidad y reproducibilidad.
+</li>
+</ul>
+<p>
+El propósito de esta sección es proporcionar un <strong>registro técnico completo</strong> del flujo de trabajo utilizado para generar el informe, de manera que cualquier persona que vuelva a consultar el proyecto pueda entender de forma clara cómo se ensamblaron los datos, qué herramientas se utilizaron y cómo se configuró todo el entorno de ejecución.
+</p>
+<div style="height: 15x; background-color: transparent;">
+
+</div>
+<div id="tab1-seccion3.1" class="titulo3">
+<p>3.1. Estructura del directorio de ejecución</p>
+</div>
+<p>
+En esta subsección se describe la <strong>estructura de archivos y carpetas</strong> desde la cual se ejecuta el pipeline de metagenómica que genera el informe automatizado. Esta información es fundamental para entender cómo se organizan los datos de entrada, los resultados intermedios y los archivos de configuración de Quarto y Nextflow.
+</p>
+<p>
+La ruta raíz desde la cual se ejecuta este pipeline es:
+</p>
+<p><code>/workspace/GenoScribe/2-pipelines/3-metagenomic</code></p>
+<p>
+A continuación se presenta la estructura completa del directorio correspondiente a este proyecto. Es importante destacar que los elementos listados (tanto archivos como subcarpetas) no representan enlaces interactivos, sino que se muestran únicamente para ilustrar la organización interna de los contenidos. Esta representación permite al lector comprender de manera clara y visual cómo se distribuyen los distintos componentes del proyecto, facilitando la navegación conceptual del directorio sin necesidad de acceder directamente a cada archivo.
+</p>
+<div class="box-files">
+<ul class="box-files">
+<li class="file-folder">
+report
+</li>
+<li class="file-folder">
+resources
+</li>
+<li class="file-folder">
+work
+</li>
+<li class="file-yml">
+_quarto.yml
+</li>
+<li class="file-qmd">
+index.qmd
+</li>
+<li class="file-nf">
+main.nf
+</li>
+<li class="file-config">
+nextflow.config
+</li>
+<li class="file-yml">
+params.yml
+</li>
+<li class="file-sh">
+run_cleaning_dir.sh
+</li>
+<li class="file-sh">
+run_pipeline_shell.sh
+</li>
+<li class="file-sh">
+run_pipeline_shiny.sh
+</li>
+</ul>
+</div>
+<p style="text-align:center;">
+<a href="../../../../../../workspace/GenoScribe/2-pipelines/3-metagenomic" target="_blank" class="boton-files"> <i class="fa-solid fa-folder-open"></i> Explorar los archivos de la carpeta “3-metagenomic” aquí </a>
+</p>
+<p>
+A continuación se detalla la organización principal del directorio raíz del pipeline (<code>3-metagenomic</code>). Esta descripción está pensada como referencia técnica: indica qué hace cada archivo o carpeta, dónde se guardan los datos generados y cómo se conectan las piezas para producir el <em>report</em> final.
+</p>
+<div class="items">
+<ul>
+<li>
+<strong><code>_quarto.yml</code>, <code>index.qmd</code></strong> <strong>⇒</strong> Archivos base de <strong>Quarto</strong> que definen la estructura del informe (toc, formatos, parámetros globales) y la página de índice. Cada pestaña del informe está representada por un <code>.qmd</code>.
+</li>
+<li>
+<strong><code>main.nf</code>, <code>nextflow.config</code>, <code>params.yml</code></strong> <strong>⇒</strong> Ficheros de control del pipeline de <strong>Nextflow</strong>:
+<ul>
+<li>
+<code>main.nf</code> <strong>→</strong> script principal que orquesta las tareas (organización de los resultados, creación de scripts de configuración y renderizado del informe).
+</li>
+<li>
+<code>nextflow.config</code> <strong>→</strong> configuración de ejecución (perfiles, recursos, módulos, rutas por defecto).
+</li>
+<li>
+<code>params.yml</code> <strong>→</strong> parámetros concretos del proyecto (paths de entrada, opciones del pipeline) — generado o rellenado por el usuario/Nextflow para cada corrida.
+</li>
+</ul>
+</li>
+<li>
+<strong><code>report/</code></strong> <strong>⇒</strong> Carpeta de salida donde Nextflow / Quarto depositan el informe final (HTML) y materiales derivados listos para compartir.
+</li>
+<li>
+<strong><code>resources/</code></strong> <strong>⇒</strong> Repositorio local de recursos y de los resultados consolidados. A alto nivel:
+<ul>
+<li>
+<code>resources/1-essential/</code> <strong>→</strong> recursos usados por las plantillas y por los <code>.qmd</code>:
+<ul>
+<li>
+<code>1-images/</code> <strong>→</strong> iconos y gráficas (portada, diagramas de workflow, favicon, etc.).
+</li>
+<li>
+<code>2-archives/</code> <strong>→</strong> copias de ficheros de interés (scripts, logs, ejemplos de <code>.ini</code>/<code>.sh</code>) usados como referencia o para descarga en la pestaña de metodología.
+</li>
+<li>
+<code>3-scripts/</code> <strong>→</strong> scripts auxiliares (R, Quarto templates, CSS, JS, Python y Bash) que apoyan la construcción del informe y la generación de artefactos (p.&nbsp;ej. <code>yaml_generator.py</code>).
+</li>
+</ul>
+</li>
+<li>
+<code>resources/2-nextflow-results/</code> <strong>→</strong> ubicación donde Nextflow consolida los resultados del/los proyecto(s):
+<ul>
+<li>
+<code>1-project-data/{nombre_del_proyecto}/</code> <strong>→</strong> copia local del proyecto procesado (entrada + resultados). Nextflow copia aquí los datos de trabajo para que Quarto los consuma de forma estable y reproducible.
+</li>
+<li>
+<code>2-fastqc-report/</code> <strong>→</strong> salida centralizada de los reports de FastQC / MultiQC generados por el QC inicial.
+</li>
+<li>
+<code>3-analisis-estadistico/</code> <strong>→</strong> resultados exportados y productos intermedios listos para análisis estadísticos adicionales (por ejemplo exportes para R, tablas xlsx, gráficas volcán, etc.).
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong><code>run_cleaning_dir.sh</code>, <code>run_pipeline_shell.sh</code>, <code>run_pipeline_shiny.sh</code></strong> <strong>⇒</strong> Scripts de <strong>utilidades</strong> en la raíz.
+<ul>
+<li>
+<code>run_pipeline_shell.sh</code> <strong>→</strong> wrapper para lanzar el pipeline desde la terminal (ejecuta Nextflow con el perfil/params adecuados).
+</li>
+<li>
+<code>run_pipeline_shiny.sh</code> <strong>→</strong> invoca una interfaz gráfica (Shiny) que permite ejecutar el pipeline mediante un formulario para usuarios menos técnicos.
+</li>
+<li>
+<code>run_cleaning_dir.sh</code> <strong>→</strong> script para limpiar caches y ficheros temporales (útil para liberar espacio, especialmente cuando los resultados y cachés de Nextflow crecen mucho).
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>
+Una vez comentada la estructura general del directorio de ejecución, se puede señalar que el pipeline está organizado de manera modular para asegurar la reproducibilidad, la trazabilidad de los resultados y la claridad en la generación del informe. Los archivos <code>.qmd</code> representan las pestañas y subsecciones del informe, mientras que Nextflow se encarga de consolidar los resultados previos, generar reportes adicionales cuando es necesario y coordinar la ejecución de Quarto para producir el documento final.
+</p>
+<p>
+Dentro de <code>resources/1-essential/3-scripts/2-quarto</code> se mantienen dos versiones de las plantillas: <code>1-full-version</code>, que incluye la pestaña de metodología y todas las secciones detalladas de análisis, y <code>2-compact-version</code>, que omite la pestaña de metodología y ofrece una versión más compacta del informe. Cada archivo <code>.qmd</code> corresponde a una pestaña o subsección específica.
+</p>
+<p>
+Nextflow utiliza los resultados existentes del análisis metagenómico (control de calidad, abundancias y predicciones funcionales) almacenados en <code>resources/2-nextflow-results/1-project-data/{nombre_del_proyecto}</code> y realiza operaciones adicionales como la consolidación de resultados, generación de reportes MultiQC en <code>2-fastqc-report</code> y preparación de datos estadísticos en <code>3-analisis-estadistico</code>. Asimismo, genera los archivos de configuración que Quarto requiere, incluyendo <code>params.yml</code> y, mediante <code>yaml_generator.py</code>, <code>_quarto.yml</code> con los parámetros y rutas específicos del proyecto, para asegurar que la renderización del informe sea reproducible y consistente.
+</p>
+<p>
+Para generar el informe, Nextflow invoca <code>quarto render</code> sobre los <code>.qmd</code> y los archivos de parámetros correspondientes, produciendo el HTML final en <code>report/</code>. Los scripts auxiliares en la raíz del proyecto, como <code>run_pipeline_shell.sh</code>, <code>run_pipeline_shiny.sh</code> y <code>run_cleaning_dir.sh</code>, permiten ejecutar el pipeline desde la terminal, mediante interfaz gráfica o limpiar caches y directorios temporales respectivamente.
+</p>
+<p>
+Para reproducir un informe exacto, se requiere disponer de la copia completa de los resultados en <code>resources/2-nextflow-results/1-project-data/{nombre_del_proyecto}</code>, así como de los archivos <code>params.yml</code> y <code>_quarto.yml</code> generados durante la ejecución. Esta estructura modular facilita la localización de los archivos necesarios y asegura que cualquier usuario pueda reconstruir el informe de manera consistente.
+</p>
+<p>
+Para detalles adicionales y pasos exactos de ejecución, se recomienda consultar la guía oficial del proyecto en GitHub: <a href="https://github.com/adrichez/GenoScribe/blob/main/6-info/3_METAGENOMIC_GUIDE.md" target="_blank" class="normalink">GenoScribe: Guía del Pipeline para Metagenómica</a>.
+</p>
+<div style="height: 15x; background-color: transparent;">
+
+</div>
+<div id="tab1-seccion3.2" class="titulo3">
+<p>3.2. Integración de Nextflow y Quarto</p>
+</div>
+<p>
+La integración entre <strong>Nextflow</strong> y <strong>Quarto</strong> constituye la base técnica que permite generar de forma automatizada el informe final a partir de los resultados del análisis metagenómico. Este enfoque busca asegurar <strong>reproducibilidad</strong>, <strong>modularidad</strong> y <strong>trazabilidad</strong>, evitando la dependencia de pasos manuales y reduciendo el riesgo de inconsistencias entre los resultados y la documentación generada. A diferencia de un pipeline clásico, en este caso Nextflow no ejecuta los procesos analíticos de miARma-Seq ni de QIIME 2, sino que <strong>consume sus resultados</strong> ya generados, realiza operaciones intermedias necesarias (copias estructuradas, generación de reportes auxiliares, preparación de parámetros) y finalmente <strong>invoca Quarto</strong> para la construcción del informe.
+</p>
+<p style="margin-botton: -25px">
+El esquema general es el siguiente:
+</p><ol>
+<li>
+Se define un conjunto de parámetros y rutas base mediante <code>nextflow.config</code>.
+</li>
+<li>
+Nextflow inicia el pipeline, copia los archivos esenciales del proyecto a una estructura de trabajo reproducible, y ejecuta procesos auxiliares como MultiQC sobre los reportes de control de calidad.
+</li>
+<li>
+Se generan o actualizan los archivos de configuración que Quarto utilizará (<code>params.yml</code> y <code>_quarto.yml</code>).
+</li>
+<li>
+Finalmente, se invoca <code>quarto render</code> para ensamblar el informe HTML final de manera completamente automatizada.
+</li>
+</ol>
+<p></p>
+<p style="margin-top: -25px">
+El archivo de configuración <strong><code>nextflow.config</code></strong>, ubicado en <code>/workspace/GenoScribe/2-pipelines/3-metagenomic/nextflow.config</code>, es el punto de partida de esta integración. Define las variables globales del pipeline, incluyendo:
+</p>
+<ul>
+<li>
+<strong><code>outdir</code></strong> <strong>⇒</strong> Ruta de salida estándar donde se almacenarán los resultados y el informe final.
+</li>
+<li>
+<strong><code>project_path</code></strong> <strong>⇒</strong> Ubicación del proyecto analizado, que contiene la estructura de directorios generada previamente por miARma-Seq y QIIME 2.
+</li>
+<li>
+<strong><code>metagenomic_type</code></strong> <strong>⇒</strong> Indicador numérico que representa el marcador analizado (<strong>1: 16S, 2: 18S, 3: ITS, 4: 16S-18S, 5: 16S-ITS, 6: 18S-ITS, 7: 16S-18S-ITS</strong>). Esta información permite determinar dinámicamente qué resultados se incluirán en el informe.
+</li>
+<li>
+<strong><code>report_version</code></strong> <strong>⇒</strong> Define la versión del informe a generar (<strong>full</strong> o <strong>compact</strong>), lo cual condiciona las pestañas y contenidos que Quarto renderizará.
+</li>
+</ul>
+<p>
+Una vez comentado esto, podemos visualizar dicho archivo mediante el siguiente <code>iframe</code>, así como explorarlo de forma más detallada en una página completa o descargarlo (hay que abrir el informe mediante un servidor para que esta acción funcione, como ya se ha mencionado).
+</p>
+<!-- IFRAME para nextflow.config -->
+<div class="iframe-container">
+<p><iframe src="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/nextflow.txt" frameborder="0" style="height: 500px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/nextflow.txt" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Ver archivo completo en una nueva página </a></p>
+<p><a href="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/nextflow.config" download="nextflow.config" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo </a></p>
+</div>
+<p>
+El archivo <strong><code>main.nf</code></strong>, ubicado en <code>/workspace/GenoScribe/2-pipelines/3-metagenomic/main.nf</code>, constituye el núcleo del pipeline y orquesta los diferentes procesos necesarios para la preparación del informe. Entre las etapas más relevantes que gestiona este script se incluyen:
+</p>
+<ul>
+<li>
+<strong>Copia estructurada de archivos del proyecto</strong> <strong>⇒</strong> Se seleccionan únicamente los elementos esenciales (sin archivos de gran tamaño como FASTQ o BAM) para trasladarlos a <code>resources/2-nextflow-results/1-project-data/</code>. Esto garantiza que Quarto trabaje sobre una estructura consolidada y ligera.
+</li>
+<li>
+<strong>Ejecución de MultiQC</strong> <strong>⇒</strong> A partir de los reportes de control de calidad (FastQC) generados en miARma-Seq, se ejecuta MultiQC para unificar la información y facilitar su visualización en el informe final.
+</li>
+<li>
+<strong>Preparación de parámetros para Quarto</strong> <strong>⇒</strong> A partir de las variables definidas en <code>nextflow.config</code>, se generan los archivos <code>params.yml</code> y <code>_quarto.yml</code> (este último, mediante <code>yaml_generator.py</code>), los cuales actúan como interfaz entre el pipeline y Quarto.
+</li>
+<li>
+<strong>Renderizado del informe</strong> <strong>⇒</strong> Cuando todos los procesos previos han finalizado satisfactoriamente, se invoca <code>quarto render</code> para construir el informe HTML en la carpeta <code>report/</code>. Esto asegura que el informe se genere siempre con datos completos y parámetros consistentes.
+</li>
+</ul>
+<p>
+De igual modo, podemos visualizar este archivo mediante el siguiente <code>iframe</code>, así como explorarlo de forma más detallada en una página completa o descargándolo.
+</p>
+<!-- IFRAME para main.nf -->
+<div class="iframe-container">
+<p><iframe src="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/main.txt" frameborder="0" style="height: 500px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<!-- Botón ver archivo completo -->
+<p><a href="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/miARma_workflow.txt" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Ver archivo completo en una nueva página </a></p>
+<p><!-- Botón descargar archivo --> <a href="../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_workflow.ini" download="miARma_workflow.ini" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo </a></p>
+</div>
+<p>
+Este diseño modular permite ampliar o modificar el pipeline fácilmente sin comprometer su reproducibilidad. Al separar claramente las etapas de preparación de datos y la generación del informe, se facilita la trazabilidad de cada componente y se asegura que cualquier informe pueda ser <strong>reconstruido en el futuro</strong> a partir de los mismos parámetros y estructura de resultados.
+</p>
+<div style="height: 15x; background-color: transparent;">
+
+</div>
+<div id="tab1-seccion3.3" class="titulo3">
+<p>3.3. Configuración del archivo _quarto.yml y params.yml</p>
+</div>
+<p>
+Una vez ejecutado el pipeline de <strong>Nextflow</strong>, se generan los archivos de configuración <strong><code>_quarto.yml</code></strong> y <strong><code>params.yml</code></strong>. Estos archivos constituyen la interfaz entre el pipeline y <strong>Quarto</strong>, permitiendo que el último paso del flujo de trabajo ejecute <code>quarto render</code> y construya el informe HTML final a partir de los datos y parámetros proporcionados.
+</p>
+<p>
+El archivo <code>params.yml</code> contiene todos los parámetros específicos de la ejecución, incluyendo rutas de archivos, opciones de visualización, marcador analizado, versión del informe y metadatos relevantes del proyecto. Por su parte, <code>_quarto.yml</code> establece la estructura del informe, definiendo las plantillas, pestañas, secciones a renderizar y rutas internas, mediante la ejecución del script <code>yaml_generator.py</code>. Juntos, estos archivos permiten que la generación del informe sea completamente automatizada, consistente y reproducible.
+</p>
+<p>
+A continuación se puede visualizar <code>params.yml</code> mediante un <code>iframe</code>, explorar su contenido de manera interactiva, o abrirlo en una página completa y descargarlo si se desea:
+</p>
+<!-- IFRAME para params.yml -->
+<div class="iframe-container">
+<p><iframe src="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/params.txt" frameborder="0" style="height: 500px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/params.txt" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Ver archivo completo en una nueva página </a></p>
+<p><a href="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/params.yml" download="params_yml" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo </a></p>
+</div>
+<p>
+Una vez comprendido el contenido de <code>params.yml</code>, se puede observar <code>_quarto.yml</code>, que actúa como guía estructural para Quarto, indicando qué plantillas y secciones deben incluirse y cómo deben organizarse dentro del informe. Este archivo es esencial para que <code>quarto render</code> genere un documento final coherente con los datos del proyecto.
+</p>
+<!-- IFRAME para _quarto.yml -->
+<div class="iframe-container">
+<p><iframe src="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/_quarto.txt" frameborder="0" style="height: 500px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/_quarto.txt" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Ver archivo completo en una nueva página </a></p>
+<p><a href="../../../../../../resources/1-essential/2-archives/2-tmp/tab1-metodologia/_quarto.yml" download="quarto_yml" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo </a></p>
+</div>
+<p>
+Esta arquitectura garantiza que cualquier informe pueda ser reproducido en el futuro de manera exacta, siempre que se disponga de los mismos resultados consolidados en <code>resources/2-nextflow-results/1-project-data/nombre_del_proyecto</code> y de los archivos <code>params.yml</code> y <code>_quarto.yml</code> generados por el pipeline. La separación clara entre la preparación de datos y la generación del informe asegura trazabilidad, modularidad y consistencia en los reportes finales.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab1-seccion4" class="titulo2">
+<p>4<span>.</span> Manuales, repositorios y documentación complementaria</p>
+</div>
+<p>
+Esta sección final cierra la pestaña de metodología, dirigida principalmente a usuarios interesados en comprender en detalle cómo se ha generado el informe, qué datos se han utilizado y cómo se ha estructurado la integración entre Nextflow y Quarto. La información aquí proporcionada permite acceder a recursos adicionales, consultar la documentación técnica y localizar los repositorios de código para revisar o reutilizar los scripts empleados.
+</p>
+<p>
+De manera similar a las tarjetas de inicio, se presentan a continuación algunas tarjetas informativas que facilitan el acceso rápido a los recursos clave relacionados con este proyecto:
+</p>
+<div class="contact-cards">
+<div class="contact-card blue">
+<i class="fa-brands fa-github fa-2x"></i>
+<p>
+<strong>Repositorio de código</strong>
+</p>
+<p><a href="https://github.com/adrichez/GenoScribe" target="_blank">GitHub del proyecto</a></p>
+</div>
+<div class="contact-card green">
+<i class="fa-solid fa-book fa-2x"></i>
+<p>
+<strong>Documentación</strong>
+</p>
+<p><a href="https://github.com/adrichez/GenoScribe/blob/main/6-info/3_METAGENOMIC_GUIDE.md" target="_blank">Manual de uso</a></p>
+</div>
+<div class="contact-card purple">
+<i class="fa-solid fa-calendar fa-2x"></i>
+<p>
+<strong>Fecha de creación del informe</strong>
+</p>
+<p><span>2025-11-26</span></p>
+</div>
+</div>
+<p style="margin-top: 25px;">
+Para cualquier duda adicional o consultas de soporte, se puede recurrir a los datos de contacto que se muestran en la pestaña de inicio del informe, donde se incluyen enlaces a la Unidad de Bioinformática del CSIC y al correo de soporte.
+</p>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../4-javascript/chatbot.js"></script>
+
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="../../../../../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>q2_metadata : tabulate</title>
+    <link rel="stylesheet" href="./q2templateassets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./q2templateassets/css/normalize.css"/>
+    <link rel="stylesheet" href="./q2templateassets/css/base-template.css"/>
+    <script src="./q2templateassets/js/jquery-3.2.0.min.js" charset="utf-8"></script>
+    <script src="./q2templateassets/js/bootstrap.min.js" charset="utf-8"></script>
+    
+<style>
+/* SPINKIT */
+
+/*
+The MIT License (MIT)
+
+Copyright (c) 2015-2020 Tobias Ahlin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+.spinner {
+  margin: 100px auto;
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.spinner > div {
+  background-color: #333;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+
+  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% {
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+</style>
+
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div id="q2templatesheader" class="row">
+        <div class="col-lg-12">
+          <a href="http://qiime2.org/">
+            <img src="./q2templateassets/img/qiime2-rect-200.png"
+            alt="QIIME 2">
+          </a>
+        </div>
+      </div>
+        
+  <div class="row">
+    <div class="col-lg-12">
+      <p>
+        <a href="metadata.tsv" target="_blank" rel="noopener noreferrer" class="btn btn-default">
+          Download metadata TSV file
+        </a>
+      </p>
+      <p>
+        This file won't necessarily reflect dynamic sorting or filtering
+        options based on the interactive table below.
+      </p>
+      <table id="table" class="table table-hover table-striped table-bordered"></table>
+      <div id="loading" class="spinner">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+      </div>
+    </div>
+  </div>
+  <link rel="stylesheet" type="text/css" href="./css/datatables.min.css"/>
+  <script type="text/javascript" src="./js/datatables.min.js"></script>
+
+  
+  
+
+
+
+<script type="text/javascript">
+  function handleErrors(errors, element, msg) {
+    console.error(errors);
+    msg = msg === undefined ? '' : msg + '<br><br>';
+    var helpMsg = '<p class="alert alert-danger"> \
+                   There was an error loading and rendering the \
+                   visualization.<br><br>' + msg + 'Please \
+                   copy-and-paste the following error messages when \
+                   reporting this error (please be aware that the content \
+                   of your analysis data and/or metadata is included in \
+                   these messages):</p>';
+    var helpMsgDiv = $('<div></div>');
+    helpMsgDiv.append(helpMsg);
+    helpMsgDiv.append('<pre><code>' + errors.join('\n\n') + '</code></pre>');
+    element.replaceWith(helpMsgDiv);
+  }
+  window.onerror = function(error) {
+    handleErrors([error], $('#loading'));
+  };
+</script>
+  <script id="data" type="application/json">{"columns":[["sample-id",""],["input","numeric"],["filtered","numeric"],["percentage of input passed filter","numeric"],["denoised","numeric"],["merged","numeric"],["percentage of input merged","numeric"],["non-chimeric","numeric"],["percentage of input non-chimeric","numeric"]],"index":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"data":[["NGS001-23_16S_41",109642.0,81674.0,74.49,76463.0,63702.0,58.1,61701.0,56.27],["NGS001-23_16S_42",110784.0,82704.0,74.65,77254.0,65274.0,58.92,63359.0,57.19],["NGS001-23_16S_43",96595.0,72248.0,74.79,67459.0,55748.0,57.71,53871.0,55.77],["NGS001-23_16S_44",106599.0,77818.0,73.0,71984.0,57649.0,54.08,55390.0,51.96],["NGS001-23_16S_47",107948.0,80038.0,74.14,75586.0,66028.0,61.17,64087.0,59.37],["NGS001-23_16S_48",107254.0,80366.0,74.93,75090.0,62459.0,58.23,60500.0,56.41],["NGS069-23_16S_29",40406.0,19472.0,48.19,17001.0,10959.0,27.12,10348.0,25.61],["NGS069-23_16S_30",50045.0,41650.0,83.23,37487.0,31037.0,62.02,30217.0,60.38],["NGS069-23_16S_31",66578.0,56179.0,84.38,50867.0,41863.0,62.88,40553.0,60.91],["NGS069-23_16S_32",81306.0,68295.0,84.0,61420.0,51182.0,62.95,49709.0,61.14],["NGS069-23_16S_35",77484.0,65281.0,84.25,61205.0,52459.0,67.7,49735.0,64.19],["NGS069-23_16S_36",94384.0,80788.0,85.6,75606.0,64588.0,68.43,59472.0,63.01],["NGS069-24-16S-1",146241.0,106795.0,73.03,99571.0,82059.0,56.11,78445.0,53.64],["NGS069-24-16S-2",97181.0,77479.0,79.73,71738.0,58901.0,60.61,56704.0,58.35],["NGS069-24-16S-3",80508.0,63371.0,78.71,58349.0,46663.0,57.96,45002.0,55.9],["NGS069-24-16S-4",86398.0,66529.0,77.0,61323.0,49015.0,56.73,46886.0,54.27],["NGS069-24-16S-5",70939.0,56173.0,79.18,50943.0,39724.0,56.0,38048.0,53.63],["NGS069-24-16S-6",115410.0,90453.0,78.38,84233.0,69741.0,60.43,66627.0,57.73],["NGS069-24-16S-7",68791.0,52544.0,76.38,48300.0,39027.0,56.73,37496.0,54.51],["NGS069-24-16S-8",129633.0,101641.0,78.41,95458.0,82005.0,63.26,77877.0,60.07],["NGS069-24-16S-9",128854.0,102211.0,79.32,95564.0,80977.0,62.84,77342.0,60.02]]}</script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      var loading = $('#loading');
+      var helpMsg = 'You can download the normalized TSV above and load in \
+                     an external application such as Microsoft Excel or \
+                     Google Sheets. The metadata file can also be used \
+                     anywhere metadata is accepted in QIIME 2.';
+      // Don't let the default error handler pick this error up,
+      // since we want to supply our own error message.
+      try {
+        var data = JSON.parse(document.getElementById('data').innerHTML);
+      } catch(error) {
+        // From include 'js-error-handler.html'
+        handleErrors([error], loading, helpMsg);
+      }
+
+      // Manually set the directive label
+      data.columns[0][1] = '#q2:types';
+
+      // Construct initial table header
+      var table = $('#table'), head = $('<thead></thead>'), row = $('<tr></tr>');
+      table.append(head), head.append(row);
+      $.each(data.columns, function(i, val) {
+        row.append(function() {
+          var cell = '<th>' + val[0] + '<br>';
+          if (i === 0) {
+            cell += '<span class="label label-default">' + val[1]  + '</span>';
+          } else {
+            var type = val[1] === 'numeric' ? 'primary' : 'success';
+            cell += '<span class="label label-' + type + '">' + val[1] +'</span>';
+          }
+          cell += '</th>';
+          return cell;
+        });
+      });
+
+      table
+        .on('init.dt', function() {
+          loading.remove();
+          console.log('Successfully loaded table!');
+        })
+        .on('error.dt', function(error, settings, techNote, message) {
+          // From 'js-error-handler.html'
+          handleErrors([error, settings, techNote, message], loading, helpMsg);
+        })
+        .DataTable({
+          data: data.data,
+          fixedHeader: true,
+          pageLength: 100,
+          dom: 'frtip',
+        });
+    });
+  </script>
+
+    </div>
+    <script type="text/javascript">
+      if (window.frameElement) {
+          document.getElementById('q2templatesheader').remove();
+      }
+    </script>
+    
+    
+  </body>
+</html>

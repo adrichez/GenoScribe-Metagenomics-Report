@@ -1,0 +1,235 @@
+---
+title: "Metagenomic Report"
+
+include-in-header:
+  text: |
+    <link rel="shortcut icon" href="../../../../../1-images/icons/favicon.svg"/>
+    <link rel="icon" type="image/x-icon" href="../../../../../1-images/icons/favicon.ico">
+
+params:
+  project_path: ""
+  metagenomic_type: ""
+  report_version: ""
+---
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{=html}
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        Este chat permite consultar de manera interactiva la información contenida en un informe específico. 
+        Para ello, se ha alimentado el sistema con el contenido del propio informe, junto con documentos externos en formato PDF y HTML, así como sesiones de preguntas y respuestas (QA). 
+        Al formular una pregunta, el chat busca los fragmentos más relevantes de todos estos documentos mediante técnicas de procesamiento de lenguaje natural ligero y comparaciones basadas en similitud de vectores (medida de coseno). 
+        A partir de los fragmentos seleccionados, se genera un resumen que intenta ofrecer una respuesta coherente y compacta a la consulta realizada.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es de prueba. No se utilizan grandes modelos de lenguaje, por lo que las respuestas pueden ser aproximadas y no siempre completamente precisas. 
+        El objetivo principal es proporcionar una visualización rápida y útil de la información contenida en los documentos, facilitando la exploración del contenido del informe de manera interactiva.
+      </p>
+      
+      <p>
+        Actualmente, los resultados no son muy precisos debido al uso de modelos muy básicos, seleccionados para que la aplicación sea rápida y ejecutable en todo tipo de dispositivos sin necesidad de servidores externos. 
+        Sin embargo, la base del sistema permite mejorar notablemente los resultados en el futuro mediante el uso de modelos más potentes o la integración con APIs externas, ofreciendo así un rendimiento y precisión significativamente superiores.
+        Para iniciar, basta con escribir su pregunta en el campo de texto inferior.
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta..."/>
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+```
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Incluir Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 3: ANÁLISIS | 8. CONCLUSIONES Y PERSPECTIVAS -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<div class="informe-titulo-tab">
+  <h1>Pestaña</h1>
+  <h2>Análisis 18S bioinformático completo</h2>
+</div>
+
+<div class="informe-titulo-seccion-unique">
+  <h1>Sección 8</h1>
+  <h2>Conclusiones y perspectivas</h2>
+</div>
+
+<div class="flecha-abajo">
+  ▼
+</div>
+
+
+<div class="informe-resumen">
+  <h2>Conclusiones y perspectivas</h2>
+
+  <p>
+    Esta sección final cumple la función de <strong>cerrar e integrar el conjunto de análisis presentados a lo largo del informe metagenómico 18S</strong>. Más que enumerar hallazgos específicos, busca ofrecer una <strong>mirada global y contextualizada</strong> sobre los resultados obtenidos, resaltando su relevancia dentro del marco experimental y su potencial para generar nuevas preguntas de investigación.
+  </p>
+
+  <p>
+    A partir de la caracterización taxonómica, la evaluación de la diversidad microbiana y los análisis comparativos realizados, es posible <strong>esbozar interpretaciones generales</strong> acerca de la dinámica microbiana en las condiciones estudiadas. Estas reflexiones permiten situar los resultados en un contexto biológico más amplio, sin perder de vista las limitaciones inherentes al enfoque utilizado y la necesidad de análisis complementarios.
+  </p>
+
+  <p>
+    Finalmente, esta sección <strong>abre la puerta a desarrollos futuros</strong>, como la validación experimental de patrones observados, la integración con otros tipos de datos (multi-ómicos, ambientales, clínicos o fenotípicos) y la exploración de nuevas hipótesis derivadas del presente estudio. De este modo, no solo se cierra el informe, sino que se sientan las bases para <strong>líneas de investigación y aplicaciones posteriores</strong>.
+  </p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo-toc">
+  Tabla de contenidos de esta sección
+</div>
+
+<div class="toc">
+  <ul>
+    <li>
+      <a href="#tab3-seccion6">
+        8<span>.</span> Conclusiones y perspectivas
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<!-- REDACCIÓN -->
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+
+<div style="height: 25px; background-color: transparent;"></div>
+
+<div class="titulo1" id="tab3-seccion6">
+  8<span>.</span> Conclusiones y perspectivas
+</div>
+
+<p>
+  A lo largo de este informe se ha llevado a cabo un <strong>análisis metagenómico 18S integral</strong>, cubriendo de forma estructurada todas las etapas esenciales del flujo de trabajo típico en estudios de caracterización microbiana a partir de secuenciación de amplicones. 
+  Desde la <strong>revisión inicial de las muestras y sus metadatos</strong>, pasando por el <strong>control de calidad de las lecturas crudas</strong>, la <strong>generación de ASVs y tablas de abundancia</strong>, la <strong>asignación taxonómica y filogenética</strong>, y los <strong>análisis de diversidad microbiana</strong>, hasta la <strong>predicción funcional de rutas metabólicas</strong>, cada paso ha sido implementado con un enfoque riguroso, reproducible y orientado a la interpretación biológica.
+</p>
+
+<p>
+  La <strong>revisión inicial</strong> permitió asegurar la coherencia entre las muestras, sus condiciones experimentales y los metadatos asociados, garantizando una base sólida para los análisis posteriores. Los procedimientos de <strong>control de calidad y preprocesamiento</strong> contribuyeron a eliminar lecturas de baja calidad, minimizando sesgos y fortaleciendo la robustez del conjunto final de secuencias utilizadas.
+</p>
+
+<p>
+  A través de la <strong>asignación taxonómica</strong> y la <strong>construcción de la tabla de abundancia</strong>, se obtuvo una caracterización detallada de las comunidades microbianas presentes en las muestras. Los análisis de <strong>diversidad alfa y beta</strong> revelaron patrones de riqueza, equidad y diferenciación entre grupos experimentales, proporcionando una visión ecológica integral de las comunidades microbianas.
+</p>
+
+<p>
+  Por su parte, el <strong>análisis diferencial de abundancia</strong> permitió identificar taxones con patrones significativamente distintos entre condiciones, aportando evidencias sobre <strong>potenciales asociaciones microbianas con variables biológicas o ambientales</strong>. 
+  La <strong>predicción funcional</strong> mediante herramientas como <code>PICRUSt2</code> complementó esta visión taxonómica con información sobre posibles <strong>funciones metabólicas y rutas biológicas</strong> implicadas en las diferencias observadas, enriqueciendo la interpretación ecológica y funcional del estudio.
+</p>
+
+<p>
+  En conjunto, este informe constituye una <strong>plataforma analítica completa</strong> para la exploración y contextualización de comunidades microbianas mediante técnicas de secuenciación 18S. 
+  Sus resultados no solo permiten caracterizar la estructura y función potencial de los microbiomas analizados, sino que también ofrecen una base sólida para la <strong>formulación de hipótesis biológicas</strong> y la planificación de estudios posteriores.
+</p>
+
+<p>
+  Como proyección hacia líneas futuras, se recomienda:
+</p>
+
+<ul>
+  <li>
+    <strong>Validar experimentalmente taxones o funciones de interés</strong> mediante técnicas complementarias como qPCR dirigida, cultivos específicos o análisis metabolómicos.
+  </li>
+  <li>
+    Incorporar <strong>datos ambientales, fenotípicos o clínicos</strong> para explorar correlaciones y generar modelos explicativos más completos.
+  </li>
+  <li>
+    Desarrollar <strong>análisis de redes microbianas</strong> que permitan identificar interacciones potenciales entre taxones y estructuras comunitarias complejas.
+  </li>
+  <li>
+    Avanzar hacia <strong>enfoques multi-ómicos</strong> (por ejemplo, metagenómica shotgun, transcriptómica, metabolómica) que ofrezcan una resolución funcional más profunda.
+  </li>
+  <li>
+    Aplicar <strong>modelos computacionales avanzados</strong> y métodos estadísticos robustos para identificar patrones ecológicos no evidentes y mejorar la capacidad predictiva del análisis.
+  </li>
+</ul>
+
+<p>
+  En definitiva, este análisis representa un paso fundamental hacia la <strong>comprensión ecológica y funcional de las comunidades microbianas</strong> estudiadas, y sienta las bases para investigaciones futuras más específicas, integradoras y orientadas a responder preguntas biológicas o biotecnológicas de mayor complejidad.
+</p>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../../4-javascript/chatbot.js"></script>

@@ -1,0 +1,1262 @@
+---
+title: "Metagenomic Report"
+
+include-in-header:
+  text: |
+    <link rel="shortcut icon" href="../../../../../1-images/icons/favicon.svg"/>
+    <link rel="icon" type="image/x-icon" href="../../../../../1-images/icons/favicon.ico">
+
+params:
+  project_path: ""
+  metagenomic_type: ""
+  report_version: ""
+---
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{=html}
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        ¡Hola! Soy <strong>Geni</strong>, el asistente inteligente de <strong>GenoScribe</strong>.  
+        Estoy aquí para ayudarte a explorar de forma interactiva el contenido de este informe bioinformático.
+      </p>
+
+      <p>
+        Cuando me haces una pregunta, primero intento reconocer si coincide con alguno de los patrones o expresiones que conozco.  
+        Si encuentro una coincidencia, te responderé directamente con una respuesta predefinida, diseñada para ser rápida, clara e incluso un poco ingeniosa.  
+        Si no reconozco el patrón, entonces activo mis herramientas de búsqueda: genero representaciones vectoriales (embeddings) y busco los fragmentos más relevantes entre varios documentos —incluyendo el propio informe, archivos PDF y HTML externos, y sesiones de preguntas y respuestas (QA).  
+        A partir de esa información, creo un resumen que intenta ofrecerte una respuesta coherente y útil basada en el contenido existente.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es experimental. No utilizo grandes modelos de lenguaje, por lo que algunas respuestas pueden ser aproximadas o incompletas.  
+        El objetivo principal es facilitar una visualización rápida, comprensible y reproducible de la información contenida en los documentos, permitiendo una exploración más dinámica del informe.
+      </p>
+
+      <p>
+        Actualmente, los resultados pueden variar en precisión, ya que empleo modelos ligeros y locales para asegurar que la aplicación funcione en cualquier entorno sin necesidad de servidores externos.  
+        Sin embargo, la estructura del sistema está preparada para mejorar notablemente su rendimiento en el futuro mediante la integración con modelos más avanzados o APIs externas.  
+        Para comenzar, simplemente escribe tu pregunta en el campo inferior y deja que yo me encargue del resto. ¡Prometo poner todo mi código en ello!
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta..."/>
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+```
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Incluir Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 3: ANÁLISIS 18S | 2. CONTROL DE CALIDAD Y PREPROCESAMIENTO -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{r}
+# Cargar librerías
+library(glue)
+library(fs)
+library(stringr)
+library(dplyr)
+
+
+# Rutas clave
+ruta_qmd <- getwd()
+ruta_metagenomic_pipeline <- file.path("..", "..", "..", "..", "..", "..", "..")
+nombre_proyecto <- basename(params$project_path)
+
+
+# Rutas de resultados Nextflow
+ruta_nextflow_results <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results")
+ruta_proyecto_relativa <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results", "1-project-data", nombre_proyecto)
+
+
+# Rutas de la carpeta Def
+ruta_Def_18S <- file.path(params$project_path, "Resultados", "Def_18S")
+ruta_Def_18S_relativa <- file.path(ruta_proyecto_relativa, "Resultados", "Def_18S")
+
+ruta_Def_18S_sample_metadata <- file.path(ruta_Def_18S, "sample-metadata.tsv")
+ruta_Def_18S_sample_metadata_relativa <- file.path(ruta_Def_18S_relativa, "sample-metadata.tsv")
+
+# Leer el archivo TSV de metadatos
+Def_18S_sample_metadata_relativa <- read.delim(
+  ruta_Def_18S_sample_metadata_relativa,
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  fill = TRUE
+)
+
+
+# Ruta de la carpeta reads
+ruta_reads_18S <- file.path(params$project_path, "Analisis", "reads", "18S")
+
+
+# Ruta resultados fastqc
+ruta_Pre_fastqc_results <- file.path(params$project_path, "Analisis", "miARma_18S", "Pre_fastqc_results")
+ruta_Pre_fastqc_results_relativa <- file.path(ruta_proyecto_relativa, "Analisis", "miARma_18S", "Pre_fastqc_results")
+
+
+# Obtener archivos .html de FastQC
+archivos_html <- dir_ls(ruta_Pre_fastqc_results_relativa, regexp = "\\.html$")
+
+# Extraer IDs de muestra (quitando el sufijo que empieza por _R1 o _R2 hasta el final)
+ids_muestras <- archivos_html |>
+  path_file() |>
+  str_replace("_(R1|R2).*_fastqc\\.html$", "") |>
+  unique()
+
+
+# Listar archivos fastqc y fastq
+archivos_fastqc <- list.files(
+  ruta_Pre_fastqc_results, 
+  pattern = "_fastqc\\.html$", 
+  full.names = FALSE
+)
+
+archivos_fastq <- list.files(
+  ruta_reads_18S, 
+  pattern = "\\.fastq\\.gz$", 
+  full.names = FALSE
+)
+
+# Extraer identificadores base (quitando sufijo R1/R2 + lo que siga hasta el final)
+ids_fastqc <- unique(gsub("_(R1|R2).*_fastqc\\.html$", "", archivos_fastqc))
+ids_fastq  <- unique(gsub("_(R1|R2).*\\.fastq\\.gz$", "", archivos_fastq))
+ids_targets <- Def_18S_sample_metadata_relativa[, 1]
+
+# Identificar diferencias
+fastqc_no_targets  <- setdiff(ids_fastqc, ids_targets)
+targets_no_fastqc  <- setdiff(ids_targets, ids_fastqc)
+targets_no_reads   <- setdiff(ids_targets, ids_fastq)
+
+
+# Ruta absoluta al informe MULTIQC
+ruta_multiqc_report <- file.path(ruta_nextflow_results, "2-fastqc-report", "results-multiqc-18S", "multiqc_report.html")
+```
+
+
+<div class="informe-titulo-tab">
+  <h1>Pestaña</h1>
+  <h2>Análisis 18S bioinformático completo</h2>
+</div>
+
+<div class="informe-titulo-seccion-unique">
+  <h1>Sección 2</h1>
+  <h2>Control de calidad y preprocesamiento</h2>
+</div>
+
+<div class="flecha-abajo">
+  ▼
+</div>
+
+
+<div class="informe-resumen">
+  <h2>Resumen</h2>
+
+  <p>
+    En esta sección se presentan los resultados del control de calidad y preprocesamiento aplicados a los archivos <code>.fastq.gz</code> generados tras la secuenciación 18S. La evaluación se ha realizado de manera integral, considerando tanto el conjunto completo de muestras como el detalle de cada una, mediante las herramientas <strong>FastQC</strong> y <strong>MultiQC</strong>, integradas en el pipeline automatizado desarrollado con <strong>Nextflow</strong>.
+  </p>
+
+  <p>
+    Se comenzó con un <strong>resumen global</strong> de calidad a través de <strong>MultiQC</strong>, que proporciona métricas agregadas para todas las muestras, permitiendo identificar patrones generales, diferencias sistemáticas o posibles anomalías globales. Este informe interactivo facilita la visualización rápida de la calidad general del dataset.
+  </p>
+
+  <p>
+    A continuación, se generaron los informes individuales de <strong>FastQC</strong> para cada muestra y dirección de lectura (<em>Forward</em> y <em>Reverse</em>). Cada informe incluye métricas clave como calidad por base, contenido GC, niveles de duplicación y presencia de adaptadores, y se presenta embebido mediante <code>iframe</code> para una visualización interactiva. Esto permite una revisión detallada y específica de la calidad de cada muestra.
+  </p>
+
+  <p>
+    Posteriormente, se realizó la <strong>demultiplexación</strong> mediante QIIME2. Este informe proporciona información esencial sobre la separación de lecturas por muestra, incluyendo la tabla de recuentos por muestra (<code>per-sample-fastq-counts.tsv</code>) y un visor interactivo (<code>index.html</code>) que permite inspeccionar la calidad por posición, distribuciones de longitud y posibles problemas en la asignación de índices. La revisión de esta sección permite identificar muestras con recuentos insuficientes, desequilibrios entre grupos o errores de indexación, y define los parámetros iniciales para el truncado y filtrado.
+  </p>
+
+  <p>
+    Tras la revisión de la demultiplexación y los informes de calidad, se contempló la posible aplicación de <em>trimming</em> para eliminar adaptadores residuales, primers o bases de baja calidad. La información de las secciones previas guía la selección de parámetros de truncado (<code>trunc_len_f</code> y <code>trunc_len_r</code>) asegurando que se mantenga un solapamiento suficiente entre lecturas forward y reverse para los pasos posteriores.
+  </p>
+
+  <p>
+    La etapa de <strong>filtrado y depuración de lecturas</strong> se realiza mediante <strong>DADA2</strong> o <strong>Deblur</strong>, generando secuencias representativas únicas, conocidas como ASVs, corrigiendo errores de secuenciación y eliminando quimeras. Esta fase asegura que los datos sean fiables y comparables entre muestras, y se documenta en la <code>stats-dada2.qzv</code>, que resume cuántas lecturas iniciales pasaron por cada paso del proceso.
+  </p>
+
+  <p>
+    La tabla de abundancia de ASVs (<code>table.qza / table.qzv</code>) y las secuencias representativas (<code>rep-seqs.qza / rep-seqs.qzv</code>) se analizarán en la siguiente sección que detallaremos más adelante: <a href="3-asvs-abundancia.html#tab3-seccion3" class="normalink">3. Generación de ASVs y tabla de abundancia</a>.
+  </p>
+
+  <p>
+    En conjunto, esta sección proporciona una visión completa del control de calidad, demultiplexación, preprocesamiento y depuración de errores aplicada a las lecturas 18S. La integración de todos estos apartados garantiza que el informe sea <strong>automatizado, reproducible</strong> y adaptable a cualquier conjunto de muestras, manteniendo siempre la trazabilidad de los datos procesados.
+  </p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo-toc">
+  Tabla de contenidos de esta sección
+</div>
+
+```{=html}
+```{r, results="asis"}
+cat('
+<div class="toc">
+  <ul>
+    <li>
+      <a href="#tab3-seccion2">
+        2<span>.</span> Control de calidad y preprocesamiento
+      </a>
+      <ul>
+        <li>
+          <a href="#tab3-seccion2.1">
+            2.1. Informes de calidad externos (FastQC / MultiQC)
+          </a>
+          <ul>
+            <li>
+              <a href="#tab3-seccion2.1.1">
+                2.1.1. Resumen global (MultiQC)
+              </a>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.1.2">
+                2.1.2. Calidad individual (FastQC)
+              </a>
+              <ul>
+                <li>
+                  <a href="#tab3-seccion2.1.2.1">
+                    2.1.2.1. Evaluación de calidad de lecturas Forward
+                  </a>
+                  <ul>
+')
+
+i <- 1
+for (id in ids_muestras) {
+  cat(glue::glue('<li><a href="#tab3-seccion2.1.2.1.{i}">2.1.2.1.{i}. Muestra: {id}</a></li>\n'))
+  i <- i + 1
+}
+
+cat('
+                  </ul>
+                </li>
+                <li>
+                  <a href="#tab3-seccion2.1.2.2">
+                    2.1.2.2. Evaluación de calidad de lecturas Backward
+                  </a>
+                  <ul>
+')
+
+i <- 1
+for (id in ids_muestras) {
+  cat(glue::glue('<li><a href="#tab3-seccion2.1.2.2.{i}">2.1.2.2.{i}. Muestra: {id}</a></li>\n'))
+  i <- i + 1
+}
+
+cat('
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.2">
+                2.2. Informe de demultiplexación en QIIME2
+              </a>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.3">
+                2.3. Reflexiones sobre la calidad observada
+              </a>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.4">
+                2.4. Trimming y filtrado inicial
+              </a>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.5">
+                2.5. Denoising y depuración con DADA2 / Deblur
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+')
+```
+```
+
+```{=html}
+```
+
+
+
+
+
+
+
+
+
+
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<!-- REDACCIÓN -->
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+
+<div style="height: 25px; background-color: transparent;"></div>
+
+<div class="titulo1" id="tab3-seccion2">
+  2<span>.</span> Control de calidad y preprocesamiento
+</div>
+
+<p>
+  En esta sección se aborda el <strong>control de calidad y preprocesamiento</strong> de los datos de secuenciación 18S, un paso fundamental para garantizar la fiabilidad de los análisis posteriores. Se comienza evaluando la calidad de las lecturas mediante <strong>FastQC</strong> y <strong>MultiQC</strong>, proporcionando una visión tanto global de todas las muestras como detallada de cada una de ellas por dirección de lectura (<em>Forward</em> y <em>Backward</em>).
+</p>
+
+<p>
+  Tras la revisión de calidad, se procederá a la etapa de <strong>filtrado y depuración de lecturas</strong> utilizando <strong>DADA2</strong> o <strong>Deblur</strong>. Este paso asegura la eliminación de secuencias de baja calidad, quimeras y otras lecturas problemáticas, generando un conjunto de ASVs confiables que servirán como base para los análisis de diversidad y composición taxonómica. 
+</p>
+
+<p>
+  A continuación, se presenta la primera subsección que describe detalladamente los <strong>informes de calidad generados por FastQC y MultiQC</strong>, incluyendo tanto el resumen global como la evaluación individual de cada muestra.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion2.1">
+  2.1. Informes de calidad externos (FastQC / MultiQC)
+</div>
+
+<p>
+  La calidad de las lecturas en un experimento de metagenómica 18S es un factor determinante para la fiabilidad de los análisis posteriores, como la asignación taxonómica, la estimación de abundancias relativas y la identificación de posibles contaminantes. Por ello, uno de los primeros pasos fundamentales en cualquier pipeline de procesamiento es la evaluación de la calidad de los archivos <code>.fastq.gz</code> generados tras la secuenciación.
+</p>
+
+<p>
+  En este estudio, el control de calidad se aplicó a <strong>todas las muestras disponibles inicialmente</strong>, independientemente de si fueron seleccionadas o no para el análisis principal. Este enfoque garantiza una evaluación exhaustiva del conjunto completo de datos, permitiendo detectar posibles problemas antes de la selección definitiva de las muestras a analizar.
+</p>
+
+<p>
+  El control de calidad se llevó a cabo utilizando la herramienta <strong>FastQC</strong>, la cual genera informes detallados por muestra sobre diversos aspectos de la calidad de las secuencias. Posteriormente, todos estos informes individuales fueron integrados mediante <strong>MultiQC</strong>, generando un único informe resumen interactivo. Este informe consolidado permite inspeccionar de forma global y comparativa el estado de las lecturas en todas las muestras procesadas.
+</p>
+
+<p>
+  Las métricas clave incluidas en el informe de MultiQC son, entre otras:
+</p>
+
+<ul>
+  <li>Calidad de las bases a lo largo de las lecturas (per base sequence quality).</li>
+  <li>Contenido de GC.</li>
+  <li>Presencia de adaptadores o secuencias no deseadas.</li>
+  <li>Nivel de duplicación de las secuencias.</li>
+  <li>Distribución de la longitud de las lecturas.</li>
+</ul>
+
+<p>
+  Estas métricas permiten identificar posibles problemas técnicos, como errores en la amplificación por PCR, contaminación cruzada, presencia de adaptadores o sesgos sistemáticos de la secuenciación. Esta información es esencial para tomar decisiones informadas sobre la necesidad de aplicar pasos de filtrado o recorte antes de proceder con la inferencia taxonómica y el análisis de diversidad.
+</p>
+
+<p>
+  Es importante señalar que <strong>no todas las muestras presentes en el informe de MultiQC están incluidas en el análisis principal</strong>. La tabla de metadatos presentada anteriormente recoge únicamente las muestras seleccionadas para las etapas posteriores de análisis taxonómico y de diversidad, por lo que puede haber discrepancias entre ambas.
+</p>
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo3" id="tab3-seccion2.1.1">
+  2.1.1. Resumen global (MultiQC)
+</div>
+
+<p>
+  El análisis conjunto de calidad se ha llevado a cabo mediante la herramienta <strong>MultiQC</strong>, la cual agrega y resume de forma interactiva los informes individuales generados previamente por <strong>FastQC</strong> para cada una de las muestras procesadas. Este enfoque permite visualizar en un único informe consolidado todas las métricas relevantes, facilitando la comparación entre muestras y la identificación de posibles anomalías sistemáticas, errores técnicos o patrones comunes.
+</p>
+
+<p>
+  El informe MultiQC incluye gráficos y tablas que resumen aspectos clave como la calidad por base, el contenido GC, la longitud de las lecturas, la presencia de adaptadores o contaminantes y otros indicadores de calidad. Esta visión global resulta especialmente útil para tomar decisiones sobre la limpieza y filtrado de las lecturas antes del alineamiento.
+</p>
+
+<p>
+  A continuación, se muestra el informe interactivo integrado directamente en este documento. También se proporciona un botón para abrirlo en una nueva pestaña, lo cual permite una visualización más cómoda y detallada si se desea explorar el informe en mayor profundidad.
+</p>
+
+```{r, results='asis'}
+cat(glue::glue('
+<div class="iframe-container">
+  <iframe src="{ruta_multiqc_report}" frameborder="0" style="height: 700px;"></iframe>
+</div>
+
+<div style="display: flex; justify-content: center; gap: 25px;">
+  <a href="{ruta_multiqc_report}"
+    target="_blank" 
+    class="boton-iframe">
+    <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de MultiQC en una pestaña nueva
+  </a>
+  
+  <a href="{ruta_multiqc_report}"
+    download="{basename(ruta_multiqc_report)}"
+    class="boton-iframe-download">
+    <i class="fa-solid fa-file-arrow-down"></i> Descargar informe
+  </a>
+</div>
+'), sep = "\n")
+```
+
+<p>
+  En la siguiente sección se detallará el análisis individual de la calidad de cada muestra, diferenciando entre lecturas <em>forward</em> y <em>backward</em>, mediante la incorporación directa de los informes <strong>FastQC</strong> individuales generados automáticamente por la herramienta <strong>miARma‑Seq</strong>.
+</p>
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo3" id="tab3-seccion2.1.2">
+  2.1.2. Calidad individual (FastQC)
+</div>
+
+<p>
+  Tras la evaluación conjunta mediante <strong>MultiQC</strong>, esta subsección se centra en el análisis individualizado de cada una de las muestras a través de los informes generados por <strong>FastQC</strong>. Este enfoque permite inspeccionar con mayor nivel de detalle los distintos parámetros de calidad, identificando posibles incidencias específicas que podrían no ser evidentes en el análisis global.
+</p>
+
+<p>
+  En el contexto de un análisis <strong>metagenómico 18S</strong>, la fase de control de calidad es especialmente relevante, dado que el posterior procesamiento con herramientas como <strong>QIIME2</strong> o <strong>DADA2</strong> se basa en la precisión de las lecturas de amplicones. <strong>FastQC</strong> proporciona una evaluación visual e interactiva de aspectos fundamentales como la calidad por base a lo largo de las lecturas, el contenido de GC, la presencia de adaptadores o primers, la sobre-representación de secuencias y la longitud de las lecturas, parámetros que pueden influir directamente en la correcta inferencia de variantes de secuencia (ASVs/OTUs).
+</p>
+
+<p>
+  En este informe, cada muestra dispone de una sección dedicada organizada por tipo de lectura <em>(forward y reverse)</em>, donde se presenta su correspondiente informe <code>.html</code> de FastQC. Los informes han sido generados automáticamente por el pipeline <strong>miARma-Seq</strong> y se integran en este documento mediante una ventana interactiva para facilitar su visualización directa, junto con un botón de acceso para abrirlos en una pestaña nueva y explorar los resultados en mayor detalle.
+</p>
+
+<p>
+  Todos los informes individuales utilizados para generar el resumen de MultiQC se encontraban almacenados en el siguiente directorio en el momento de la generación de este informe:
+</p>
+
+```{r, results='asis'}
+cat(glue::glue('
+<code>{ruta_Pre_fastqc_results}</code>
+'), sep = "\n")
+```
+
+<p>
+  A continuación, se muestra el listado completo de los archivos de salida generados por <code>FastQC</code> para cada una de las muestras procesadas. Para cada muestra se generan dos archivos principales: un informe en formato <code>.html</code>, que ofrece una visualización interactiva de los resultados del control de calidad, y un archivo comprimido <code>.zip</code>, que contiene los archivos fuente utilizados para construir dicho informe, incluyendo datos tabulados, gráficos en formato <code>.png</code> y un resumen en texto plano.
+</p>
+
+<p>
+  Aunque es posible acceder a estos archivos directamente desde el visor interactivo que se presenta a continuación, se recomienda utilizar las secciones específicas por muestra situadas más abajo. En dichas secciones, los informes <code>.html</code> se integran directamente en el documento mediante <code>iframe</code>, junto con un botón de acceso para su visualización ampliada. Además, se proporciona contexto adicional para facilitar la interpretación de los resultados individuales.
+</p>
+
+<div class="box-files">
+
+```{r, results="asis"}
+if (!dir.exists(ruta_Pre_fastqc_results)) {
+  cat(sprintf('<p><em>La ruta "%s" no existe o no es accesible.</em></p>\n', ruta_Pre_fastqc_results_relativa))
+} else {
+  # Listar archivos con extensiones de interés
+  files <- list.files(ruta_Pre_fastqc_results_relativa, pattern = "\\.(html|zip|fastq\\.gz)$", full.names = FALSE)
+  
+  if (length(files) == 0) {
+    cat('<p><em>No se encontraron archivos con las extensiones esperadas en la carpeta especificada.</em></p>\n')
+  } else {
+    enlace <- ruta_Pre_fastqc_results_relativa
+    
+    cat("<ul>\n")
+    for (f in files) {
+      # Asignar clase según la extensión
+      clase <- if (grepl("\\.html$", f)) {
+        "file-html"
+      } else if (grepl("\\.zip$", f)) {
+        "file-zip"
+      } else if (grepl("\\.fastq\\.gz$", f)) {
+        "file-fastqgz"
+      } else {
+        "file-default"
+      }
+      
+      cat(sprintf('<li class="%s"><a href="%s/%s" target="_blank">%s</a></li>\n',
+                  clase, enlace, f, f))
+    }
+    cat("</ul>\n")
+  }
+}
+```
+
+</div>
+
+```{r, echo=FALSE, results="asis"}
+# Para que funcione con rutas absolutas
+enlace <- ruta_Pre_fastqc_results_relativa
+
+# Imprimir el enlace
+cat(glue::glue('
+<p style="text-align:center;">
+  <a href="{enlace}" target="_blank" class="boton-files">
+    <i class="fa-solid fa-folder-open"></i> Explorar los archivos de la carpeta "Pre_fastqc_results" aquí
+  </a>
+</p>
+'), sep = "\n")
+```
+
+<p>
+  Así, estos informes individuales generados por <strong>FastQC</strong> ofrecen una evaluación visual e interactiva de diversos aspectos clave de la calidad de las lecturas de secuenciación. Cada informe está estructurado en módulos que resumen métricas específicas, facilitando así la identificación de posibles problemas técnicos o artefactos introducidos durante la preparación de las librerías o el proceso de secuenciación.
+</p>
+
+
+<div class="divider"></div>
+
+<p>
+  A continuación se describe brevemente la información incluida en estos informes, accesibles, como ya hemos comentado, desde el visor interactivo anterior o más adelante desde cada apartado específico.
+</p>
+
+<ul>
+  <li><strong>Basic Statistics [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Información general sobre las secuencias, incluyendo el número total de lecturas, su longitud media y el contenido GC. Estos parámetros permiten confirmar que los datos cumplen con los criterios básicos de calidad esperados por la plataforma de secuenciación.</li>
+
+  <li><strong>Per base sequence quality [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Evalúa la calidad de las bases en cada posición de las lecturas. Una baja calidad al principio o final de las lecturas puede requerir recorte (trimming) para evitar errores en etapas posteriores.</li>
+
+  <li><strong>Per tile sequence quality [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Detecta anomalías en regiones específicas del flujo óptico del secuenciador. Problemas en este módulo pueden indicar fallos mecánicos o de iluminación que afectan localmente la calidad.</li>
+
+  <li><strong>Per sequence quality scores [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Muestra la distribución de puntuaciones de calidad para todas las lecturas. Una alta proporción de lecturas con baja calidad puede comprometer el análisis.</li>
+
+  <li><strong>Per base sequence content [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Analiza la proporción de nucleótidos (A, T, G, C) en cada posición. Desequilibrios importantes pueden reflejar sesgos de la librería o contaminación.</li>
+
+  <li><strong>Per sequence GC content [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Evalúa el contenido GC promedio por lectura. Desviaciones respecto al esperado para el organismo estudiado pueden indicar presencia de contaminantes o problemas en la preparación de la librería.</li>
+
+  <li><strong>Sequence Length Distribution [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Muestra la distribución de longitudes de las lecturas. Una distribución uniforme o acorde con el protocolo indica buena calidad, mientras que distribuciones anómalas pueden sugerir errores en el proceso de fragmentación o secuenciación.</li>
+
+  <li><strong>Sequence Duplication Levels [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Informa sobre la proporción de lecturas duplicadas. Un alto nivel puede deberse a sobre-secuenciación, baja complejidad de la muestra o problemas en la PCR.</li>
+
+  <li><strong>Overrepresented sequences [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Identifica secuencias que aparecen con frecuencia anormalmente alta, como adaptadores no eliminados, contaminantes o secuencias ribosomales.</li>
+
+  <li><strong>Adapter Content [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Detecta la presencia de secuencias adaptadoras dentro de las lecturas. Si se detectan, es necesario aplicar un paso de recorte (trimming) antes de continuar con el análisis.</li>
+</ul>
+
+<p>
+  Cada módulo es evaluado individualmente y clasificado como <span style="color: green;"><strong>PASS</strong></span>, <span style="color: orange;"><strong>WARNING</strong></span> o <span style="color: red;"><strong>FAIL</strong></span>. Un resultado <strong>PASS</strong> indica que el módulo cumple con los criterios de calidad recomendados. <strong>WARNING</strong> señala que se ha detectado una desviación leve o moderada que podría afectar algunos análisis dependiendo de la sensibilidad del downstream. <strong>FAIL</strong>, en cambio, indica problemas importantes que deberían ser corregidos o, al menos, tenidos en cuenta antes de continuar con el procesamiento de los datos.
+</p>
+
+<p>
+  Dicho esto, en las siguientes subsecciones se analizarán en detalle los resultados de calidad, distinguiendo entre lecturas <em>forward</em> y <em>backward</em>. Dentro de cada una, se presentará el informe individual correspondiente a cada muestra, integrado directamente en el documento para facilitar su consulta. Esta estructura permite una revisión ordenada y completa del estado de las lecturas, asegurando que cada muestra sea evaluada con el nivel de detalle necesario antes de proceder con las etapas posteriores del análisis.
+</p>
+
+
+
+
+
+
+<div style="height: 13px; background-color: transparent;"></div>
+
+<div class="titulo4" id="tab3-seccion2.1.2.1">
+  2.1.2.1. Evaluación de calidad de lecturas Forward
+</div>
+
+<p>
+  En este apartado se muestran los resultados del análisis de calidad correspondientes a las lecturas <strong>forward</strong> <em>(read 1)</em> de cada una de las muestras. Estas lecturas representan el primer extremo de los fragmentos secuenciados en protocolos <em>paired-end</em>, y su calidad es especialmente relevante para asegurar una alineación precisa y una cuantificación fiable en los pasos posteriores del análisis transcriptómico.
+</p>
+
+<p>
+  A continuación, se incluyen las evaluaciones individuales para cada muestra, organizadas de forma estructurada para facilitar su revisión. Esta presentación permite detectar con claridad posibles incidencias específicas en las lecturas <em>read 1</em>, como caídas de calidad en posiciones terminales, contaminación por adaptadores, sesgos en la composición de bases o niveles anómalos de duplicación. Identificar estos problemas a tiempo es crucial para garantizar la robustez y validez de los resultados obtenidos en las siguientes etapas del pipeline.
+</p>
+
+```{r, results='asis'}
+library(glue)
+library(stringr)
+library(fs)
+
+i <- 1
+
+for (id in ids_muestras) {
+  
+  # Buscar archivo R1 correspondiente al ID (sin asumir que hay _001 o no)
+  ruta_fasqc_R1 <- archivos_html[
+    str_detect(path_file(archivos_html), paste0("^", id, "_R1.*_fastqc\\.html$"))
+  ]
+  
+  if (length(ruta_fasqc_R1) == 0) {
+    warning(glue("⚠️ No se encontró archivo R1 para la muestra {id}"))
+    next
+  }
+  
+  cat(glue('
+  <div style="height: 10px; background-color: transparent;"></div>
+
+  <div class="titulo5" id="tab3-seccion2.1.2.1.{i}">
+    2.1.2.1.{i}. Muestra: {id}
+  </div>
+
+  <p>
+    A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>{id}</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+  </p>
+
+  <div class="iframe-container">
+    <iframe src="{ruta_fasqc_R1}" frameborder="0" style="height: 700px;"></iframe>
+  </div>
+
+  <div style="display: flex; justify-content: center; gap: 25px;">
+    <a href="{ruta_fasqc_R1}"
+      target="_blank" 
+      class="boton-iframe">
+      <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva
+    </a>
+    
+    <a href="{ruta_fasqc_R1}"
+      download="{basename(ruta_fasqc_R1)}"
+      class="boton-iframe-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar informe
+    </a>
+  </div>
+  '), sep = "\n")
+  
+  i <- i + 1
+}
+```
+
+
+
+
+
+
+<div style="height: 13px; background-color: transparent;"></div>
+
+<div class="titulo4" id="tab3-seccion2.1.2.2">
+  2.1.2.2. Evaluación de calidad de lecturas Backward
+</div>
+
+<p>
+  En esta sección se presentan los resultados del análisis de calidad correspondientes a las lecturas <strong>backward</strong> <em>(read 2)</em> de cada muestra. Estas lecturas representan el segundo extremo de los fragmentos secuenciados en protocolos <em>paired-end</em>, y complementan la información proporcionada por las lecturas <em>forward</em> para una reconstrucción más completa de las transcripciones.
+</p>
+
+<p>
+  A continuación, se muestran las evaluaciones individuales de calidad para las lecturas <em>read 2</em> por muestra, siguiendo el mismo formato estructurado que en el apartado anterior. Revisar cuidadosamente estos informes permite identificar posibles deficiencias específicas en las lecturas <em>backward</em>, como una menor calidad en las regiones finales, errores de secuenciación acumulativos o patrones inusuales en la distribución de bases. Estos aspectos son fundamentales para garantizar que ambas lecturas de cada fragmento contribuyan de forma fiable al análisis global.
+</p>
+
+```{r, results='asis'}
+library(glue)
+library(stringr)
+library(fs)
+
+i <- 1
+
+for (id in ids_muestras) {
+  
+  # Buscar archivo R2 correspondiente al ID (robusto a _001 u otros sufijos)
+  ruta_fasqc_R2 <- archivos_html[
+    str_detect(path_file(archivos_html), paste0("^", id, "_R2.*_fastqc\\.html$"))
+  ]
+  
+  if (length(ruta_fasqc_R2) == 0) {
+    warning(glue("⚠️ No se encontró archivo R2 para la muestra {id}"))
+    next
+  }
+  
+  cat(glue('
+  <div style="height: 10px; background-color: transparent;"></div>
+
+  <div class="titulo5" id="tab3-seccion2.1.2.2.{i}">
+    2.1.2.2.{i}. Muestra: {id}
+  </div>
+
+  <p>
+    A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>{id}</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+  </p>
+
+  <div class="iframe-container">
+    <iframe src="{ruta_fasqc_R2}" frameborder="0" style="height: 700px;"></iframe>
+  </div>
+
+  <div style="display: flex; justify-content: center; gap: 25px;">
+    <a href="{ruta_fasqc_R2}"
+      target="_blank" 
+      class="boton-iframe">
+      <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página
+    </a>
+    
+    <a href="{ruta_fasqc_R2}"
+      download="{basename(ruta_fasqc_R2)}"
+      class="boton-iframe-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar informe
+    </a>
+  </div>
+  '), sep = "\n")
+  
+  i <- i + 1
+}
+```
+
+
+
+
+
+
+
+
+
+
+<div class="titulo2" id="tab3-seccion2.2">
+  2.2. Informe de demultiplexación en QIIME2
+</div>
+
+```{r}
+# Definir ruta del archivo .qzv
+ruta_demux_qzv_relativa <- file.path(ruta_Def_18S_relativa, "demux.qzv")
+ruta_demux_qzv <- file.path(ruta_Def_18S, "demux.qzv")
+
+# Definir ruta de salida para el unzip
+ruta_Def_18S_unzip <- file.path(ruta_Def_18S_relativa, "unzip")
+ruta_unzip_demux <- file.path(ruta_Def_18S_unzip, "demux")
+
+# Crear carpeta de salida si no existe
+if (!dir.exists(ruta_Def_18S_unzip)) dir.create(ruta_Def_18S_unzip, recursive = TRUE)
+
+# Solo hacer unzip si el archivo existe
+if (file.exists(ruta_demux_qzv_relativa)) {
+  # Usando system2 para llamar a unzip desde R
+  system2("unzip", args = c("-o", shQuote(ruta_demux_qzv_relativa),
+                            "-d", shQuote(ruta_unzip_demux)))
+} else {
+  message("⚠️ El archivo stats-dada2.qzv no existe. Se omite el unzip.")
+}
+```
+
+```{r}
+# Comprobar que el unzip se ha realizado
+if (dir.exists(ruta_unzip_demux)) {
+  
+  # Listar subcarpetas dentro de la carpeta unzip (solo 1er nivel)
+  subcarpetas <- list.dirs(ruta_unzip_demux, recursive = FALSE, full.names = TRUE)
+  
+  if (length(subcarpetas) == 0) {
+    stop("No se encontró ninguna subcarpeta dentro de ", ruta_unzip_demux)
+  }
+  
+  # Tomamos la primera subcarpeta (la aleatoria)
+  carpeta_random <- subcarpetas[1]
+  
+  # Ruta a 'data'
+  ruta_data <- file.path(carpeta_random, "data")
+  
+  # Archivos dentro de 'data'
+  ruta_per_sample_fastq_counts_tsv <- file.path(ruta_data, "per-sample-fastq-counts.tsv")
+  ruta_index_html <- file.path(ruta_data, "index.html")
+  
+  # Comprobar que existen
+  if (!file.exists(ruta_per_sample_fastq_counts_tsv)) message("⚠️ per-sample-fastq-counts.tsv no encontrado")
+  if (!file.exists(ruta_index_html)) message("⚠️ index.html no encontrado")
+  
+} else {
+  message("⚠️ Carpeta de unzip no encontrada. No se puede acceder a los archivos.")
+}
+```
+
+<p>
+  Tras la evaluación inicial de calidad con <strong>FastQC / MultiQC</strong>, el siguiente paso del análisis consiste en revisar el informe de <em>demultiplexación</em> generado por QIIME2 (<code>demux.qzv</code>). Este archivo contiene información esencial sobre cómo se han separado las lecturas en función de los índices asignados a cada muestra y permite una primera inspección detallada del número de lecturas y de su calidad antes de aplicar procesos de filtrado o depuración. El archivo correspondiente se encuentra en el siguiente directorio:
+</p>
+
+```{r, results="asis"}
+if (file.exists(ruta_demux_qzv)) {
+  cat(glue::glue('
+<code>{ruta_demux_qzv}</code>
+'), sep = "\n")
+} else {
+  cat(glue::glue('
+⚠️ El archivo <code>demux.qzv</code> no existe en la ruta especificada: 
+<code>{ruta_demux_qzv}</code>
+'), sep = "\n")
+}
+```
+
+<p>
+  Al descomprimir <code>demux.qzv</code> se obtienen varios resultados intermedios. Entre ellos destaca el archivo <code>per-sample-fastq-counts.tsv</code>, que resume el número de lecturas forward y reverse asignadas a cada muestra tras la separación. La estructura de esta tabla es sencilla: en la primera columna aparecen los identificadores de las muestras y, en las dos siguientes, el número de secuencias detectadas para las lecturas forward y reverse, respectivamente. Por ejemplo:
+</p>
+
+<div style="text-align: center;">
+  <table style="border-collapse: collapse; margin: 0 auto; width: 60%;">
+    <thead>
+      <tr style="background-color: #055379; color: white;">
+        <th style="border: 1px solid #ccc; padding: 6px;">Sample ID</th>
+        <th style="border: 1px solid #ccc; padding: 6px;">Forward sequence count</th>
+        <th style="border: 1px solid #ccc; padding: 6px;">Backward sequence count</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border: 1px solid #ccc; padding: 6px;">NGS069-24-18S-1</td>
+        <td style="border: 1px solid #ccc; padding: 6px;">146241</td>
+        <td style="border: 1px solid #ccc; padding: 6px;">146241</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ccc; padding: 6px;">NGS069-24-18S-8</td>
+        <td style="border: 1px solid #ccc; padding: 6px;">129633</td>
+        <td style="border: 1px solid #ccc; padding: 6px;">129633</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ccc; padding: 6px;">NGS069-24-18S-9</td>
+        <td style="border: 1px solid #ccc; padding: 6px;">128854</td>
+        <td style="border: 1px solid #ccc; padding: 6px;">128854</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<p>
+  Este tipo de información resulta crítica porque permite identificar rápidamente si todas las muestras cuentan con un número suficiente de lecturas para los análisis posteriores. Muestras con un número muy bajo de secuencias pueden carecer de potencia estadística y comprometer la calidad de los resultados. Además, la tabla ayuda a comprobar la coherencia entre las lecturas forward y reverse: en condiciones normales los recuentos deben coincidir o diferir mínimamente, como se observa en el ejemplo, lo que confirma que la demultiplexación se realizó correctamente y que cada muestra dispone de sus pares de secuencias completos.
+</p>
+
+```{r}
+# Leer el archivo y mostrar tabla interactiva
+if (file.exists(ruta_per_sample_fastq_counts_tsv)) {
+  # Leer el archivo generado al descomprimir
+  library(readr)
+  per_sample_fastq_counts <- read_tsv(ruta_per_sample_fastq_counts_tsv, comment = "#", show_col_types = FALSE)
+  
+  # Tabla interactiva de metadatos
+  library(DT)
+  library(htmltools)
+  htmltools::div(
+    class = "scroll-y-max-500",
+    DT::datatable(
+      per_sample_fastq_counts,
+      options = list(
+        scrollX = TRUE,
+        paging = FALSE,
+        lengthChange = FALSE,
+        language = list(
+          url = '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+        )
+      ),
+      class = 'stripe hover compact'
+    )
+  )
+  
+} else {
+  cat(glue::glue('
+  cat("Archivo "per-sample-fastq-counts.tsv" no encontrado. Verifica la ruta.")
+  '), sep = "\n")
+}
+```
+
+```{r, results='asis'}
+if (file.exists(ruta_per_sample_fastq_counts_tsv)) {
+
+  cat(glue::glue('
+  <p style="text-align:center;">
+    <a href="{ruta_per_sample_fastq_counts_tsv}" 
+      download="{basename(ruta_per_sample_fastq_counts_tsv)}"  
+      class="boton-file-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo "per-sample-fastq-counts.tsv" original
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  Junto con esta tabla, el informe genera también un archivo <code>index.html</code> que contiene una representación interactiva de la información. Este visor es especialmente útil porque ofrece gráficas de calidad de las lecturas a lo largo de cada posición, tanto para forward como para reverse. Dichas gráficas permiten localizar con claridad los puntos en los que la calidad media y la mediana comienzan a descender, lo que constituye la referencia principal para establecer los parámetros de truncamiento (<code>trunc_len_f</code> y <code>trunc_len_r</code>) en los pasos posteriores de filtrado y depuración con DADA2 o Deblur. Además, incluye resúmenes de las longitudes de las secuencias y distribuciones estadísticas que permiten comprobar si la mayoría de las lecturas se ajustan a la región de amplicón esperada. En definitiva, el <code>index.html</code> actúa como una guía visual que facilita la toma de decisiones informadas sobre recortes, exclusión de muestras problemáticas y verificación del solapamiento mínimo necesario para el ensamblaje de pares de lectura.
+</p>
+
+<p>
+  Dicho esto, incluimos dicho informe a continuación mediante un <code>iframe</code> para poder visualizarlo de forma interactiva así como mediante un botón para poder abrirlo en pantalla completa en una nueva pestaña para explorarlo con más detalle:
+</p>
+
+```{r, results='asis'}
+# Generar iframe para Quarto si existe index.html
+if (file.exists(ruta_index_html)) {
+
+  cat(glue::glue('
+  <div class="iframe-container">
+    <iframe src="{ruta_index_html}" frameborder="0" style="height: 700px;"></iframe>
+  </div>
+
+  <p style="text-align:center;">
+    <a href="{ruta_index_html}" target="_blank" class="boton-iframe">
+      <i class="fa-solid fa-file-lines"></i> Abrir informe en nueva pestaña
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  A partir de este informe, el analista puede decidir si es necesario descartar muestras con una cobertura insuficiente, revisar posibles errores de indexación en aquellas que no presentan lecturas, o bien establecer de forma justificada los valores de truncado que maximicen la calidad de los datos sin perder la capacidad de ensamblar las lecturas forward y reverse. Todas estas decisiones deben documentarse cuidadosamente en el informe junto con las rutas a los archivos generados (<code>demux.qzv</code>, <code>per-sample-fastq-counts.tsv</code> e <code>index.html</code>), lo que asegura la trazabilidad del análisis y refuerza su reproducibilidad.
+</p>
+
+<p>
+  En resumen, el informe de demultiplexación constituye el puente entre el control de calidad inicial y los pasos de trimming y depuración. Gracias a la combinación de tablas cuantitativas y visualizaciones interactivas, ofrece una visión clara de la calidad y cantidad de las lecturas disponibles y orienta las decisiones críticas que determinarán la robustez de las etapas posteriores del pipeline.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div class="titulo2" id="tab3-seccion2.3">
+  2.3. Reflexiones finales sobre el control de calidad
+</div>
+
+<p>
+  <strong>¿Por qué es fundamental realizar un control de calidad en metagenómica 18S?</strong><br>
+</p>
+
+<p>
+  En estudios de <strong>secuenciación de amplicones 18S</strong>, la fiabilidad de los análisis posteriores depende críticamente de la calidad de las lecturas. Detectar tempranamente problemas como baja calidad en posiciones específicas, sesgos nucleotídicos, presencia de adaptadores residuales, primers no eliminados o contaminación cruzada es esencial para asegurar resultados precisos en etapas posteriores como el filtrado, la inferencia de variantes de secuencia (ASVs), la construcción de tablas de abundancia y los análisis taxonómicos o funcionales.
+</p>
+
+<p>
+  Una extensión clave de este control de calidad es el análisis de <strong>demultiplexación</strong> descrito en la <a href="#tab3-seccion2.2" class="normalink">sección 2.2. Informe de demultiplexación en QIIME2</a>. Allí se revisa la separación de lecturas por muestra, se comprueba que cada muestra dispone de un número adecuado de lecturas forward y reverse y se inspeccionan las gráficas de calidad y las distribuciones de longitud. Este paso permite identificar muestras con cobertura insuficiente, errores en los índices o solapamientos problemáticos antes de iniciar los procesos de trimming y depuración, asegurando que los datos que ingresan al pipeline son consistentes y fiables.
+</p>
+
+<p>
+  La presencia de lecturas de baja calidad o secuencias duplicadas puede introducir sesgos que afectan la estimación de diversidad microbiana y la identificación de OTUs o ASVs, generando posibles falsos positivos o negativos en la composición del microbioma. Por ello, un control de calidad riguroso —que ahora incluye tanto la inspección inicial con FastQC/MultiQC como la revisión del informe de demultiplexación— permite definir filtros adecuados para la limpieza de datos y garantiza la reproducibilidad de los análisis.
+</p>
+
+<div style="height: 5px; background-color: transparent;"></div>
+
+<p>
+  <strong>Conceptos clave a recordar:</strong>
+</p>
+
+<ul>
+  <li><strong>Lecturas forward (read 1) y reverse (read 2)</strong> <strong>&rArr;</strong> fragmentos secuenciados desde ambos extremos en la técnica paired-end, que aportan información complementaria para mejorar la resolución de variantes de secuencia y la detección de errores de secuenciación.</li>
+  <li><strong>Módulos de FastQC</strong> <strong>&rArr;</strong> métricas que evalúan calidad por base, contenido de GC, secuencias sobre-representadas, duplicaciones y adaptadores, permitiendo identificar problemas técnicos o biológicos específicos de cada muestra.</li>
+  <li><strong>MultiQC</strong> <strong>&rArr;</strong> herramienta que integra los informes individuales de FastQC, proporcionando una visión global que facilita la identificación de anomalías consistentes entre múltiples muestras y lotes de secuenciación.</li>
+  <li><strong>Informe de demultiplexación (2.2)</strong> <strong>&rArr;</strong> asegura que cada muestra posee un número suficiente de lecturas, verifica la coherencia entre forward y reverse y permite identificar problemas de indexación o de solapamiento que puedan afectar la depuración y ensamblaje posterior.</li>
+  <li><strong>Importancia para 18S</strong> <strong>&rArr;</strong> un control de calidad adecuado garantiza que la inferencia de ASVs/OTUs sea confiable, evitando errores en la taxonomía y en los análisis de diversidad alfa y beta.</li>
+</ul>
+
+<p>
+  En conjunto, este control de calidad integral constituye un pilar indispensable en cualquier pipeline de análisis de metagenómica 18S. La combinación de FastQC, MultiQC y la revisión de demultiplexación maximiza la confianza en los datos, reduce la introducción de artefactos y asegura que los resultados biológicos reflejen de manera precisa la composición y estructura real de las comunidades microbianas estudiadas.
+</p>
+
+<p>
+  Tras haber completado estas inspecciones y validaciones, se está preparado para proceder con la siguiente fase del flujo de trabajo, que consiste en el <a href="#tab3-seccion2.4" class="normalink">trimming y filtrado inicial</a>, donde se aplicarán los recortes de longitud y los filtros de calidad definidos a partir de la información obtenida en los pasos previos.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion2.4">
+  2.4. Trimming y filtrado inicial
+</div>
+
+<p>
+  Tras la evaluación de la calidad de las lecturas, tanto a nivel global con <a href="#tab3-seccion2.1.1" class="normalink">MultiQC</a> como individual para cada muestra y dirección de lectura con <a href="#tab3-seccion2.1.2" class="normalink">FastQC</a>, y considerando la información detallada en el <a href="#tab3-seccion2.2" class="normalink">Informe de demultiplexación en QIIME2</a> y las <a href="#tab3-seccion2.3" class="normalink">reflexiones finales sobre el control de calidad</a>, se plantea la fase de <em>trimming</em> y filtrado inicial de las secuencias.
+</p>
+
+<p>
+  Este paso consiste en recortar regiones potencialmente problemáticas de las lecturas, tales como adaptadores residuales, <em>primers</em> no deseados o bases de baja calidad en los extremos. La información obtenida del informe de demultiplexación —como la distribución de lecturas por muestra, la calidad por posición y la longitud de las lecturas— permite definir de forma justificada los parámetros de truncado (<code>trunc_len_f</code> y <code>trunc_len_r</code>) y asegurar que se mantiene un solapamiento adecuado entre lecturas forward y reverse.
+</p>
+
+<p>
+  Para orientar la decisión sobre qué recortes realizar, es fundamental observar patrones concretos en los informes de calidad y en el análisis de demultiplexación: caídas de calidad en posiciones específicas, picos anómalos de composición de nucleótidos, duplicaciones excesivas, muestras con recuentos muy bajos o indicios de errores de indexación o contaminación. Estos indicadores guían la selección de parámetros de trimming y permiten equilibrar la limpieza de las lecturas con la preservación de suficiente información para el análisis.
+</p>
+
+<p>
+  En conjunto, el <em>trimming</em> y filtrado inicial constituyen una preparación crítica para la siguiente fase, en la que se aplicará un filtrado más exhaustivo y la depuración de errores mediante <strong>DADA2</strong>. Gracias a la integración de la revisión de demultiplexación, FastQC y MultiQC, se asegura que las secuencias utilizadas para generar las ASVs sean de alta calidad, representativas y consistentes, lo que garantiza la fiabilidad de los análisis de abundancia y diversidad microbiana que se desarrollarán en las secciones posteriores.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion2.5">
+  2.5. Denoising y depuración con DADA2 / Deblur
+</div>
+
+```{r}
+# Definir ruta del archivo .qzv
+ruta_stats_dada2_qzv_relativa <- file.path(ruta_Def_18S_relativa, "stats-dada2.qzv")
+ruta_stats_dada2_qzv <- file.path(ruta_Def_18S, "stats-dada2.qzv")
+
+# Definir ruta de salida para el unzip
+ruta_Def_18S_unzip <- file.path(ruta_Def_18S_relativa, "unzip")
+ruta_unzip_stats_dada2 <- file.path(ruta_Def_18S_unzip, "stats-dada2")
+
+# Crear carpeta de salida si no existe
+if (!dir.exists(ruta_Def_18S_unzip)) dir.create(ruta_Def_18S_unzip, recursive = TRUE)
+
+# Solo hacer unzip si el archivo existe
+if (file.exists(ruta_stats_dada2_qzv_relativa)) {
+  # Usando system2 para llamar a unzip desde R
+  system2("unzip", args = c("-o", shQuote(ruta_stats_dada2_qzv_relativa),
+                            "-d", shQuote(ruta_unzip_stats_dada2)))
+} else {
+  message("⚠️ El archivo stats-dada2.qzv no existe. Se omite el unzip.")
+}
+```
+
+```{r}
+# Comprobar que el unzip se ha realizado
+if (dir.exists(ruta_unzip_stats_dada2)) {
+  
+  # Listar subcarpetas dentro de la carpeta unzip (solo 1er nivel)
+  subcarpetas <- list.dirs(ruta_unzip_stats_dada2, recursive = FALSE, full.names = TRUE)
+  
+  if (length(subcarpetas) == 0) {
+    stop("No se encontró ninguna subcarpeta dentro de ", ruta_unzip_stats_dada2)
+  }
+  
+  # Tomamos la primera subcarpeta (la aleatoria)
+  carpeta_random <- subcarpetas[1]
+  
+  # Ruta a 'data'
+  ruta_data <- file.path(carpeta_random, "data")
+  
+  # Archivos dentro de 'data'
+  ruta_metadata_tsv <- file.path(ruta_data, "metadata.tsv")
+  ruta_index_html <- file.path(ruta_data, "index.html")
+  
+  # Comprobar que existen
+  if (!file.exists(ruta_metadata_tsv)) message("⚠️ metadata.tsv no encontrado")
+  if (!file.exists(ruta_index_html)) message("⚠️ index.html no encontrado")
+  
+} else {
+  message("⚠️ Carpeta de unzip no encontrada. No se puede acceder a los archivos.")
+}
+```
+
+
+<p>
+  Tras la evaluación de la calidad de las lecturas y la posible aplicación de <em>trimming</em> para eliminar adaptadores, primers o bases de baja calidad, se procede a la depuración de errores mediante <strong>DADA2</strong> (o <strong>Deblur</strong>). 
+  El objetivo de este paso es generar secuencias representativas únicas, conocidas como ASVs (Amplicon Sequence Variants), corrigiendo errores de secuenciación y eliminando quimeras. 
+  Esta depuración asegura que los datos que se utilicen en los análisis posteriores sean fiables y comparables entre muestras.
+</p>
+
+<p>
+  DADA2/Deblur toma como entrada las lecturas filtradas y produce varios outputs fundamentales. Entre ellos se incluyen:
+</p>
+
+<ul>
+  <li>
+    <strong>Tabla de estadísticas de filtrado y depuración</strong> (<code>stats-dada2.qzv</code>) <strong>&rArr;</strong> este archivo contiene información detallada por muestra sobre cada paso del procesamiento de las lecturas. Incluye el número de lecturas iniciales, las que pasaron los filtros de calidad, las que fueron <em>denoised</em>, las que se <em>merged</em> correctamente y las libres de quimeras. 
+    En esta sección nos centraremos en <em>analizar estas métricas</em>, ya que permiten evaluar cuantitativamente la eficiencia del filtrado y depuración, detectar posibles pérdidas de datos excesivas y asegurar que las lecturas que pasan a la etapa de generación de ASVs son fiables y representativas.
+  </li>
+  <li>
+    <strong>Tabla de abundancia de ASVs</strong> (<code>table.qza / table.qzv</code>) <strong>&rArr;</strong> esta tabla resume la frecuencia con la que cada ASV aparece en cada muestra, constituyendo la base cuantitativa para todos los análisis de diversidad y composición taxonómica. Cada fila representa un ASV y cada columna una muestra, con valores que reflejan el número de lecturas asignadas a esa variante. 
+    Aunque en esta sección solo se menciona su existencia, su análisis detallado se realiza en la sección siguiente: 
+    <a href="3-asvs-abundancia.html#tab3-seccion3" class="normalink">3. Generación de ASVs y tabla de abundancia</a>. 
+    Entender esta tabla es clave para interpretar la abundancia relativa de cada variante y la comparabilidad entre muestras.
+  </li>
+  <li>
+    <strong>Secuencias representativas de cada ASV</strong> (<code>rep-seqs.qza / rep-seqs.qzv</code>) <strong>&rArr;</strong> estas secuencias contienen la información exacta de cada variante encontrada tras el proceso de depuración y son fundamentales para la identificación taxonómica y la construcción de filogenias. 
+    Cada ASV se representa por una secuencia única que, junto con la tabla de abundancia, permite analizar la diversidad y composición microbiana. Su estudio también se realiza en la sección siguiente, ya que complementa la información cuantitativa con la información de secuencia precisa de cada variante.
+  </li>
+</ul>
+
+<p>
+  El archivo <code>stats-dada2.qzv</code> es fundamental para documentar y comprender el proceso de depuración de lecturas. Proporciona información cuantitativa por muestra sobre cada etapa del procesamiento, incluyendo:
+</p>
+
+<ul>
+  <li>Número total de lecturas iniciales.</li>
+  <li>Lecturas que pasaron los filtros de calidad.</li>
+  <li>Lecturas <em>denoised</em> y correctamente <em>merged</em>.</li>
+  <li>Lecturas libres de quimeras.</li>
+</ul>
+
+<p>
+  Analizar estos datos permite responder preguntas clave, como: ¿Qué porcentaje de lecturas iniciales pasó por todas las etapas de filtrado y depuración? ¿Cuántas se descartaron por baja calidad o por ser quimeras? ¿Cuántas lecturas quedan disponibles para la construcción de ASVs? Esta evaluación es esencial para garantizar la fiabilidad de los análisis de abundancia y diversidad que se presentan posteriormente.
+</p>
+
+<p>
+  Dicho archivo <code>stats-dada2.qzv</code> a partir del cuál se extraerán los datos mencionados anteriormente, se puede encontrar en el siguiente directorio que se muestra a continuación:
+</p>
+
+```{r, results="asis"}
+if (file.exists(ruta_stats_dada2_qzv)) {
+  cat(glue::glue('
+<code>{ruta_stats_dada2_qzv}</code>
+'), sep = "\n")
+} else {
+  cat(glue::glue('
+⚠️ El archivo <code>stats-dada2.qzv</code> no existe en la ruta especificada: 
+<code>{ruta_stats_dada2_qzv}</code>
+'), sep = "\n")
+}
+```
+
+<p>
+  Una vez evaluados estos datos, se puede proceder a la generación de la tabla de abundancia de ASVs y al análisis de diversidad microbiana, que se describen en la sección siguiente. 
+</p>
+
+<p>
+  A modo de resumen, la siguiente tabla (extraída de <code>stats-dada2.qzv</code>) sintetiza, por muestra, el número de lecturas procesadas en cada paso y el porcentaje correspondiente respecto al total de lecturas de entrada, proporcionando una visión clara de la eficiencia del filtrado y depuración.
+</p>
+
+```{r}
+# Leer el archivo y mostrar tabla interactiva
+if (file.exists(ruta_metadata_tsv)) {
+  # Leer el archivo de metadatos generado al descomprimir
+  library(readr)
+  metadata <- read_tsv(ruta_metadata_tsv, comment = "#", show_col_types = FALSE)
+  
+  # Tabla interactiva de metadatos
+  library(DT)
+  htmltools::div(
+    class = "scroll-y-max-500",
+    DT::datatable(
+      metadata,
+      options = list(
+        scrollX = TRUE,
+        paging = FALSE,
+        lengthChange = FALSE,
+        language = list(
+          url = '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+        )
+      ),
+      class = 'stripe hover compact'
+    )
+  )
+  
+} else {
+  cat(glue::glue('
+  cat("Archivo "metadata.tsv" no encontrado. Verifica la ruta.")
+  '), sep = "\n")
+}
+```
+
+```{r, results='asis'}
+if (file.exists(ruta_metadata_tsv)) {
+
+  cat(glue::glue('
+  <p style="text-align:center;">
+    <a href="{ruta_metadata_tsv}" 
+      download="{basename(ruta_metadata_tsv)}"
+      class="boton-file-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo "metadata.tsv" original
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  De forma análoga, si se desea obtener más detalle, el archivo <code>index.html</code> generado dentro del <code>stats-dada2.qzv</code> proporciona una visualización interactiva de los datos, permitiendo explorar cada paso del filtrado y depuración.
+</p>
+
+<p>
+  Mediante el siguiente visor interactivo se puede explorar dicha información o para una mejor visualización se puede hacer uso del botón que se encuentra justo debajo para abrir el informe en una página nueva en tamaño completo:
+</p>
+
+```{r, results='asis'}
+# Generar iframe para Quarto si existe index.html
+if (file.exists(ruta_index_html)) {
+
+  cat(glue::glue('
+  <div class="iframe-container">
+    <iframe src="{ruta_index_html}" frameborder="0" style="height: 700px;"></iframe>
+  </div>
+
+  <p style="text-align:center;">
+    <a href="{ruta_index_html}" target="_blank" class="boton-iframe">
+      <i class="fa-solid fa-file-lines"></i> Abrir informe en nueva pestaña
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  Con la depuración completada y las ASVs definidas, los datos quedan listos para construir la tabla de abundancia (<code>table.qza / table.qzv</code>) y para realizar los análisis de diversidad microbiana, que se detallan en la siguiente sección. Esta etapa garantiza que las secuencias utilizadas sean de alta fidelidad y comparables entre todas las muestras del experimento.
+</p>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../../4-javascript/chatbot.js"></script>

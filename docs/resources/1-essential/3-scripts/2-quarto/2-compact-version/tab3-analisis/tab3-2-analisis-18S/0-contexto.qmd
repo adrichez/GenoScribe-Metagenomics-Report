@@ -1,0 +1,691 @@
+---
+title: "Metagenomic Report"
+
+include-in-header:
+  text: |
+    <link rel="shortcut icon" href="../../../../../1-images/icons/favicon.svg"/>
+    <link rel="icon" type="image/x-icon" href="../../../../../1-images/icons/favicon.ico">
+
+params:
+  project_path: ""
+  metagenomic_type: ""
+  report_version: ""
+---
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{=html}
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        Este chat permite consultar de manera interactiva la información contenida en un informe específico. 
+        Para ello, se ha alimentado el sistema con el contenido del propio informe, junto con documentos externos en formato PDF y HTML, así como sesiones de preguntas y respuestas (QA). 
+        Al formular una pregunta, el chat busca los fragmentos más relevantes de todos estos documentos mediante técnicas de procesamiento de lenguaje natural ligero y comparaciones basadas en similitud de vectores (medida de coseno). 
+        A partir de los fragmentos seleccionados, se genera un resumen que intenta ofrecer una respuesta coherente y compacta a la consulta realizada.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es de prueba. No se utilizan grandes modelos de lenguaje, por lo que las respuestas pueden ser aproximadas y no siempre completamente precisas. 
+        El objetivo principal es proporcionar una visualización rápida y útil de la información contenida en los documentos, facilitando la exploración del contenido del informe de manera interactiva.
+      </p>
+      
+      <p>
+        Actualmente, los resultados no son muy precisos debido al uso de modelos muy básicos, seleccionados para que la aplicación sea rápida y ejecutable en todo tipo de dispositivos sin necesidad de servidores externos. 
+        Sin embargo, la base del sistema permite mejorar notablemente los resultados en el futuro mediante el uso de modelos más potentes o la integración con APIs externas, ofreciendo así un rendimiento y precisión significativamente superiores.
+        Para iniciar, basta con escribir su pregunta en el campo de texto inferior.
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta..."/>
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+```
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Incluir Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 3: ANÁLISIS 18S | 0. CONTEXTO -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{r}
+# Cargar librerías
+library(glue)
+library(fs)
+library(stringr)
+library(dplyr)
+library(tidyverse)
+library(magrittr)
+library(DT)
+library(htmltools)
+library(purrr)
+library(tibble)
+
+
+# Rutas clave
+ruta_qmd <- getwd()
+ruta_metagenomic_pipeline <- file.path("..", "..", "..", "..", "..", "..", "..")
+nombre_proyecto <- basename(params$project_path)
+
+
+# Rutas de resultados Nextflow
+ruta_nextflow_results <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results")
+ruta_proyecto_relativa <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results", "1-project-data", nombre_proyecto)
+
+
+# Ruta resultados fastqc
+ruta_Pre_fastqc_results <- file.path(params$project_path, "Analisis", "miARma_18S", "Pre_fastqc_results")
+ruta_Pre_fastqc_results_relativa <- file.path(ruta_proyecto_relativa, "Analisis", "miARma_18S", "Pre_fastqc_results")
+
+
+# Obtener archivos .html de FastQC
+archivos_html <- dir_ls(ruta_Pre_fastqc_results_relativa, regexp = "\\.html$")
+
+# Extraer IDs de muestra (quitando el sufijo que empieza por _R1 o _R2 hasta el final)
+ids_muestras <- archivos_html |>
+  path_file() |>
+  str_replace("_(R1|R2).*_fastqc\\.html$", "") |>
+  unique()
+
+
+# Rutas de la carpeta Def_18S
+ruta_Def_18S <- file.path(params$project_path, "Resultados", "Def_18S")
+ruta_Def_18S_relativa <- file.path(ruta_proyecto_relativa, "Resultados", "Def_18S")
+
+
+# Rutas de la carpeta export
+ruta_exported <- file.path(ruta_Def_18S, "exported")
+ruta_exported_relativa <- file.path(ruta_Def_18S_relativa, "exported")
+
+
+# Listar carpetas únicas (nivel 1) ignorando "_ingles" y que existan realmente
+folders <- list.dirs(ruta_exported_relativa, full.names = TRUE, recursive = FALSE) %>%
+  str_subset("_ingles", negate = TRUE) %>%
+  keep(dir.exists) %>%  # <-- solo carpetas que existen
+  basename()
+
+
+# Función para obtener lista de archivos y comparaciones únicas de forma segura
+get_files_info <- function(folder_name) {
+  path <- file.path(ruta_exported_relativa, folder_name)
+  
+  if (!dir.exists(path)) {
+    message(glue("Carpeta '{folder_name}' no existe. Se omite."))
+    return(NULL)
+  }
+  
+  # Listar archivos .xls y .png
+  files <- list.files(path, pattern = "\\.(xls|png)$", full.names = TRUE)
+  
+  if (length(files) == 0) {
+    message(glue("No se encontraron archivos en '{folder_name}'."))
+    return(NULL)
+  }
+  
+  # Extraer solo el nombre base
+  file_names <- basename(files)
+  
+  # Extraer comparación limpia (quitamos número inicial, extensión y cambiamos _ -> " ", - -> " vs ")
+  comparison <- file_names %>%
+    str_remove("^\\d+\\.") %>%        # quitar número inicial
+    str_remove("\\.(xls|png)$") %>%   # quitar extensión
+    str_replace_all("_", " ") %>%     # _ -> espacio
+    str_replace_all("-", " vs ")      # - -> " vs "
+  
+  tibble(
+    file = files,
+    comparison = comparison,
+    type = if_else(str_detect(files, "\\.xls$"), "xls", "png")
+  )
+}
+
+
+# Crear lista de dataframes solo para carpetas existentes
+folder_dfs <- map(folders, ~ get_files_info(.x)) %>%
+  set_names(folders)
+
+
+# Filtrar NULLs (carpetas vacías o inexistentes)
+folder_dfs <- folder_dfs[!sapply(folder_dfs, is.null)]
+
+
+# Lista de carpetas con comparaciones únicas
+folder_files <- map(names(folder_dfs), ~ {
+  df <- folder_dfs[[.x]]
+  df %>%
+    group_by(comparison) %>%
+    summarise(
+      xls = file[type == "xls"],
+      png = file[type == "png"],
+      .groups = "drop"
+    )
+}) %>%
+  set_names(names(folder_dfs))
+```
+
+
+<div class="informe-titulo-tab">
+  <h1>Pestaña</h1>
+  <h2>Análisis 18S bioinformático completo</h2>
+</div>
+
+<div class="informe-titulo-seccion-unique">
+  <h1>Sección</h1>
+  <h2>Introducción Contextual</h2>
+</div>
+
+<div class="flecha-abajo">
+  ▼
+</div>
+
+
+<div class="informe-resumen">
+  <p>
+    Esta pestaña tiene como objetivo proporcionar una <strong>visión contextual y estructurada</strong> del análisis de metagenómica 18S realizado con <code>QIIME2</code> y herramientas complementarias, funcionando como una <strong>guía introductoria</strong> al informe. Aquí se explica la lógica seguida, la organización de los contenidos y qué puede esperar el lector en cada una de las secciones posteriores.
+  </p>
+
+  <p>
+    El resumen refleja el flujo completo del análisis, desde la revisión inicial de las muestras y metadatos, pasando por el control de calidad, la construcción de unidades taxonómicas representativas (ASVs), la asignación taxonómica y análisis filogenético, hasta los estudios de diversidad, comparaciones diferenciales y predicción funcional. Cada bloque principal se desarrolla en su propia subsección, lo que permite una navegación modular y progresiva, adaptada tanto a lectores técnicos como a aquellos con formación biológica.
+  </p>
+
+  <p>
+    A continuación, se ofrece una descripción detallada de cada bloque principal:
+  </p>
+
+  <ul>
+    <li>
+      <strong>1. Revisión inicial del conjunto de muestras y metadatos</strong> <strong>&rArr;</strong> Se proporciona una visión general de las muestras y su distribución según condiciones experimentales, incluyendo la estructura de carpetas y organización del proyecto. Esto permite contextualizar el diseño experimental, detectar posibles inconsistencias y asegurar que los metadatos están completos y listos para el análisis.
+    </li>
+
+    <li>
+      <strong>2. Control de calidad y preprocesamiento de las lecturas</strong> <strong>&rArr;</strong> Se presentan los informes generados con <code>FastQC</code> y <code>MultiQC</code>, tanto a nivel global como individual por muestra, permitiendo identificar problemas de calidad y sesgos técnicos. Además, se incluyen las etapas de trimming, filtrado y depuración de secuencias mediante <code>DADA2</code> o <code>Deblur</code>, garantizando que solo las secuencias de alta calidad se utilicen en los análisis posteriores.
+    </li>
+
+    <li>
+      <strong>3. Generación de ASVs y tabla de abundancia</strong> <strong>&rArr;</strong> Esta sección documenta la obtención de secuencias representativas (ASVs) y la construcción de la tabla de abundancia por muestra. Se incluyen métricas sobre el número de ASVs retenidas y la distribución de lecturas, proporcionando la base sólida para todos los análisis comparativos y de diversidad subsecuentes.
+    </li>
+
+    <li>
+      <strong>4. Asignación taxonómica y filogenia</strong> <strong>&rArr;</strong> Se describe la asignación de taxonomía a nivel de múltiples categorías (familia, género, especie) y la construcción del árbol filogenético. Se incluyen visualizaciones interactivas, tablas de abundancia por nivel taxonómico y comparaciones entre árboles, lo que permite interpretar la estructura evolutiva y la composición taxonómica de las comunidades.
+    </li>
+
+    <li>
+      <strong>5. Análisis diferencial de abundancia</strong> <strong>&rArr;</strong> Aquí se identifican los taxones cuya abundancia varía significativamente entre condiciones experimentales, usando pruebas estadísticas y representaciones gráficas (tablas y volcanos). Este análisis permite destacar taxones potencialmente asociados a los factores estudiados y preparar la interpretación funcional.
+    </li>
+
+    <li>
+      <strong>6. Diversidad microbiana</strong> <strong>&rArr;</strong> Se evalúa la diversidad alfa (riqueza, equidad y métricas filogenéticas) y beta (distancias entre muestras), con gráficos de rarefacción, PCoA y otras representaciones. Estas métricas proporcionan información sobre la complejidad, similitud y variabilidad de las comunidades microbianas entre grupos.
+    </li>
+
+    <li>
+      <strong>7. Predicción funcional (PICRUSt2 / Pycrust)</strong> <strong>&rArr;</strong> Se infiere el potencial funcional de las comunidades a partir de la composición taxonómica observada. Los resultados incluyen PCA global de pathways, análisis diferencial global (ALDEx2), comparaciones por pares (MetagenomeSeq) y PCA funcional por pares. Esto permite identificar pathways diferencialmente abundantes y patrones de agrupamiento funcional, complementando la interpretación taxonómica con un enfoque metabólico.
+    </li>
+
+    <li>
+      <strong>8. Conclusiones y perspectivas</strong> <strong>&rArr;</strong> Finalmente, se sintetizan los hallazgos clave de todas las secciones anteriores, integrando observaciones sobre calidad de los datos, diversidad, composición taxonómica y predicción funcional. Esta síntesis prepara al lector para la discusión de resultados, la comparación con otros estudios (16S, ITS) y la interpretación biológica de las diferencias observadas.
+    </li>
+  </ul>
+
+  <p>
+    En resumen, esta pestaña sirve como <strong>punto de entrada al informe</strong>, proporcionando el contexto necesario, explicando la lógica de los análisis y facilitando la navegación entre las distintas etapas del pipeline. La estructura modular permite al lector enfocarse en la visión global del análisis o profundizar en aspectos técnicos o biológicos específicos según su interés.
+  </p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo-toc">
+  Tabla de contenidos general
+</div>
+
+<p>
+  Se presenta a continuación el índice interactivo de la pestaña de <a href="1-revision-inicial.html" class="normalink">Análisis</a>, el cual organiza de forma estructurada cada etapa del proceso seguido. Desde aquí, es posible navegar fácilmente entre las distintas secciones del informe.
+</p>
+
+```{=html}
+```{r, echo=FALSE, results="asis"}
+cat('
+<div class="toc">
+  <ul>
+
+
+    <!-- Sección 1 -->
+    <li>
+      <a href="1-revision-inicial.html#tab3-seccion1">
+        1<span>.</span> Revisión inicial del conjunto de muestras y metadatos
+      </a>
+      <ul>
+        <li>
+          <a href="1-revision-inicial.html#tab3-seccion1.1">
+            1.1. Organización y estructura del proyecto
+          </a>
+        </li>
+        <li>
+          <a href="1-revision-inicial.html#tab3-seccion1.2">
+            1.2. Revisión del archivo de metadatos
+          </a>
+        </li>
+        <li>
+          <a href="1-revision-inicial.html#tab3-seccion1.3">
+            1.3. Exploración inicial de las muestras de entrada
+          </a>
+        </li>
+      </ul>
+    </li>
+
+
+    <!-- Sección 2 -->
+    <li>
+      <a href="2-control-calidad.html#tab3-seccion2">
+        2<span>.</span> Control de calidad y preprocesamiento
+      </a>
+      <ul>
+        <li>
+          <a href="2-control-calidad.html#tab3-seccion2.1">
+            2.1. Informes de calidad externos (FastQC / MultiQC)
+          </a>
+          <ul>
+            <li>
+              <a href="2-control-calidad.html#tab3-seccion2.1.1">
+                2.1.1. Resumen global (MultiQC)
+              </a>
+            </li>
+            <li>
+              <a href="2-control-calidad.html#tab3-seccion2.1.2">
+                2.1.2. Calidad individual (FastQC)
+              </a>
+              <ul>
+                <li>
+                  <a href="2-control-calidad.html#tab3-seccion2.1.2.1">
+                    2.1.2.1. Evaluación de calidad de lecturas Forward
+                  </a>
+                  <ul>
+')
+
+i <- 1
+for (id in ids_muestras) {
+  cat(glue::glue('<li><a href="2-control-calidad.html#tab3-seccion2.1.2.1.{i}">2.1.2.1.{i}. Muestra: {id}</a></li>\n'))
+  i <- i + 1
+}
+
+cat('
+                  </ul>
+                </li>
+                <li>
+                  <a href="2-control-calidad.html#tab3-seccion2.1.2.2">
+                    2.1.2.2. Evaluación de calidad de lecturas Reverse
+                  </a>
+                  <ul>
+')
+
+i <- 1
+for (id in ids_muestras) {
+  cat(glue::glue('<li><a href="2-control-calidad.html#tab3-seccion2.1.2.2.{i}">2.1.2.2.{i}. Muestra: {id}</a></li>\n'))
+  i <- i + 1
+}
+
+cat('
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="2-control-calidad.html#tab3-seccion2.2">
+                2.2. Informe de demultiplexación en QIIME2
+              </a>
+            </li>
+            <li>
+              <a href="2-control-calidad.html#tab3-seccion2.3">
+                2.3. Reflexiones sobre la calidad observada
+              </a>
+            </li>
+            <li>
+              <a href="2-control-calidad.html#tab3-seccion2.4">
+                2.4. Trimming y filtrado inicial
+              </a>
+            </li>
+            <li>
+            <li>
+              <a href="2-control-calidad.html#tab3-seccion2.5">
+                2.5. Denoising y depuración con DADA2 / Deblur
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+')
+
+
+cat('
+    <!-- Sección 3 -->
+    <li>
+      <a href="3-asvs-tabla.html#tab3-seccion3">
+        3<span>.</span> Generación de ASVs y tabla de abundancia
+      </a>
+      <ul>
+        <li>
+          <a href="3-asvs-tabla.html#tab3-seccion3.1">
+            3.1. Obtención de secuencias representativas (ASVs)
+          </a>
+        </li>
+        <li>
+          <a href="3-asvs-tabla.html#tab3-seccion3.2">
+            3.2. Construcción de la tabla de abundancias
+          </a>
+        </li>
+      </ul>
+    </li>
+
+
+    <!-- Sección 4 -->
+    <li>
+      <a href="#4-taxonomia-filogenia.html#tab3-seccion4">
+        4<span>.</span> Asignación taxonómica y filogenia
+      </a>
+      <ul>
+        <li>
+          <a href="#4-taxonomia-filogenia.html#tab3-seccion4.1">
+            4.1. Asignación taxonómica
+          </a>
+          <ul>
+            <li>
+              <a href="#4-taxonomia-filogenia.html#tab3-seccion4.1.1">
+                4.1.1. Archivos principales
+              </a>
+            </li>
+            <li>
+              <a href="#4-taxonomia-filogenia.html#tab3-seccion4.1.2">
+                4.1.2. Visualización de composición taxonómica
+              </a>
+              <ul>
+                <li>
+                  <a href="#4-taxonomia-filogenia.html#tab3-seccion4.1.2.1">
+                    4.1.2.1. Visualización interactiva de la composición taxonómica
+                  </a>
+                </li>
+')
+
+# Generar los enlaces para las tablas por nivel taxonómico
+for (nivel in 1:7) {
+  numero_sub <- nivel + 1 # para no colisionar con la visualización interactiva
+  cat(glue('
+                <li>
+                  <a href="#4-taxonomia-filogenia.html#tab3-seccion4.1.2.{numero_sub}">
+                    4.1.2.{numero_sub}. Tabla interactiva de abundancia de ASVs por nivel taxonómico {nivel}
+                  </a>
+                </li>
+  '))
+}
+
+cat('
+              </ul>
+            </li>
+            <li>
+              <a href="#4-taxonomia-filogenia.html#tab3-seccion4.1.3">
+                4.1.3. Archivos exportados por niveles taxonómicos
+              </a>
+              <ul>
+                <li>
+                  <a href="#4-taxonomia-filogenia.html#tab3-seccion4.1.3.1">
+                    4.1.3.1. Tabla de abundancia relativa a nivel taxonómico: <strong>Familia (L5)</strong>
+                  </a>
+                </li>
+                <li>
+                  <a href="#4-taxonomia-filogenia.html#tab3-seccion4.1.3.2">
+                    4.1.3.2. Tabla de abundancia relativa a nivel taxonómico: <strong>Género (L6)</strong>
+                  </a>
+                </li>
+                <li>
+                  <a href="#4-taxonomia-filogenia.html#tab3-seccion4.1.3.2">
+                    4.1.3.2. Tabla de abundancia relativa a nivel taxonómico: <strong>Especie (L7)</strong>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#4-taxonomia-filogenia.html#tab3-seccion4.2">
+            4.2. Construcción del árbol filogenético
+          </a>
+          <ul>
+            <li>
+              <a href="#4-taxonomia-filogenia.html#tab3-seccion4.2.1">
+                4.2.1. Archivos principales
+              </a>
+            </li>
+            <li>
+              <a href="#4-taxonomia-filogenia.html#tab3-seccion4.2.2">
+                4.2.2. Diferencias entre árboles
+              </a>
+              <ul>
+                <li>
+                  <a href="#4-taxonomia-filogenia.html#tab3-seccion4.2.2.1">
+                    4.2.2.1. Árbol sin raíz
+                  </a>
+                </li>
+                <li>
+                  <a href="#4-taxonomia-filogenia.html#tab3-seccion4.2.2.2">
+                    4.2.2.2. Árbol enraizado
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#4-taxonomia-filogenia.html#tab3-seccion4.2.3">
+                4.2.3. Relación con análisis posteriores
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+
+
+    <!-- Sección 5 -->
+    <li>
+      <a href="#5-analisis-diferencial.html#tab3-seccion5">
+        5<span>.</span> Análisis diferencial de abundancia
+      </a>
+      <ul>
+')
+
+# Iterar sobre las carpetas/folders
+for (i in seq_along(folders)) {
+  cat(glue('
+        <li>
+          <a href="#5-analisis-diferencial.html#tab3-seccion5.{i}">
+            5.{i}. Resultados a nivel de {folders[i]}
+          </a>
+        </li>
+  '))
+}
+
+cat('      </ul>
+    </li>
+
+
+    <!-- Sección 6 -->
+    <li>
+      <a href="#6-diversidad-microbiana.html#tab3-seccion6">
+        6<span>.</span> Diversidad microbiana
+      </a>
+      <ul>
+        <li>
+          <a href="#6-diversidad-microbiana.html#tab3-seccion6.1">
+            6.1. Curvas de rarefacción y cobertura
+          </a>
+        </li>
+        <li>
+          <a href="#6-diversidad-microbiana.html#tab3-seccion6.2">
+            6.2. Diversidad alfa (dentro de muestras)
+          </a>
+          <ul>
+            <li>
+              <a href="#6-diversidad-microbiana.html#tab3-seccion6.2.1">
+                  6.2.1. Índice de Shannon (riqueza + equidad)
+              </a>
+            </li>
+            <li>
+              <a href="#6-diversidad-microbiana.html#tab3-seccion6.2.2">
+                  6.2.2. Diversidad filogenética de Faith (longitud de ramas evolutivas)
+              </a>
+            </li>
+            <li>
+              <a href="#6-diversidad-microbiana.html#tab3-seccion6.2.3">
+                  6.2.3. Evenness (uniformidad de abundancias)
+              </a>
+            </li>
+            <li>
+              <a href="#6-diversidad-microbiana.html#tab3-seccion6.2.4">
+                  6.2.4. Riqueza observada (Observed Features)
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#6-diversidad-microbiana.html#tab3-seccion6.3">
+            6.3. Diversidad beta (entre muestras)
+          </a>
+          <ul>
+            <li>
+              <a href="#6-diversidad-microbiana.html#tab3-seccion6.3.1">
+                  6.3.1. Distancia de Bray–Curtis (abundancias relativas)
+              </a>
+            </li>
+            <li>
+              <a href="#6-diversidad-microbiana.html#tab3-seccion6.3.2">
+                  6.3.2. Distancia de Jaccard (presencia/ausencia)
+              </a>
+            </li>
+            <li>
+              <a href="#6-diversidad-microbiana.html#tab3-seccion6.3.3">
+                  6.3.3. Unweighted UniFrac (filogenia + presencia/ausencia)
+              </a>
+            </li>
+            <li>
+              <a href="#6-diversidad-microbiana.html#tab3-seccion6.3.4">
+                  6.3.4. Weighted UniFrac (filogenia + abundancias)
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+
+
+    <!-- Sección 7 -->
+    <li>
+      <a href="#7-prediccion-funcional.html#tab3-seccion7">
+        7<span>.</span> Predicción funcional (PICRUSt2 / Pycrust)
+      </a>
+      <ul>
+        <li>
+          <a href="#7-prediccion-funcional.html#tab3-seccion7.1">
+            7.1. PCA global de pathways
+          </a>
+        </li>
+        <li>
+          <a href="#7-prediccion-funcional.html#tab3-seccion7.2">
+            7.2. Análisis diferencial global (ALDEx2)
+          </a>
+        </li>
+        <li>
+          <a href="#7-prediccion-funcional.html#tab3-seccion7.3">
+            7.3. Comparaciones específicas por pares (MetagenomeSeq)
+          </a>
+        </li>
+        <li>
+          <a href="#7-prediccion-funcional.html#tab3-seccion7.4">
+            7.4. PCA funcional por pares (<code>pathway_pca_MetagenomeSeq_*</code>)
+          </a>
+        </li>
+      </ul>
+    </li>
+
+
+    <!-- Sección 8 -->
+    <li>
+      <a href="8-conclusiones.html#tab3-seccion8">
+        8<span>.</span> Conclusiones y perspectivas
+      </a>
+    </li>
+  </ul>
+</div>
+')
+```
+```
+
+```{=html}
+```
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../../4-javascript/chatbot.js"></script>

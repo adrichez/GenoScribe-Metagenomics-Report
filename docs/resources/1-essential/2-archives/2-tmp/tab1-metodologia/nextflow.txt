@@ -1,0 +1,10 @@
+nextflow.enable.dsl=2
+
+docker.enabled = false
+
+params {
+    outdir = "resources/2-nextflow-results"    // carpeta de salida por defecto
+    project_path = "/Users/adrian/Documents/4 Workspace/Prototipo-resultados/03-EXT-25-Metagenomic"    // ruta del proyecto
+    metagenomic_type = 1    // tipo de análisis metagenómico (1: 16S, 2: 18S, 3: ITS, 4: 16S-18S, 5: 16S-ITS, 6: 18S-ITS, 7: 16S-18S-ITS)
+    report_version = 1    // versión del informe (1: "full", 2: "compact")
+}

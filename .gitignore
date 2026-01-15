@@ -1,0 +1,15 @@
+# Archivos del sistema (macOS)
+**/.DS_Store
+
+
+# Archivos temporales y de respaldo
+**/*.log
+**/*.tmp
+**/*.bak
+**/*.swp
+
+
+# Archivos de R (en cualquier nivel)
+**/.RData
+**/.Rhistory
+**/*.rds

@@ -1,0 +1,14 @@
+glue
+fs
+stringr
+dplyr
+BiocGenerics
+S4Vectors
+IRanges
+XVector
+GenomeInfoDb
+Biostrings
+DT
+htmltools
+qiime2R
+readr

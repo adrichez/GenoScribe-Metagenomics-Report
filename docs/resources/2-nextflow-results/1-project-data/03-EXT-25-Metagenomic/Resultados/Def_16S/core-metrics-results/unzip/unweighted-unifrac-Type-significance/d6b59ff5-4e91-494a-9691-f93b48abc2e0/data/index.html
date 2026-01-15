@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>q2_diversity : beta_group_significance</title>
+    <link rel="stylesheet" href="./q2templateassets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./q2templateassets/css/normalize.css"/>
+    <link rel="stylesheet" href="./q2templateassets/css/base-template.css"/>
+    <script src="./q2templateassets/js/jquery-3.2.0.min.js" charset="utf-8"></script>
+    <script src="./q2templateassets/js/bootstrap.min.js" charset="utf-8"></script>
+    
+    
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div id="q2templatesheader" class="row">
+        <div class="col-lg-12">
+          <a href="http://qiime2.org/">
+            <img src="./q2templateassets/img/qiime2-rect-200.png"
+            alt="QIIME 2">
+          </a>
+        </div>
+      </div>
+        
+  
+
+  <div class="row">
+    <div class="col-lg-12">
+      <h2>Overview</h2>
+      <table border="0" class="dataframe table table-striped table-hover">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PERMANOVA results</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>method name</th>
+      <td>PERMANOVA</td>
+    </tr>
+    <tr>
+      <th>test statistic name</th>
+      <td>pseudo-F</td>
+    </tr>
+    <tr>
+      <th>sample size</th>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>number of groups</th>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>test statistic</th>
+      <td>1.705419</td>
+    </tr>
+    <tr>
+      <th>p-value</th>
+      <td>0.001</td>
+    </tr>
+    <tr>
+      <th>number of permutations</th>
+      <td>999</td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <h2>Group significance plots</h2>
+      <a href="raw_data.tsv" target="_blank" rel="noopener noreferrer">
+        Download raw data as TSV
+      </a>
+      
+        <div class="row">
+          
+            <div class="col-lg-4 text-center">
+              <a href="Equine-boxplots.pdf">
+                <img src="Equine-boxplots.png">
+                <br>
+                <p>Download as PDF</p>
+              </a>
+            </div>
+          
+            <div class="col-lg-4 text-center">
+              <a href="Equine%252Bc-boxplots.pdf">
+                <img src="Equine%252Bc-boxplots.png">
+                <br>
+                <p>Download as PDF</p>
+              </a>
+            </div>
+          
+            <div class="col-lg-4 text-center">
+              <a href="Livestock_exc%252Bc-boxplots.pdf">
+                <img src="Livestock_exc%252Bc-boxplots.png">
+                <br>
+                <p>Download as PDF</p>
+              </a>
+            </div>
+          
+        </div>
+      
+        <div class="row">
+          
+            <div class="col-lg-4 text-center">
+              <a href="Ovine-boxplots.pdf">
+                <img src="Ovine-boxplots.png">
+                <br>
+                <p>Download as PDF</p>
+              </a>
+            </div>
+          
+            <div class="col-lg-4 text-center">
+              <a href="livestock_exclusion-boxplots.pdf">
+                <img src="livestock_exclusion-boxplots.png">
+                <br>
+                <p>Download as PDF</p>
+              </a>
+            </div>
+          
+            <div class="col-lg-4 text-center">
+              <a href="ovine%252Bc-boxplots.pdf">
+                <img src="ovine%252Bc-boxplots.png">
+                <br>
+                <p>Download as PDF</p>
+              </a>
+            </div>
+          
+        </div>
+      
+    </div>
+  </div>
+
+  
+    <div class="row">
+      <div class="col-lg-12">
+        <h2>Pairwise permanova results</h2>
+        <a href="permanova-pairwise.csv">Download CSV</a>
+        <table border="0" class="dataframe table table-striped table-hover">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>Sample size</th>
+      <th>Permutations</th>
+      <th>pseudo-F</th>
+      <th>p-value</th>
+      <th>q-value</th>
+    </tr>
+    <tr>
+      <th>Group 1</th>
+      <th>Group 2</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="5" valign="top">Equine</th>
+      <th>Equine+c</th>
+      <td>7</td>
+      <td>999</td>
+      <td>1.493611</td>
+      <td>0.032</td>
+      <td>0.058333</td>
+    </tr>
+    <tr>
+      <th>Livestock_exc+c</th>
+      <td>7</td>
+      <td>999</td>
+      <td>2.195444</td>
+      <td>0.027</td>
+      <td>0.058333</td>
+    </tr>
+    <tr>
+      <th>Ovine</th>
+      <td>8</td>
+      <td>999</td>
+      <td>1.103861</td>
+      <td>0.223</td>
+      <td>0.238929</td>
+    </tr>
+    <tr>
+      <th>livestock_exclusion</th>
+      <td>8</td>
+      <td>999</td>
+      <td>1.004349</td>
+      <td>0.422</td>
+      <td>0.422000</td>
+    </tr>
+    <tr>
+      <th>ovine+c</th>
+      <td>7</td>
+      <td>999</td>
+      <td>2.050423</td>
+      <td>0.024</td>
+      <td>0.058333</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">Equine+c</th>
+      <th>Livestock_exc+c</th>
+      <td>6</td>
+      <td>999</td>
+      <td>2.072141</td>
+      <td>0.114</td>
+      <td>0.147500</td>
+    </tr>
+    <tr>
+      <th>Ovine</th>
+      <td>7</td>
+      <td>999</td>
+      <td>1.693940</td>
+      <td>0.032</td>
+      <td>0.058333</td>
+    </tr>
+    <tr>
+      <th>livestock_exclusion</th>
+      <td>7</td>
+      <td>999</td>
+      <td>1.730123</td>
+      <td>0.024</td>
+      <td>0.058333</td>
+    </tr>
+    <tr>
+      <th>ovine+c</th>
+      <td>6</td>
+      <td>999</td>
+      <td>1.872898</td>
+      <td>0.107</td>
+      <td>0.147500</td>
+    </tr>
+    <tr>
+      <th rowspan="3" valign="top">Livestock_exc+c</th>
+      <th>Ovine</th>
+      <td>7</td>
+      <td>999</td>
+      <td>2.144778</td>
+      <td>0.026</td>
+      <td>0.058333</td>
+    </tr>
+    <tr>
+      <th>livestock_exclusion</th>
+      <td>7</td>
+      <td>999</td>
+      <td>2.021935</td>
+      <td>0.035</td>
+      <td>0.058333</td>
+    </tr>
+    <tr>
+      <th>ovine+c</th>
+      <td>6</td>
+      <td>999</td>
+      <td>1.981197</td>
+      <td>0.118</td>
+      <td>0.147500</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">Ovine</th>
+      <th>livestock_exclusion</th>
+      <td>8</td>
+      <td>999</td>
+      <td>1.239363</td>
+      <td>0.145</td>
+      <td>0.167308</td>
+    </tr>
+    <tr>
+      <th>ovine+c</th>
+      <td>7</td>
+      <td>999</td>
+      <td>1.683926</td>
+      <td>0.023</td>
+      <td>0.058333</td>
+    </tr>
+    <tr>
+      <th>livestock_exclusion</th>
+      <th>ovine+c</th>
+      <td>7</td>
+      <td>999</td>
+      <td>2.298133</td>
+      <td>0.032</td>
+      <td>0.058333</td>
+    </tr>
+  </tbody>
+</table>
+      </div>
+    </div>
+  
+
+
+    </div>
+    <script type="text/javascript">
+      if (window.frameElement) {
+          document.getElementById('q2templatesheader').remove();
+      }
+    </script>
+    
+    
+  </body>
+</html>

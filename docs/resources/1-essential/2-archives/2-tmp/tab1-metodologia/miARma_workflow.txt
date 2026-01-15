@@ -1,0 +1,31 @@
+;General parameters
+[General]
+; type of analysis (miRNA, mRNA or circRNA)
+type=mRNA
+;0 for no verbose, otherwise to print "almost" everything
+verbose=0
+; Folder for miRNA reads
+read_dir=/mnt/beegfs/Bioinformatica/EXT/18-EXT-24-Laura_Lozano/Analisis/reads/ITS2/
+; label for the analsysis
+label=mRNA_mouse
+; ; Folder where miARma has been instaled
+miARmaPath=/home/eandres/bin/miARma/
+; Number of process to run at the same time
+threads=20
+; Folder to store results
+output_dir=/mnt/beegfs/Bioinformatica/EXT/18-EXT-24-Laura_Lozano/Analisis/miARma_ITS2/
+organism=human
+;Type of sequencing ; could be Paired or Single. [Single by default]
+seqtype=Paired
+#Whether the data is from a strand-specific assay (yes, no or reverse, yes by default) for featureCounts analysis
+strand=no
+stats_file=/mnt/beegfs/Bioinformatica/EXT/18-EXT-24-Laura_Lozano/Analisis/miARma_ITS2//miARma_stat.15247.log
+logfile=/mnt/beegfs/Bioinformatica/EXT/18-EXT-24-Laura_Lozano/Analisis/miARma_ITS2//miARma_logfile.15247.log
+
+#stats_file=/mnt/beegfs/Bioinformatica/EXT/18-EXT-24-Laura_Lozano/Analisis/miARma_16S//miARma_stat.113645.log
+#logfile=/mnt/beegfs/Bioinformatica/EXT/18-EXT-24-Laura_Lozano/Analisis/miARma_16S//miARma_logfile.113645.log
+#stats_file=/mnt/beegfs/Bioinformatica/EXT/18-EXT-24-Laura_Lozano/Analisis/miARma//miARma_stat.39536.log
+#logfile=/mnt/beegfs/Bioinformatica/EXT/18-EXT-24-Laura_Lozano/Analisis/miARma//miARma_logfile.39536.log
+[Quality]
+; Character string to put in the name of the results directory
+prefix=Pre

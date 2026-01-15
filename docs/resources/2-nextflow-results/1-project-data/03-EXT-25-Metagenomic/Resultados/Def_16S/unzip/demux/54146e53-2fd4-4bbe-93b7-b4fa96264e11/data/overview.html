@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>q2_demux : summarize</title>
+    <link rel="stylesheet" href="./q2templateassets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./q2templateassets/css/normalize.css"/>
+    <script src="./q2templateassets/js/jquery-3.2.0.min.js" charset="utf-8"></script>
+    <script src="./q2templateassets/js/child.js"></script>
+    
+    
+  </head>
+  <body>
+    <div class="container-fluid">
+        
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Demultiplexed sequence counts summary</h1>
+        <table border="0" class="dataframe table table-striped table-hover">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>forward reads</th>
+      <th>reverse reads</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Minimum</th>
+      <td>40406</td>
+      <td>40406</td>
+    </tr>
+    <tr>
+      <th>Median</th>
+      <td>96595.0</td>
+      <td>96595.0</td>
+    </tr>
+    <tr>
+      <th>Mean</th>
+      <td>93951.428571</td>
+      <td>93951.428571</td>
+    </tr>
+    <tr>
+      <th>Maximum</th>
+      <td>146241</td>
+      <td>146241</td>
+    </tr>
+    <tr>
+      <th>Total</th>
+      <td>1972980</td>
+      <td>1972980</td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+</div>
+
+<div class="row">
+    
+        <div class="col-lg-6">
+            <h3>Forward Reads Frequency Histogram</h3>
+            <div class="text-center">
+                
+                    <a href="demultiplex-summary-forward.pdf">
+                        <img src="demultiplex-summary-forward.png">
+                        <p>Download as PDF</p>
+                    </a>
+                
+            </div>
+        </div>
+    
+        <div class="col-lg-6">
+            <h3>Reverse Reads Frequency Histogram</h3>
+            <div class="text-center">
+                
+                    <a href="demultiplex-summary-reverse.pdf">
+                        <img src="demultiplex-summary-reverse.png">
+                        <p>Download as PDF</p>
+                    </a>
+                
+            </div>
+        </div>
+    
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Per-sample sequence counts</h1>
+        <h4>
+            Total Samples:&nbsp;
+            
+                
+                    21 (forward)&nbsp;
+                
+            
+                
+                    21 (reverse)&nbsp;
+                
+            
+        </h4>
+        <table border="0" class="dataframe table table-striped table-hover">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>forward sequence count</th>
+      <th>reverse sequence count</th>
+    </tr>
+    <tr>
+      <th>sample ID</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>NGS069-24-16S-1</th>
+      <td>146241</td>
+      <td>146241</td>
+    </tr>
+    <tr>
+      <th>NGS069-24-16S-8</th>
+      <td>129633</td>
+      <td>129633</td>
+    </tr>
+    <tr>
+      <th>NGS069-24-16S-9</th>
+      <td>128854</td>
+      <td>128854</td>
+    </tr>
+    <tr>
+      <th>NGS069-24-16S-6</th>
+      <td>115410</td>
+      <td>115410</td>
+    </tr>
+    <tr>
+      <th>NGS001-23_16S_42</th>
+      <td>110784</td>
+      <td>110784</td>
+    </tr>
+    <tr>
+      <th>NGS001-23_16S_41</th>
+      <td>109642</td>
+      <td>109642</td>
+    </tr>
+    <tr>
+      <th>NGS001-23_16S_47</th>
+      <td>107948</td>
+      <td>107948</td>
+    </tr>
+    <tr>
+      <th>NGS001-23_16S_48</th>
+      <td>107254</td>
+      <td>107254</td>
+    </tr>
+    <tr>
+      <th>NGS001-23_16S_44</th>
+      <td>106599</td>
+      <td>106599</td>
+    </tr>
+    <tr>
+      <th>NGS069-24-16S-2</th>
+      <td>97181</td>
+      <td>97181</td>
+    </tr>
+    <tr>
+      <th>NGS001-23_16S_43</th>
+      <td>96595</td>
+      <td>96595</td>
+    </tr>
+    <tr>
+      <th>NGS069-23_16S_36</th>
+      <td>94384</td>
+      <td>94384</td>
+    </tr>
+    <tr>
+      <th>NGS069-24-16S-4</th>
+      <td>86398</td>
+      <td>86398</td>
+    </tr>
+    <tr>
+      <th>NGS069-23_16S_32</th>
+      <td>81306</td>
+      <td>81306</td>
+    </tr>
+    <tr>
+      <th>NGS069-24-16S-3</th>
+      <td>80508</td>
+      <td>80508</td>
+    </tr>
+    <tr>
+      <th>NGS069-23_16S_35</th>
+      <td>77484</td>
+      <td>77484</td>
+    </tr>
+    <tr>
+      <th>NGS069-24-16S-5</th>
+      <td>70939</td>
+      <td>70939</td>
+    </tr>
+    <tr>
+      <th>NGS069-24-16S-7</th>
+      <td>68791</td>
+      <td>68791</td>
+    </tr>
+    <tr>
+      <th>NGS069-23_16S_31</th>
+      <td>66578</td>
+      <td>66578</td>
+    </tr>
+    <tr>
+      <th>NGS069-23_16S_30</th>
+      <td>50045</td>
+      <td>50045</td>
+    </tr>
+    <tr>
+      <th>NGS069-23_16S_29</th>
+      <td>40406</td>
+      <td>40406</td>
+    </tr>
+  </tbody>
+</table>
+        <a href="per-sample-fastq-counts.tsv">Download as TSV</a>
+    </div>
+</div>
+
+    </div>
+    
+    
+  </body>
+</html>

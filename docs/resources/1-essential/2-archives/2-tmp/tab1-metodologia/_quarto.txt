@@ -1,0 +1,92 @@
+project:
+  type: website
+  output-dir: report
+  render:
+    - index.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab1-metodologia/metodologia.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab2-resumen/tab2-1-resumen-16S/resumen.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/0-contexto.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/1-revision-inicial.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/2-control-calidad.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/3-generacion-asvs.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/4-taxonomia-filogenia.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/5-analisis-diferencial.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/6-diversidad-microbiana.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/7-prediccion-funcional.qmd
+    - resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/8-conclusiones.qmd
+
+resources:
+  - resources/**
+  - '!resources/1-essential/3-scripts/1-r/'
+  - '!resources/1-essential/3-scripts/5-python/'
+
+format:
+  html:
+    css: resources/1-essential/3-scripts/3-css/styles.css
+    theme: lux
+    toc: false
+    code-fold: false
+    code-tools: false
+    number-sections: false
+    page-layout: custom
+    smooth-scroll: true
+    highlight-style: a11y-dark
+    self-contained: false
+    copy-files: true
+    html: true
+
+include-in-header:
+  text: |-
+    <link rel="shortcut icon" href="resources/1-essential/1-images/icons/favicon.svg"/>
+    <link rel="icon" type="image/x-icon" href="resources/1-essential/1-images/icons/favicon.ico">
+
+execute:
+  echo: false
+  warning: false
+  message: false
+  freeze: false
+  cache: true
+
+params:
+  project_path: ''
+  metagenomic_type: ''
+  report_version: ''
+
+website:
+  navbar:
+    title: |-
+      <img class='brand-logo' src='/resources/1-essential/1-images/icons/ipbln.png'>
+      <a class='brand-text' href='https://www.ipb.csic.es/servicios/Bioinformatica/index.html'>IPBLN</a>
+    right:
+      - text: Inicio
+        icon: house
+        href: "index.qmd"
+      - text: Metodología
+        icon: wrench
+        href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab1-metodologia/metodologia.qmd"
+      - text: Resumen 16S
+        icon: clipboard-data
+        href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab2-resumen/tab2-1-resumen-16S/resumen.qmd"
+      - text: Análisis 16S
+        icon: bar-chart
+        menu:
+          - text: ➤ Introducción contextual
+            href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/0-contexto.qmd"
+          - text: 1. Revisión inicial de muestras y metadatos
+            href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/1-revision-inicial.qmd"
+          - text: 2. Control de calidad y preprocesamiento
+            href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/2-control-calidad.qmd"
+          - text: 3. Generación de ASVs y tabla de abundancia
+            href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/3-generacion-asvs.qmd"
+          - text: 4. Asignación taxonómica y filogenia
+            href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/4-taxonomia-filogenia.qmd"
+          - text: 5. Análisis diferencial de abundancia
+            href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/5-analisis-diferencial.qmd"
+          - text: 6. Diversidad microbiana
+            href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/6-diversidad-microbiana.qmd"
+          - text: 7. Predicción funcional
+            href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/7-prediccion-funcional.qmd"
+          - text: 8. Conclusiones y perspectivas
+            href: "resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/8-conclusiones.qmd"
+
+clean: false

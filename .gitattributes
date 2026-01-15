@@ -1,0 +1,100 @@
+###############################################################################################################################
+# GIT ATTRIBUTES CONFIGURATION FILE
+###############################################################################################################################
+
+#===========================================================================================================
+# Git LFS configuration for large files
+#===========================================================================================================
+
+# Insert here patterns for files to be managed by Git LFS
+
+
+
+#===========================================================================================================
+# Git LFS configuration for large files
+#===========================================================================================================
+
+#-------------------------------------------------------------------------------------
+# Scripts
+#-------------------------------------------------------------------------------------
+
+# Shell scripts
+*.sh linguist-language=Shell
+
+# Nextflow scripts
+*.nf linguist-language=Nextflow
+*.config linguist-language=Nextflow
+
+# R scripts
+*.R linguist-language=R
+
+# Python scripts
+*.py linguist-language=Python
+
+
+#-------------------------------------------------------------------------------------
+# Notebooks / Markdown
+#-------------------------------------------------------------------------------------
+
+# Quarto Markdown (mixto Markdown + R)
+*.qmd linguist-language=R
+
+# R Markdown
+*.Rmd linguist-language=R
+
+# Markdown files
+*.md linguist-language=Markdown
+
+# Jupyter Notebooks
+*.ipynb linguist-language=Python
+
+
+#-------------------------------------------------------------------------------------
+# Configuration / Data files
+#-------------------------------------------------------------------------------------
+
+# YAML files
+*.yml linguist-language=YAML
+
+# JSON files
+*.json linguist-language=JSON
+
+# CSV files
+*.csv linguist-language=CSV
+
+# TSV files
+*.tsv linguist-language=TSV
+
+# TXT files
+*.txt linguist-language=Text
+
+
+#-------------------------------------------------------------------------------------
+# Web / Frontend
+#-------------------------------------------------------------------------------------
+
+# JavaScript files
+*.js linguist-language=JavaScript
+
+# CSS files
+*.css linguist-language=CSS
+
+# HTML files
+*.html linguist-language=HTML
+
+
+#-------------------------------------------------------------------------------------
+# Other / Misc
+#-------------------------------------------------------------------------------------
+
+# Dockerfiles
+Dockerfile linguist-language=Dockerfile
+
+
+#-----------------------------------------------------------------------------------------------------------
+# Vendored files / Folders (to be excluded from language stats)
+#-----------------------------------------------------------------------------------------------------------
+
+# JavaScript libraries in pipelines
+docs/**/4-javascript/embeddings_web_reduced.js linguist-vendored
+docs/**/4-javascript/responses.js linguist-vendored

@@ -1,0 +1,864 @@
+---
+title: "Metagenomic Report"
+
+include-in-header:
+  text: |
+    <link rel="shortcut icon" href="../../../../../1-images/icons/favicon.svg"/>
+    <link rel="icon" type="image/x-icon" href="../../../../../1-images/icons/favicon.ico">
+
+params:
+  project_path: ""
+  metagenomic_type: ""
+  report_version: ""
+---
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{=html}
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        ¡Hola! Soy <strong>Geni</strong>, el asistente inteligente de <strong>GenoScribe</strong>.  
+        Estoy aquí para ayudarte a explorar de forma interactiva el contenido de este informe bioinformático.
+      </p>
+
+      <p>
+        Cuando me haces una pregunta, primero intento reconocer si coincide con alguno de los patrones o expresiones que conozco.  
+        Si encuentro una coincidencia, te responderé directamente con una respuesta predefinida, diseñada para ser rápida, clara e incluso un poco ingeniosa.  
+        Si no reconozco el patrón, entonces activo mis herramientas de búsqueda: genero representaciones vectoriales (embeddings) y busco los fragmentos más relevantes entre varios documentos —incluyendo el propio informe, archivos PDF y HTML externos, y sesiones de preguntas y respuestas (QA).  
+        A partir de esa información, creo un resumen que intenta ofrecerte una respuesta coherente y útil basada en el contenido existente.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es experimental. No utilizo grandes modelos de lenguaje, por lo que algunas respuestas pueden ser aproximadas o incompletas.  
+        El objetivo principal es facilitar una visualización rápida, comprensible y reproducible de la información contenida en los documentos, permitiendo una exploración más dinámica del informe.
+      </p>
+
+      <p>
+        Actualmente, los resultados pueden variar en precisión, ya que empleo modelos ligeros y locales para asegurar que la aplicación funcione en cualquier entorno sin necesidad de servidores externos.  
+        Sin embargo, la estructura del sistema está preparada para mejorar notablemente su rendimiento en el futuro mediante la integración con modelos más avanzados o APIs externas.  
+        Para comenzar, simplemente escribe tu pregunta en el campo inferior y deja que yo me encargue del resto. ¡Prometo poner todo mi código en ello!
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta..."/>
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+```
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Incluir Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 3: ANÁLISIS | 7. PREDICCIÓN FUNCIONAL (PICRUSt2 / Pycrust) -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{r}
+# Cargar librerías
+library(glue)
+library(fs)
+library(stringr)
+library(dplyr)
+library(tibble)
+
+
+# Rutas clave
+ruta_qmd <- getwd()
+ruta_metagenomic_pipeline <- file.path("..", "..", "..", "..", "..", "..", "..")
+nombre_proyecto <- basename(params$project_path)
+
+
+# Rutas de resultados Nextflow
+ruta_nextflow_results <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results")
+ruta_proyecto_relativa <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results", "1-project-data", nombre_proyecto)
+
+
+# Rutas de la carpeta 
+ruta_Def_16S <- file.path(params$project_path, "Resultados", "Def_16S")
+ruta_Def_16S_relativa <- file.path(ruta_proyecto_relativa, "Resultados", "Def_16S")
+
+
+# Listar PNGs que empiezan por pathway
+all_pngs <- list.files(ruta_Def_16S, pattern = "^pathway.*\\.png$", full.names = FALSE)
+if (length(all_pngs) == 0) stop("No hay imágenes pathway*.png en: ", ruta_Def_16S)
+
+# Helper: formateo bonito
+make_pretty <- function(x) {
+  x %>% str_replace_all("_", " ") %>% str_trim() %>% str_to_sentence()
+}
+
+# Construir dataframe
+img_df <- tibble(
+  file = all_pngs,
+  path = file.path(ruta_Def_16S, all_pngs),
+  path_rel = file.path(ruta_Def_16S_relativa, all_pngs)
+) %>%
+  mutate(
+    # tipo
+    type = case_when(
+      str_detect(file, "^pathway_pca_MetagenomeSeq_") ~ "pca_pair",  # 7.4
+      file == "pathway_pca_p_0.05_all.png" ~ "pca_global",  # 7.1
+      str_detect(file, "^pathway_ALDEx2_") ~ "aldex2",  # 7.2
+      str_detect(file, "^pathway_MetagenomeSeq_") ~ "metagenomeseq_pair",  # 7.3
+      TRUE ~ "other"
+    ),
+    section = case_when(
+      type == "pca_global" ~ "7.1",
+      type == "aldex2" ~ "7.2",
+      type == "metagenomeseq_pair" ~ "7.3",
+      type == "pca_pair" ~ "7.4",
+      TRUE ~ NA_character_
+    ),
+    # extraer grupos para comparaciones
+    grp_str = case_when(
+      type %in% c("metagenomeseq_pair", "pca_pair") ~ str_match(file, "^(?:pathway_(?:pca_)?MetagenomeSeq_)(.+)\\.png$")[,2],
+      TRUE ~ NA_character_
+    ),
+    group_a_raw = if_else(!is.na(grp_str), str_split_fixed(grp_str, "_vs_", 2)[,1], NA_character_),
+    group_b_raw = if_else(!is.na(grp_str), str_split_fixed(grp_str, "_vs_", 2)[,2], NA_character_),
+    group_a = if_else(!is.na(group_a_raw), make_pretty(group_a_raw), NA_character_),
+    group_b = if_else(!is.na(group_b_raw), make_pretty(group_b_raw), NA_character_),
+    caption = case_when(
+      type == "pca_global" ~ "PCA global de pathways (p < 0.05).",
+      type == "aldex2" & str_detect(file, "Kruskal") ~ "ALDEx2 — Mapa de calor (Kruskal-Wallis).",
+      type == "aldex2" & str_detect(file, "glm_test_heatmap") ~ "ALDEx2 — Mapa de calor (GLM).",
+      type == "aldex2" & str_detect(file, "glm_test_p_values") ~ "ALDEx2 — P-values (GLM).",
+      type == "metagenomeseq_pair" & !is.na(group_a) & !is.na(group_b) ~ paste0("MetagenomeSeq — Comparación: ", group_a, " vs ", group_b, "."),
+      type == "pca_pair" & !is.na(group_a) & !is.na(group_b) ~ paste0("PCA funcional — Comparación: ", group_a, " vs ", group_b, "."),
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  select(file, path, path_rel, type, section, group_a_raw, group_b_raw, group_a, group_b, caption)
+
+
+# Filtrar solo la fila que empieza por "pathway_pca_p"
+pca_global <- img_df %>%
+  filter(type == "pca_global")
+
+# Filtrar solo las imágenes ALDEx2
+aldex2_global <- img_df %>%
+  filter(type == "aldex2")
+
+# Filtrar solo las imágenes MetagenomeSeq por pares
+metagenomeseq_pair <- img_df %>%
+  filter(type == "metagenomeseq_pair")
+
+# Filtrar solo las imágenes de PCA funcional por pares
+pca_pair <- img_df %>%
+  filter(type == "pca_pair")
+```
+
+
+<div class="informe-titulo-tab">
+  <h1>Pestaña</h1>
+  <h2>Análisis 16S bioinformático completo</h2>
+</div>
+
+<div class="informe-titulo-seccion-unique">
+  <h1>Sección 7</h1>
+  <h2>Predicción funcional (PICRUSt2 / Pycrust)</h2>
+</div>
+
+<div class="flecha-abajo">
+  ▼
+</div>
+
+
+<div class="informe-resumen">
+  <h2>Resumen</h2>
+
+  <p>
+    En esta sección se presentan los resultados de la <strong>predicción funcional</strong> de las comunidades microbianas a partir de los datos de metagenómica 16S, utilizando las herramientas <strong>PICRUSt2</strong> y <strong>Pycrust</strong>. 
+    El objetivo principal es inferir la abundancia de rutas metabólicas (<em>pathways</em>) y funciones biológicas presentes en las muestras, proporcionando una visión integral de la funcionalidad microbiana y permitiendo identificar diferencias entre los grupos experimentales.
+  </p>
+
+  <p>
+    La sección se estructura en cuatro bloques principales:
+  </p>
+
+  <ul>
+    <li>
+      <strong>7.1. PCA global de pathways</strong> <strong>&rArr;</strong> Se realiza un análisis de componentes principales (PCA) sobre las abundancias relativas de pathways predichos. Esto permite visualizar la variación funcional global entre todas las muestras del estudio, identificando patrones de agrupamiento y posibles similitudes o diferencias funcionales entre grupos. La representación incluye los primeros componentes principales (PC1 y PC2), puntos coloreados según el grupo experimental, elipses de confianza y distribuciones marginales, facilitando una interpretación rápida y clara de la estructura funcional global.
+    </li>
+
+    <li>
+      <strong>7.2. Análisis diferencial global (ALDEx2)</strong> <strong>&rArr;</strong> Se aplican métodos estadísticos globales para identificar pathways diferencialmente abundantes entre todos los grupos experimentales. Se incluyen mapas de calor basados en el test de Kruskal-Wallis y en modelos lineales generalizados (GLM), así como gráficos de p-values que resaltan las rutas con diferencias significativas. Este análisis permite detectar patrones funcionales globales y establecer una base para comparaciones más detalladas entre grupos específicos.
+    </li>
+
+    <li>
+      <strong>7.3. Comparaciones específicas por pares (MetagenomeSeq)</strong> <strong>&rArr;</strong> Se realizan comparaciones dirigidas entre pares de grupos experimentales utilizando MetagenomeSeq. Cada gráfico de esta subsección muestra la abundancia relativa de pathways seleccionados según criterios de significancia estadística para esa comparación específica. Esto permite identificar funciones metabólicas que distinguen a un grupo de otro de forma más focalizada y detalla las rutas responsables de diferencias funcionales o fenotípicas específicas.
+    </li>
+
+    <li>
+      <strong>7.4. PCA funcional por pares (<code>pathway_pca_MetagenomeSeq_*</code>)</strong> <strong>&rArr;</strong> Se realizan PCA sobre las abundancias relativas de pathways para cada comparación por pares. Estas figuras muestran cómo se agrupan las muestras de dos grupos específicos, permitiendo visualizar la separación funcional entre ellos y la consistencia de los patrones observados en los análisis de MetagenomeSeq. En algunos casos, los PCA pueden aparecer vacíos si no se detectan pathways diferencialmente abundantes o si la variabilidad funcional es insuficiente para generar una representación informativa.
+    </li>
+  </ul>
+
+  <p>
+    En conjunto, esta sección proporciona una visión integral de la funcionalidad metabólica de las comunidades microbianas estudiadas. Se combinan análisis globales y específicos, representaciones estadísticas y visualizaciones gráficas para permitir interpretar patrones funcionales generales, detectar rutas clave que diferencian grupos y explorar agrupamientos funcionales por pares. 
+    El propósito final es facilitar la comprensión de las funciones metabólicas potenciales asociadas a cada grupo experimental y servir como base para futuras interpretaciones biológicas o experimentales.
+  </p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo-toc">
+  Tabla de contenidos de esta sección
+</div>
+
+<div class="toc">
+  <ul>
+    <li>
+      <a href="#tab3-seccion7">
+        7<span>.</span> Predicción funcional (PICRUSt2 / Pycrust)
+      </a>
+      <ul>
+        <li>
+          <a href="#tab3-seccion7.1">
+            7.1. PCA global de pathways
+          </a>
+        </li>
+        <li>
+          <a href="#tab3-seccion7.2">
+            7.2. Análisis diferencial global (ALDEx2)
+          </a>
+        </li>
+        <li>
+          <a href="#tab3-seccion7.3">
+            7.3. Comparaciones específicas por pares (MetagenomeSeq)
+          </a>
+        </li>
+        <li>
+          <a href="#tab3-seccion7.4">
+            7.4. PCA funcional por pares (<code>pathway_pca_MetagenomeSeq_*</code>)
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<!-- REDACCIÓN -->
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+
+<div style="height: 25px; background-color: transparent;"></div>
+
+<div class="titulo1" id="tab3-seccion7">
+  7<span>.</span> Predicción funcional (PICRUSt2 / Pycrust)
+</div>
+
+<p>
+  En esta sección se presentan los resultados del análisis de <strong>predicción funcional</strong> de las comunidades microbianas utilizando <strong>PICRUSt2</strong> (Phylogenetic Investigation of Communities by Reconstruction of Unobserved States, versión 2). Esta herramienta permite inferir el potencial funcional de las comunidades microbianas a partir de datos de secuenciación 16S rRNA, complementando así la información taxonómica obtenida previamente con una perspectiva funcional.
+</p>
+
+<p>
+  El enfoque de PICRUSt2 se basa en la <em>inferencia filogenética</em> y en el uso de bases de datos funcionales de referencia. A partir de los ASVs (Amplicon Sequence Variants) obtenidos en la etapa de análisis taxonómico, se predice la presencia y abundancia de genes y rutas metabólicas mediante su proyección sobre genomas de referencia filogenéticamente cercanos. De esta forma, es posible estimar el repertorio funcional potencial de las comunidades microbianas sin necesidad de disponer de datos metagenómicos completos.
+</p>
+
+<p>
+  Las rutas metabólicas predichas se anotan utilizando la base de datos <strong>MetaCyc</strong>, que contiene información estructurada sobre vías metabólicas y reacciones bioquímicas. A partir de esta anotación se generan tablas de abundancia de pathways para cada muestra, que sirven como base para distintos análisis estadísticos y visualizaciones.
+</p>
+
+<p>
+  El objetivo principal de esta sección es <strong>explorar y visualizar la variación funcional</strong> entre grupos experimentales, identificando pathways diferencialmente abundantes y patrones de agrupamiento funcional. Para ello, los resultados se presentan en los siguientes subapartados, mostrando de manera clara y ordenada las figuras generadas durante el análisis:
+</p>
+
+<ul>
+  <li>
+    <strong>7.1. PCA global de pathways</strong> <strong>&rArr;</strong> Permite evaluar la variación funcional global entre todas las muestras mediante un Análisis de Componentes Principales (PCA). Se visualiza la estructura general de agrupamiento de las comunidades microbianas a nivel funcional.  
+    <span class="soft-strong">Figura asociada</span> <strong>&rarr;</strong> <code>pathway_pca_p_0.05_all.png</code>.
+  </li>
+  <li>
+    <strong>7.2. Análisis diferencial global (ALDEx2)</strong> <strong>&rArr;</strong> Se identifican pathways diferencialmente abundantes entre grupos experimentales mediante <code>ALDEx2</code>, utilizando transformaciones centradas log-ratio (clr) y pruebas estadísticas no paramétricas. Las figuras incluyen mapas de calor y distribuciones de p-values.  
+    <span class="soft-strong">Figuras asociadas</span> <strong>&rarr;</strong> <code>pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png</code>, <code>pathway_ALDEx2_glm_test_heatmap.png</code>, <code>pathway_ALDEx2_glm_test_p_values.png</code>.
+  </li>
+  <li>
+    <strong>7.3. Comparaciones específicas por pares (MetagenomeSeq)</strong> <strong>&rArr;</strong> Se realizan análisis de abundancia diferencial entre pares de grupos mediante <code>MetagenomeSeq</code>, permitiendo identificar rutas metabólicas específicas asociadas a cada condición experimental.  
+    <span class="soft-strong">Figuras asociadas</span> <strong>&rarr;</strong> todos los archivos <code>pathway_MetagenomeSeq_*</code>.
+  </li>
+  <li>
+    <strong>7.4. PCA funcional por pares (<code>pathway_pca_MetagenomeSeq_*</code>)</strong> <strong>&rArr;</strong> Se visualizan PCA específicos para cada comparación por pares de grupos, mostrando la separación funcional en función de sus perfiles de pathways. Esto complementa el análisis de abundancia diferencial, resaltando la consistencia y divergencia funcional entre grupos.  
+    <span class="soft-strong">Figuras asociadas</span> <strong>&rarr;</strong> todos los archivos <code>pathway_pca_MetagenomeSeq_*</code>.
+  </li>
+</ul>
+
+<p>
+  Para facilitar la revisión y exploración de los resultados generados en esta sección, a continuación se incluye un listado de todas las imágenes relacionadas con la predicción funcional. 
+  Cada archivo corresponde a una figura generada durante los análisis de PCA global, análisis diferencial global con ALDEx2, comparaciones por pares con MetagenomeSeq y PCA funcional por pares. 
+  Los nombres de los archivos reflejan el tipo de análisis y, en el caso de comparaciones por pares, los grupos involucrados. 
+  Haciendo clic en cada enlace, el lector podrá abrir la figura correspondiente en una ventana nueva y examinar los resultados de forma detallada.
+</p>
+
+<div class="box-files">
+
+```{r, results="asis"}
+if (!dir.exists(ruta_Def_16S_relativa)) {
+  cat(sprintf('<p><em>La ruta "%s" no existe o no es accesible.</em></p>\n', ruta_Def_16S_relativa))
+} else {
+  # Listar archivos que comiencen por "pathway" y terminen en .png
+  files <- list.files(ruta_Def_16S_relativa, pattern = "^pathway.*\\.png$", full.names = FALSE)
+  
+  if (length(files) == 0) {
+    cat('<p><em>No se encontraron imágenes pathway*.png en la carpeta especificada.</em></p>\n')
+  } else {
+    enlace <- ruta_Def_16S_relativa
+    
+    cat("<ul>\n")
+    for (f in files) {
+      # Asignar clase según convención de imágenes
+      clase <- "file-img"
+      
+      cat(sprintf('<li class="%s"><a href="%s/%s" target="_blank">%s</a></li>\n',
+                  clase, enlace, f, f))
+    }
+    cat("</ul>\n")
+  }
+}
+```
+
+</div>
+
+```{r, echo=FALSE, results="asis"}
+# Enlace general a la carpeta de imágenes pathway
+enlace <- ruta_Def_16S_relativa
+
+cat(glue::glue('
+<p style="text-align:center;">
+  <a href="{enlace}" target="_blank" class="boton-files">
+    <i class="fa-solid fa-folder-open"></i> Explorar todos los archivos pathway*.png de la carpeta "{basename(enlace)}" aquí
+  </a>
+</p>
+'), sep = "\n")
+```
+
+<p>
+  En conjunto, esta sección integra los análisis funcionales globales y específicos, proporcionando al lector una visión completa del potencial metabólico de las comunidades microbianas estudiadas. Las figuras permiten comparar perfiles funcionales, identificar pathways relevantes y observar agrupamientos que reflejan diferencias y similitudes entre los grupos experimentales.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion7.1">
+  7.1. PCA global de pathways
+</div>
+
+<p>
+  En esta subsección se presenta un <strong>análisis de componentes principales (PCA) global</strong> basado en las rutas metabólicas (<em>pathways</em>) predichas a partir de los datos de metagenómica 16S mediante <strong>PICRUSt2</strong>. 
+  Un <strong>pathway</strong> representa una ruta bioquímica interconectada dentro de un organismo o comunidad microbiana, compuesta por un conjunto de reacciones que contribuyen a funciones metabólicas específicas, como la degradación de carbohidratos, la biosíntesis de aminoácidos, la producción de energía o rutas de señalización celular. 
+  Cada pathway se asigna utilizando la base de datos <strong>MetaCyc</strong>, que proporciona una referencia estandarizada para mapear funciones metabólicas a los microorganismos presentes en las muestras.
+</p>
+
+<p>
+  El objetivo de esta sección es ofrecer una <strong>visión global de la variabilidad funcional</strong> de todas las muestras del estudio. 
+  Dado que la abundancia relativa de pathways puede ser extremadamente alta y compleja, el PCA permite reducir la dimensionalidad de los datos y representar las relaciones entre muestras en un espacio bidimensional (PC1 y PC2) que captura la mayor parte de la variabilidad funcional.
+</p>
+
+<p>
+  La figura mostrada a continuación se construyó considerando únicamente los pathways con <em>p</em> &lt; 0.05, es decir, aquellos que presentan diferencias estadísticamente significativas en al menos una comparación entre grupos. 
+  Este filtrado permite centrar la visualización en las rutas más relevantes y reducir el ruido de fondo que podrían introducir pathways con poca variabilidad.
+</p>
+
+<p>
+  Para generar esta imagen, primero se predijo la funcionalidad metabólica de cada muestra utilizando PICRUSt2 a partir de la tabla de ASVs obtenida en el análisis de metagenómica 16S. 
+  Esto produjo una tabla de abundancia de pathways por muestra. Posteriormente, se seleccionaron los pathways significativos y se aplicó PCA sobre las abundancias relativas, obteniendo un gráfico que resume de manera clara y visual la estructura funcional global de la comunidad microbiana.
+</p>
+
+```{r, results="asis"}
+if (file.exists(pca_global$path_rel)) {
+  cat(glue::glue('
+  <p>
+    La imagen generada se encuentra en el siguiente directorio:
+  </p>
+
+  <p>
+    <code>{pca_global$path}</code>
+  </p>
+
+  <p>
+    A continuación se visualiza la figura, la cual se puede explorar con más detalle, si se considerara necesario, haciendo click en el botón que se proporciona justo debajo.
+  </p>
+
+  <div class="box-images">
+    <img 
+      src="{pca_global$path_rel}" 
+      alt="Imagen {pca_global$file}"
+      style="width: 575px; max-width: 100%;">
+  </div>
+
+  <div style="display: flex; justify-content: center; gap: 25px;">
+    <a href="{pca_global$path_rel}"
+      target="_blank" 
+      class="boton-image">
+      <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva
+    </a>
+    
+    <a href="{pca_global$path_rel}"
+      download="{basename(pca_global$path_rel)}"
+      class="boton-image-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen
+    </a>
+  </div>
+  '), sep = "\n")
+
+} else {
+  cat(glue::glue('
+  <div class="alert-warning alert-box">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <b>Advertencia</b><br>
+    El archivo <code>{pca_global$file}</code> no existe en la ruta especificada:<br>
+    <code>{pca_global$path}</code>.
+  </div>
+  '), sep = "\n")
+}
+```
+
+<p>
+  Esta figura representa cada muestra como un punto dentro de un espacio bidimensional definido por las componentes principales PC1 (eje X) y PC2 (eje Y). 
+  Los puntos se colorean según el grupo experimental al que pertenece cada muestra, y se incluyen <strong>elipses de confianza</strong> que resumen la dispersión funcional dentro de cada grupo. 
+  Además, en los ejes se muestran distribuciones marginales de los puntos por grupo, lo que facilita observar cómo se distribuye la abundancia de pathways a lo largo de cada componente principal.
+</p>
+
+<p>
+  La interpretación de esta figura permite identificar <strong>patrones de agrupamiento funcional</strong> entre las muestras. 
+  Un agrupamiento compacto de muestras del mismo grupo indica que poseen perfiles funcionales similares, mientras que la separación clara entre grupos sugiere diferencias metabólicas significativas. 
+  Los solapamientos entre elipses pueden reflejar similitudes funcionales o redundancias entre grupos.
+</p>
+
+<p>
+  En resumen, el PCA global de pathways proporciona una <strong>visión inicial y completa de la estructura funcional</strong> de las comunidades microbianas del estudio. 
+  Esta visualización sirve como base antes de analizar comparaciones más específicas mediante métodos estadísticos. 
+  En el siguiente apartado se presentará el <strong>análisis diferencial global con ALDEx2</strong>, que permitirá identificar qué pathways muestran cambios significativos de abundancia entre los diferentes grupos experimentales.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion7.2">
+  7.2. Análisis diferencial global (ALDEx2)
+</div>
+
+<p>
+  En esta subsección se presentan los resultados del <strong>análisis diferencial global</strong> de pathways utilizando <strong>ALDEx2</strong>. 
+  ALDEx2 es un paquete estadístico diseñado para estudios de abundancia relativa de datos de secuenciación, que permite identificar features (en este caso, pathways) que difieren significativamente entre grupos experimentales, considerando la naturaleza composicional de los datos microbiológicos.
+</p>
+
+<p>
+  Mientras que el PCA global resume la variación funcional general, ALDEx2 permite <strong>evaluar de manera estadística qué pathways muestran diferencias significativas</strong> en abundancia relativa entre todos los grupos del estudio. Los resultados se presentan principalmente mediante mapas de calor y gráficos de p-values.
+</p>
+
+<p>
+  En esta sección se incluyen las siguientes figuras generadas previamente:
+</p>
+
+<ul>
+  <li><code>pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png</code> <strong>&rArr;</strong> Mapa de calor basado en el test de Kruskal-Wallis para identificar pathways con diferencias globales.</li>
+  <li><code>pathway_ALDEx2_glm_test_heatmap.png</code> <strong>&rArr;</strong> Mapa de calor basado en el modelo lineal generalizado (GLM), mostrando la abundancia relativa de pathways entre grupos.</li>
+  <li><code>pathway_ALDEx2_glm_test_p_values.png</code> <strong>&rArr;</strong> Gráfico de p-values de GLM, destacando las rutas con diferencias estadísticamente significativas.</li>
+</ul>
+
+```{r, results="asis"}
+for(i in seq_len(nrow(aldex2_global))) {
+  if (file.exists(aldex2_global$path_rel[i])) {
+
+    # Detectar tipo de análisis según el nombre del archivo
+    tipo_figura <- case_when(
+      grepl("Kruskal", aldex2_global$file[i], ignore.case = TRUE) ~ "Mapa de calor basado en el test de Kruskal–Wallis",
+      grepl("glm_test_heatmap", aldex2_global$file[i], ignore.case = TRUE) ~ "Mapa de calor basado en el modelo lineal generalizado (GLM)",
+      grepl("p_values", aldex2_global$file[i], ignore.case = TRUE) ~ "Gráfico de p-values asociados al test GLM",
+      TRUE ~ "Visualización de resultados del análisis ALDEx2"
+    )
+
+    cat(glue::glue('
+    <div style="height: 10px; background-color: transparent;"></div>
+
+    <div class="titulo4">
+      ➤ Figura {i}: {aldex2_global$file[i]}
+    </div>
+
+    <p>
+      La siguiente figura corresponde al <strong>{tipo_figura}</strong> generado a partir del análisis funcional global. 
+      Este tipo de representación permite observar de manera visual y comparativa cómo varía la abundancia relativa de distintos pathways entre los grupos experimentales, 
+      facilitando la identificación de patrones y posibles diferencias funcionales relevantes.
+    </p>
+
+    <p>
+      A continuación, se indica la ubicación exacta en la que se encuentra almacenado este archivo de salida dentro del flujo de análisis:
+    </p>
+
+    <p>
+      <code>{aldex2_global$path[i]}</code>
+    </p>
+
+    <p>
+      Seguidamente se muestra la figura generada:
+    </p>
+
+    <div class="box-images">
+      <img 
+        src="{aldex2_global$path_rel[i]}" 
+        alt="Imagen {aldex2_global$file[i]}"
+        style="width: 575px; max-width: 100%;">
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 25px;">
+      <a href="{aldex2_global$path_rel[i]}"
+        target="_blank" 
+        class="boton-image">
+        <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva
+      </a>
+      
+      <a href="{aldex2_global$path_rel[i]}"
+        download="{basename(aldex2_global$path_rel[i])}"
+        class="boton-image-download">
+        <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen
+      </a>
+    </div>
+    '), sep = "\n")
+  } else {
+    cat(glue::glue('
+    <div class="alert-warning alert-box">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <b>Advertencia</b><br>
+      El archivo <code>{aldex2_global$file[i]}</code> no existe en la ruta especificada:<br>
+      <code>{aldex2_global$path[i]}</code>.
+    </div>
+    '), sep = "\n")
+  }
+}
+```
+
+<p>
+  Los <strong>mapas de calor</strong> permiten visualizar la abundancia relativa de pathways a lo largo de todos los grupos experimentales. 
+  Cada fila corresponde a un pathway y cada columna a un grupo o muestra, con colores que representan la magnitud relativa de abundancia. 
+  Esto facilita identificar patrones generales de expresión funcional y pathways que se comportan de manera similar entre distintos grupos.
+</p>
+
+<p>
+  El gráfico de <strong>p-values</strong> proporciona información complementaria, destacando las rutas metabólicas cuya abundancia relativa difiere de manera significativa según el modelo estadístico aplicado. 
+  Los pathways con p-values bajos son aquellos que muestran cambios más consistentes entre grupos y, por lo tanto, son de mayor interés para la interpretación biológica.
+</p>
+
+<p>
+  En conjunto, el análisis global con ALDEx2 permite <strong>identificar rutas metabólicas clave</strong> que diferencian las comunidades microbianas de los distintos grupos del estudio, sirviendo como base antes de explorar comparaciones más específicas entre pares de grupos, que se presentan en el siguiente apartado mediante <strong>MetagenomeSeq</strong>.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion7.3">
+  7.3. Comparaciones específicas por pares (MetagenomeSeq)
+</div>
+
+<p>
+  En esta subsección se presentan los resultados de las <strong>comparaciones funcionales específicas por pares de grupos</strong> obtenidos mediante <strong>MetagenomeSeq</strong>. 
+  Esta herramienta estadística está especialmente diseñada para analizar datos de abundancia relativa en estudios de metagenómica, teniendo en cuenta características propias de este tipo de datos, como su dispersión, su naturaleza censurada (por la gran cantidad de ceros) y la variabilidad entre muestras.
+</p>
+
+<p>
+  A diferencia del análisis global realizado con <strong>ALDEx2</strong>, que resume diferencias considerando todos los grupos simultáneamente, MetagenomeSeq permite realizar <strong>comparaciones dirigidas entre pares de grupos específicos</strong>. 
+  Esto hace posible detectar rutas metabólicas (pathways) cuya abundancia relativa difiere significativamente únicamente en esa comparación concreta, proporcionando una visión más focalizada de los cambios funcionales asociados a cada condición experimental.
+</p>
+
+<p>
+  Cada figura mostrada a continuación representa el resultado de una de estas comparaciones. 
+  En ellas se visualizan los pathways que superan los umbrales definidos de significancia estadística y abundancia relativa, lo que facilita identificar funciones biológicas potencialmente relevantes que diferencian a un grupo del otro.
+</p>
+
+<p>
+  Las imágenes incluidas en esta sección provienen de los archivos generados previamente y nombrados con el prefijo <code>pathway_MetagenomeSeq_</code>, cada uno correspondiente a una comparación específica entre dos grupos experimentales.
+</p>
+
+<p>
+  Es importante señalar que, en algunos casos, <strong>una figura puede aparecer vacía o sin contenido visible</strong>. 
+  Esto suele deberse a que <strong>no se han detectado pathways diferencialmente abundantes</strong> para esa comparación bajo los criterios estadísticos establecidos (por ejemplo, valores de p ajustados por debajo del umbral definido). 
+  También puede ocurrir cuando las diferencias entre los grupos son muy pequeñas o no se dispone de un número suficiente de muestras para alcanzar significancia estadística.
+</p>
+
+```{r, results="asis"}
+for(i in seq_len(nrow(metagenomeseq_pair))) {
+  if (file.exists(metagenomeseq_pair$path_rel[i])) {
+    cat(glue::glue('
+    <div class="titulo4">
+      ➤ Figura {i}: {metagenomeseq_pair$file[i]}
+    </div>
+
+    <p>
+      La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos 
+      <strong>{metagenomeseq_pair$group_a[i]}</strong> y <strong>{metagenomeseq_pair$group_b[i]}</strong>. 
+      Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, 
+      revelando posibles funciones biológicas que caracterizan a cada uno.
+    </p>
+
+    <p>
+      A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+    </p>
+
+    <p>
+      <code>{metagenomeseq_pair$path[i]}</code>
+    </p>
+
+    <p>
+      Seguidamente se presenta la figura correspondiente a esta comparación:
+    </p>
+
+    <div class="box-images">
+      <img 
+        src="{metagenomeseq_pair$path_rel[i]}" 
+        alt="Imagen {metagenomeseq_pair$file[i]}"
+        style="width: 575px; max-width: 100%;">
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 25px;">
+      <a href="{metagenomeseq_pair$path_rel[i]}"
+        target="_blank" 
+        class="boton-image">
+        <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva
+      </a>
+      
+      <a href="{metagenomeseq_pair$path_rel[i]}"
+        download="{basename(metagenomeseq_pair$path_rel[i])}"
+        class="boton-image-download">
+        <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen
+      </a>
+    </div>
+    '), sep = "\n")
+  } else {
+    cat(glue::glue('
+    <div class="alert-warning alert-box">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <b>Advertencia</b><br>
+      El archivo <code>{metagenomeseq_pair$file[i]}</code> no existe en la ruta especificada:<br>
+      <code>{metagenomeseq_pair$path[i]}</code>.
+    </div>
+    '), sep = "\n")
+  }
+}
+```
+
+<p>
+  Cada gráfico de MetagenomeSeq muestra la <strong>abundancia relativa de pathways</strong> para la comparación específica entre dos grupos. 
+  En los gráficos de barras, cada barra representa un pathway, con su altura indicando la abundancia relativa y el color o marcador señalando la significancia estadística. 
+  Esto permite identificar pathways que están sobre- o subrepresentados en un grupo en comparación con otro.
+</p>
+
+<p>
+  La interpretación de estas figuras permite detectar <strong>rutas metabólicas clave asociadas a diferencias entre grupos específicos</strong>. 
+  Al analizar estas comparaciones por pares, se puede identificar funcionalidad metabólica particular de ciertos grupos experimentales y posibles rutas responsables de diferencias fenotípicas o de la respuesta a tratamientos.
+</p>
+
+<p>
+  En conjunto, las comparaciones por pares de MetagenomeSeq complementan los análisis globales de ALDEx2, proporcionando un detalle más fino sobre las diferencias funcionales. 
+  A continuación, en la subsección 7.4, se mostrarán los <strong>PCA funcionales por pares</strong>, que permiten visualizar patrones de agrupamiento de pathways en cada comparación individual.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion7.4">
+  7.4. PCA funcional por pares (<code>pathway_pca_MetagenomeSeq_*</code>)
+</div>
+
+<p>
+  En esta subsección se presentan los resultados del <strong>Análisis de Componentes Principales (PCA) funcional</strong> realizado de forma específica para cada par de grupos experimentales. 
+  A diferencia del PCA global mostrado en la sección 7.1, aquí se analiza únicamente la variación funcional entre <strong>dos grupos concretos</strong>, utilizando los perfiles de pathways obtenidos tras el análisis con <strong>MetagenomeSeq</strong>.
+</p>
+
+<p>
+  Cada figura de PCA por pares permite evaluar visualmente cómo se agrupan las muestras de los dos grupos comparados en función de su perfil funcional. 
+  Los puntos representan muestras individuales, coloreadas según el grupo, mientras que las elipses muestran la dispersión y el patrón central de cada grupo. 
+  Los ejes PC1 y PC2 reflejan las dos componentes principales que capturan la mayor parte de la variabilidad funcional entre las muestras de cada comparación.
+</p>
+
+<p>
+  Los archivos mostrados en esta sección tienen nombres que comienzan con <code>pathway_pca_MetagenomeSeq_</code>, cada uno correspondiente a una comparación específica entre dos grupos experimentales. 
+  Estas representaciones gráficas permiten identificar de manera visual <strong>separaciones o solapamientos funcionales</strong> entre los grupos, evaluando la consistencia de los patrones observados en los análisis de MetagenomeSeq.
+</p>
+
+<p>
+  Es importante mencionar que algunas figuras pueden aparecer vacías o sin contenido visible. 
+  Esto ocurre cuando no se detecta suficiente variabilidad funcional entre los grupos para generar un PCA informativo, o cuando la generación de la imagen se omitió en el flujo de análisis de R. 
+  La ausencia de señal gráfica no implica un error, sino que refleja <strong>la falta de patrones estadísticamente relevantes</strong> en esa comparación específica.
+</p>
+
+```{r, results="asis"}
+for(i in seq_len(nrow(pca_pair))) {
+  if (file.exists(pca_pair$path_rel[i])) {
+    cat(glue::glue('
+    <div class="titulo4">
+      ➤ Figura {i}: {pca_pair$file[i]}
+    </div>
+
+    <p>
+      La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos 
+      <strong>{pca_pair$group_a[i]}</strong> y <strong>{pca_pair$group_b[i]}</strong>. 
+      Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+    </p>
+
+    <p>
+      A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+    </p>
+
+    <p>
+      <code>{pca_pair$path[i]}</code>
+    </p>
+
+    <p>
+      Seguidamente se presenta la figura correspondiente a esta comparación:
+    </p>
+
+    <div class="box-images">
+      <img 
+        src="{pca_pair$path_rel[i]}" 
+        alt="Imagen {pca_pair$file[i]}"
+        style="width: 575px; max-width: 100%;">
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 25px;">
+      <a href="{pca_pair$path_rel[i]}"
+        target="_blank" 
+        class="boton-image">
+        <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva
+      </a>
+      
+      <a href="{pca_pair$path_rel[i]}"
+        download="{basename(pca_pair$path_rel[i])}"
+        class="boton-image-download">
+        <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen
+      </a>
+    </div>
+    '), sep = "\n")
+  } else {
+    cat(glue::glue('
+    <div class="alert-warning alert-box">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <b>Advertencia</b><br>
+      El archivo <code>{pca_pair$file[i]}</code> no existe en la ruta especificada:<br>
+      <code>{pca_pair$path[i]}</code>.
+    </div>
+    '), sep = "\n")
+  }
+}
+```
+
+<p>
+  Cada PCA funcional por pares resume de forma visual la distribución de las muestras según sus perfiles de pathways. 
+  La interpretación permite detectar <strong>separaciones funcionales claras</strong> entre los grupos, identificar posibles solapamientos y evaluar la consistencia de los patrones observados en los análisis de MetagenomeSeq.
+</p>
+
+<p>
+  En conjunto, estos PCA por pares complementan los análisis de MetagenomeSeq realizados en la sección 7.3, proporcionando una <strong>visión visual detallada</strong> de la separación funcional entre grupos específicos. 
+  Esta información puede ayudar a priorizar pathways relevantes para análisis posteriores o experimentos de validación.
+</p>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../../4-javascript/chatbot.js"></script>

@@ -1,0 +1,606 @@
+---
+title: "Metagenomic Report"
+
+include-in-header:
+  text: |
+    <link rel="shortcut icon" href="../../../../../1-images/icons/favicon.svg"/>
+    <link rel="icon" type="image/x-icon" href="../../../../../1-images/icons/favicon.ico">
+
+params:
+  project_path: ""
+  metagenomic_type: ""
+  report_version: ""
+---
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{=html}
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        Este chat permite consultar de manera interactiva la información contenida en un informe específico. 
+        Para ello, se ha alimentado el sistema con el contenido del propio informe, junto con documentos externos en formato PDF y HTML, así como sesiones de preguntas y respuestas (QA). 
+        Al formular una pregunta, el chat busca los fragmentos más relevantes de todos estos documentos mediante técnicas de procesamiento de lenguaje natural ligero y comparaciones basadas en similitud de vectores (medida de coseno). 
+        A partir de los fragmentos seleccionados, se genera un resumen que intenta ofrecer una respuesta coherente y compacta a la consulta realizada.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es de prueba. No se utilizan grandes modelos de lenguaje, por lo que las respuestas pueden ser aproximadas y no siempre completamente precisas. 
+        El objetivo principal es proporcionar una visualización rápida y útil de la información contenida en los documentos, facilitando la exploración del contenido del informe de manera interactiva.
+      </p>
+      
+      <p>
+        Actualmente, los resultados no son muy precisos debido al uso de modelos muy básicos, seleccionados para que la aplicación sea rápida y ejecutable en todo tipo de dispositivos sin necesidad de servidores externos. 
+        Sin embargo, la base del sistema permite mejorar notablemente los resultados en el futuro mediante el uso de modelos más potentes o la integración con APIs externas, ofreciendo así un rendimiento y precisión significativamente superiores.
+        Para iniciar, basta con escribir su pregunta en el campo de texto inferior.
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta..."/>
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+```
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Incluir Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 3: ANÁLISIS ITS | 1. REVISIÓN INICIAL DEL CONJUNTO DE MUESTRAS Y METADATOS -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{r}
+# Cargar librerías
+library(glue)
+library(fs)
+library(stringr)
+library(dplyr)
+
+
+# Rutas clave
+ruta_qmd <- getwd()
+ruta_metagenomic_pipeline <- file.path("..", "..", "..", "..", "..", "..", "..")
+nombre_proyecto <- basename(params$project_path)
+
+
+# Rutas de resultados Nextflow
+ruta_nextflow_results <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results")
+ruta_proyecto_relativa <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results", "1-project-data", nombre_proyecto)
+
+
+# Rutas de la carpeta Def
+ruta_Def_ITS <- file.path(params$project_path, "Resultados", "Def_ITS")
+ruta_Def_ITS_relativa <- file.path(ruta_proyecto_relativa, "Resultados", "Def_ITS")
+
+ruta_Def_ITS_sample_metadata <- file.path(ruta_Def_ITS, "sample-metadata.tsv")
+ruta_Def_ITS_sample_metadata_relativa <- file.path(ruta_Def_ITS_relativa, "sample-metadata.tsv")
+
+
+# Leer el archivo TSV de metadatos
+Def_ITS_sample_metadata_relativa <- read.delim(
+  ruta_Def_ITS_sample_metadata_relativa,
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  fill = TRUE
+)
+
+# Calcular en número de muestras únicas
+n_samples <- dim(Def_ITS_sample_metadata_relativa)[1]
+
+
+# Calcular métricas
+metricas_metadata <- Def_ITS_sample_metadata_relativa %>%
+  summarise(
+    n_Type = n_distinct(Type),
+    lista_Type = paste(unique(Type), collapse = ", "),
+    n_TypeII = n_distinct(TypeII),
+    lista_TypeII = paste(unique(TypeII), collapse = ", "),
+    n_tandas = n_distinct(tanda),
+    lista_tandas = paste(unique(tanda), collapse = ", ")
+  )
+
+
+# Rutas de la carpeta archivos para guardar los resultados
+ruta_archives_ITS <- file.path(ruta_metagenomic_pipeline, "resources", "1-essential", "2-archives", "2-tmp", "tab3-analisis", "tab3-3-analisis-ITS")
+
+# Crear la carpeta si no existe
+if (!dir.exists(ruta_archives_ITS)) {
+  dir.create(ruta_archives_ITS, recursive = TRUE, showWarnings = FALSE)
+}
+
+# Ruta del archivo TXT de metadatos creado
+ruta_archives_ITS_sample_metadata <- file.path(ruta_archives_ITS, "sample_metadata.txt")
+
+# Creación del archivo en formato TXT
+write.table(
+  Def_ITS_sample_metadata_relativa,
+  file = ruta_archives_ITS_sample_metadata,
+  sep = "\t",          # tabulador como separador
+  quote = FALSE,       # sin comillas
+  row.names = FALSE
+)
+
+
+# Ruta de la carpeta reads
+ruta_reads_ITS <- file.path(params$project_path, "Analisis", "reads", "ITS")
+```
+
+
+<div class="informe-titulo-tab">
+  <h1>Pestaña</h1>
+  <h2>Análisis ITS bioinformático completo</h2>
+</div>
+
+<div class="informe-titulo-seccion-unique">
+  <h1>Sección 1</h1>
+  <h2>Revisión inicial del conjunto de muestras y metadatos</h2>
+</div>
+
+<div class="flecha-abajo">
+  ▼
+</div>
+
+
+<div class="informe-resumen">
+  <h2>Resumen</h2>
+
+  <p>
+    En esta primera sección se realiza una exploración preliminar de los datos disponibles con el objetivo de entender la estructura del proyecto y garantizar la coherencia de las muestras antes de abordar los análisis posteriores. Para ello, se incorpora un visor interactivo que permite navegar por la organización de carpetas del proyecto, ofreciendo una visión estructurada del entorno de trabajo y de los archivos generados en las etapas iniciales.
+  </p>
+
+  <p>
+    Uno de los elementos clave analizados es el archivo de metadatos, el cual proporciona información esencial sobre cada muestra. En concreto, se examinan tres variables principales:
+  </p>
+
+  <ul>
+    <li><strong>Filename</strong> <strong>&rArr;</strong> indica el nombre del archivo original (.fastq.gz) que contiene las lecturas crudas.</li>
+    <li><strong>Name</strong> <strong>&rArr;</strong> representa el identificador interno asignado a cada muestra, utilizado de forma coherente a lo largo del pipeline.</li>
+    <li><strong>Type</strong> <strong>&rArr;</strong> define el grupo experimental al que pertenece la muestra (por ejemplo, caso, control, replicado, etc.).</li>
+  </ul>
+
+  <p>
+    Esta revisión no solo permite validar la correcta anotación de las muestras y su clasificación experimental, sino también anticipar posibles problemas o inconsistencias. Finalmente, se ofrece una visualización adicional que muestra todos los archivos <code>fastq.gz</code> disponibles, lo que permite confirmar la integridad del conjunto de datos iniciales desde los cuales se iniciará el análisis de calidad y procesamiento técnico.
+  </p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo-toc">
+  Tabla de contenidos de esta sección
+</div>
+
+<div class="toc">
+  <ul>
+    <li>
+      <a href="#tab3-seccion1">1<span>.</span> Revisión inicial del conjunto de muestras y metadatos</a>
+      <ul>
+        <li><a href="#tab3-seccion1.1">1.1. Organización y estructura del proyecto</a></li>
+        <li><a href="#tab3-seccion1.2">1.2. Revisión del archivo de metadatos</a></li>
+        <li><a href="#tab3-seccion1.3">1.3. Exploración inicial de las muestras de entrada</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<!-- REDACCIÓN -->
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+
+<div style="height: 25px; background-color: transparent;"></div>
+
+<div class="titulo1" id="tab3-seccion1">
+  1<span>.</span> Revisión inicial del conjunto de muestras y metadatos
+</div>
+
+<p>
+  Antes de iniciar el análisis técnico y estadístico de los datos de expresión génica, es fundamental realizar una revisión preliminar del entorno de trabajo, los archivos disponibles y la información asociada a cada muestra. Esta sección tiene como objetivo contextualizar el diseño experimental, validar la organización de los datos y asegurar la integridad y consistencia de las muestras. Para ello, se examina tanto la estructura de carpetas del proyecto como el archivo de metadatos, y se identifican los archivos de lectura cruda que servirán como punto de partida para los análisis posteriores.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion1.1">
+  1.1. Organización y estructura del proyecto
+</div>
+
+```{r, results="asis"}
+cat(glue::glue('
+<p>
+  El presente análisis de <strong>metagenómica de ITS</strong> tiene como objetivo caracterizar la composición y diversidad de las comunidades microbianas presentes en las muestras seleccionadas, cuyo entorno de trabajo se encuentra organizado dentro de la siguiente ruta del proyecto:
+</p>
+
+<code>{params$project_path}</code>
+
+<p>
+  Los archivos y carpetas que componen este entorno de trabajo pueden explorarse mediante el siguiente visor interactivo, el cual permite navegar por la jerarquía del proyecto y consultar los contenidos de forma estructurada, proporcionándose además un acceso directo a los recursos relevantes mediante botones específicos. Mencionar, eso sí, que aquí podremos visualizar solo los archivos más relevantes y esenciales para la elaboración de este informe, mientras que archivos más pesados (como podrían ser archivos <code>.fastq.gz</code>), han sido ignorados en el proceso de copiado de archivos a la ruta de este informe dado el alto volumen de espacio y tiempo requerido para ello. Así, en el caso de querer explorar estos archivos específicos será necesario consultar la carpeta original con los resultados proporcionados tanto por la herramienta <strong>miARma-Seq</strong> como por <strong>QIIME2</strong>.
+</p>
+'), sep = "\n")
+```
+
+<div class="box-files">
+
+```{r, echo=FALSE, results="asis"}
+if (!dir.exists(ruta_proyecto_relativa)) {
+  cat(sprintf('<p><em>La ruta "%s" no existe o no es accesible.</em></p>\n', ruta_proyecto_relativa))
+} else {
+  # Listar todos los archivos, sin filtros
+  files <- list.files(ruta_proyecto_relativa, full.names = FALSE)
+  
+  if (length(files) == 0) {
+    cat('<p><em>No se encontraron archivos en la carpeta especificada.</em></p>\n')
+  } else {
+    enlace <- ruta_proyecto_relativa
+    
+    cat("<ul>\n")
+    for (f in files) {
+      # Asignar clase según la extensión
+      clase <- if (!grepl("\\.", f)) {
+        "file-folder"
+      } else if (grepl("\\.html$", f)) {
+        "file-html"
+      } else if (grepl("\\.zip$", f)) {
+        "file-zip"
+      } else if (grepl("\\.fastq\\.gz$", f)) {
+        "file-fastqgz"
+      } else {
+        "file-default"
+      }
+      
+      cat(sprintf('<li class="%s"><a href="%s/%s" target="_blank">%s</a></li>\n',
+                  clase, enlace, f, f))
+    }
+    cat("</ul>\n")
+  }
+}
+```
+
+</div>
+
+```{r, results="asis"}
+# Para que funcione con rutas absolutas
+enlace <- ruta_proyecto_relativa
+
+# Imprimir el enlace
+cat(glue::glue('
+<p style="text-align:center;">
+  <a href="{enlace}" target="_blank" class="boton-files">
+    <i class="fa-solid fa-folder-open"></i> Explorar los archivos de la carpeta "{nombre_proyecto}" aquí
+  </a>
+</p>
+'), sep = "\n")
+```
+
+```{r, results="asis"}
+cat(glue::glue('
+<p>
+  A continuación, se presenta en detalle la estructura de carpetas y archivos empleada en el análisis de metagenómica ITS, organizada para facilitar tanto el desarrollo reproducible del análisis como la posterior consulta e interpretación de los resultados:
+</p>
+
+<div class="items">
+<ul>
+  <li>
+    <strong><code>{nombre_proyecto}/Analisis/reads/ITS/</code></strong> <strong>&rArr;</strong> Directorio que contiene los archivos de lectura crudos de las muestras, preparados para su procesamiento con QIIME2.
+  </li>
+
+  <li>
+    <strong><code>{nombre_proyecto}/Resultados/Def_ITS/</code></strong> <strong>&rArr;</strong> Carpeta que agrupa los resultados generados por QIIME2 y la predicción funcional de las comunidades microbianas:
+    <ul>
+      <li>
+        <code>core-metrics-results/</code> <strong>&rarr;</strong> Contiene ficheros <code>.qzv</code> con métricas principales de diversidad y composición microbiana. Dichos ficheros pueden visualizarse interactivamente usando <a href="https://view.qiime2.org/" target="_blank" class="normalink">QIIME2 View</a>, además de visualizarlas más adelante en este informe.
+      </li>
+      <li>
+        <code>sample-metadata.tsv</code> <strong>&rarr;</strong> Archivo de metadatos con información de las muestras (tipo, condición, replicados, etc.), necesario para los análisis estadísticos y comparativos.
+      </li>
+      <li>
+        <code>exported/</code> <strong>&rarr;</strong> Carpeta con resultados de abundancia diferencial. Incluye subcarpetas por nivel taxonómico (<code>genero/</code>, <code>familia/</code>), cada una con:
+        <ul>
+          <li>Archivos <code>.xlsx</code> con los resultados estadísticos de abundancia diferencial entre grupos de comparación.</li>
+          <li>Gráficos tipo <em>volcano</em> con los organismos más y menos abundantes, cuando están disponibles.</li>
+        </ul>
+      </li>
+      <li>
+        Archivos de predicción funcional de Pycrust <strong>&rarr;</strong> se encuentran directamente dentro de <code>Resultados/Def_ITS/</code> y se identifican porque sus nombres contienen <code>MetagenomeSeq</code>, <code>glm_test_p_values</code> o <code>pca_p_0,05_all</code>. Estos gráficos permiten evaluar la funcionalidad potencial de las comunidades microbianas según los organismos más abundantes.
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<p>
+  Esta organización modular permite automatizar los análisis clave de metagenómica ITS, garantiza trazabilidad y reproducibilidad, y facilita la interpretación de los resultados. Además, contribuye a una documentación clara del flujo de trabajo, útil en entornos colaborativos o proyectos de largo recorrido.
+</p>
+'), sep = "\n")
+```
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion1.2">
+  1.2. Revisión del archivo de metadatos
+</div>
+
+<p>
+  Como ya se ha comentado anteriormente, la definición del conjunto de muestras analizadas, en este estudio de metagenómica ITS, se encuentra detallado en un archivo de metadatos, accesible en la siguiente ubicación:
+</p>
+
+```{r, results="asis"}
+cat(glue::glue('
+<code>{ruta_Def_ITS_sample_metadata}</code>
+'), sep = "\n")
+```
+
+<p>
+  Este archivo es fundamental para organizar el análisis, ya que permite identificar, clasificar y vincular cada muestra con su contexto experimental. Contiene columnas clave como:
+</p>
+
+<ul>
+  <li><strong>SampleID</strong> <strong>&rArr;</strong> identificador único de la muestra, que coincide con los nombres de los archivos de datos crudos (por ejemplo, <code>.fastq.gz</code>).</li>
+  <li><strong>Type</strong> <strong>&rArr;</strong> grupo principal de la muestra (por ejemplo, <code>Equine</code>, <code>Ovine</code>, <code>Livestock_exc</code>).</li>
+  <li><strong>TypeII</strong> <strong>&rArr;</strong> subtipo o denominación más específica de la muestra dentro de su grupo (por ejemplo, <code>Burro_1</code>, <code>Oveja_1</code>, <code>Control_1</code>).</li>
+  <li><strong>tanda</strong> <strong>&rArr;</strong> número de tanda o lote experimental al que pertenece la muestra.</li>
+</ul>
+
+<p>
+  A continuación se muestra una tabla interactiva que resume esta información, permitiendo una revisión visual y filtrada de las muestras incluidas en el experimento. Esto facilita comprobar su identificador, su grupo y subtipo, y su asignación a las tandas experimentales:
+</p>
+
+```{r, echo=FALSE}
+# Tabla interactiva de metadatos
+library(DT)
+
+htmltools::div(
+  class = "scroll-y-max-500",
+  DT::datatable(
+    Def_ITS_sample_metadata_relativa,
+    options = list(
+      scrollX = TRUE,
+      paging = FALSE,
+      lengthChange = FALSE,
+      language = list(
+        url = '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      )
+    ),
+    class = 'stripe hover compact',
+    rownames = FALSE
+  )
+)
+```
+
+```{r, results='asis'}
+if (file.exists((ruta_Def_ITS_sample_metadata_relativa))) {
+
+  cat(glue::glue('
+  <p style="text-align:center; margin-top: 5px;">
+    <a href="{ruta_Def_ITS_sample_metadata_relativa}" 
+      download="{basename(ruta_Def_ITS_sample_metadata_relativa)}" 
+      class="boton-file-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo "{basename(ruta_Def_ITS_sample_metadata_relativa)}"
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  Para consultar el archivo completo, puede utilizar el visor incrustado que se presenta a continuación o, si lo prefiere, abrir el documento en una pestaña independiente para una exploración más cómoda:
+</p>
+
+```{r, results='asis'}
+cat(glue::glue('
+<div class="iframe-container">
+  <iframe src="{ruta_archives_ITS_sample_metadata}" frameborder="0" style="height: 500px;"></iframe>
+</div>
+
+<p style="text-align:center;">
+  <a href="{ruta_archives_ITS_sample_metadata}"
+    target="_blank" 
+    class="boton-iframe">
+    <i class="fa-solid fa-file-lines"></i> Abrir archivo de metadatos en una nueva página
+  </a>
+</p>
+'), sep = "\n")
+```
+
+```{r, results="asis"}
+cat(glue::glue('
+<p>
+  Así, observando dicha tabla, concretamente la columna <code>SampleID</code>, podemos ver que el experimento comprende <strong>{n_samples}</strong> muestras únicas, organizadas según los <strong>Tipos principales</strong>, <strong>Subtipos</strong> y <strong>tandas</strong>. A continuación se listan los distintos valores detectados en el archivo de metadatos:
+</p>
+
+<ul>
+  <li><strong>Tipos principales (Type)</strong> <strong>&rArr;</strong> {metricas_metadata$lista_Type}</li>
+  <li><strong>Subtipos (TypeII)</strong> <strong>&rArr;</strong> {metricas_metadata$lista_TypeII}</li>
+  <li><strong>Tandas</strong> <strong>&rArr;</strong> {metricas_metadata$lista_tandas}</li>
+</ul>
+'), sep = "\n")
+```
+
+<p>
+  El archivo de metadatos es una pieza esencial para asegurar la trazabilidad del análisis, ya que documenta de forma estructurada la correspondencia entre las muestras, sus nombres internos y los grupos experimentales. Esta trazabilidad garantiza tanto la reproducibilidad como una interpretación correcta de los resultados obtenidos.
+</p>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab3-seccion1.3">
+  1.3. Exploración inicial de las muestras de entrada
+</div>
+
+<p>
+  Este apartado tiene como objetivo ofrecer una primera visión estructurada de los archivos de lectura que constituyen la base del análisis metagenómico ITS. Estos archivos, en formato <code>.fastq.gz</code>, representan las secuencias crudas obtenidas tras la secuenciación del ADN ribosomal ITS y han sido previamente organizados para su uso en el pipeline de análisis.
+</p>
+
+<p>
+  Las muestras empleadas en este estudio han sido definidas en el archivo de metadatos, y cada identificador se ha vinculado de manera coherente con los archivos de lectura correspondientes. Esta asociación garantiza la trazabilidad completa desde los datos crudos hasta los resultados taxonómicos y funcionales, minimizando posibles inconsistencias en las fases posteriores.
+</p>
+
+<p>
+  A continuación, se indica el directorio donde se encontraban almacenados los archivos de lectura seleccionados para el análisis en el momento de generación del informe:
+</p>
+
+```{r, results='asis'}
+cat(glue::glue('
+<code>{ruta_reads_ITS}</code>
+'), sep = "\n")
+```
+
+<p>
+  Este directorio contiene una copia estructurada de los archivos de lectura para cada muestra incluida en el análisis. Cada archivo <code>.fastq.gz</code> ha sido nombrado de forma coherente con la tabla de metadatos, lo que facilita la automatización y reproducibilidad del flujo de trabajo.
+</p>
+
+<p>
+  En la siguiente tabla interactiva se muestra el listado completo de archivos que serán empleados en las etapas de control de calidad y posterior inferencia taxonómica. Esta vista permite verificar rápidamente la integridad del conjunto de muestras y su correspondencia con la información previamente definida:
+</p>
+
+<div class="box-files">
+
+```{r, results="asis"}
+if (!dir.exists(ruta_reads_ITS)) {
+  cat(sprintf('<p><em>La ruta "%s" no existe o no es accesible.</em></p>\n', ruta_reads_ITS))
+} else {
+  # Listar solo archivos con extensión .ht2
+  files <- list.files(ruta_reads_ITS, pattern = "\\.fastq.gz$", full.names = FALSE)
+  
+  if (length(files) == 0) {
+    cat('<p><em>No se encontraron archivos con extensión <code>.fastq.gz</code> en la carpeta especificada.</em></p>\n')
+  } else {
+    enlace <- paste0("file://", ruta_reads_ITS)
+    
+    cat("<ul>\n")
+    for (f in files) {
+      # Asignar clase según la extensión
+      clase <- if (!grepl("\\.", f)) {
+        "file-folder"
+      } else if (grepl("\\.html$", f)) {
+        "file-html"
+      } else if (grepl("\\.zip$", f)) {
+        "file-zip"
+      } else if (grepl("\\.fastq\\.gz$", f)) {
+        "file-fastqgz"
+      } else {
+        "file-default"
+      }
+      
+      cat(sprintf('<li class="%s"><a href="%s/%s" target="_blank">%s</a></li>\n',
+                  clase, enlace, f, f))
+    }
+    cat("</ul>\n")
+  }
+}
+```
+
+</div>
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<p>
+  Tras esta exploración preliminar, el informe continúa con la sección dedicada al control de calidad de los datos crudos. En ella se presenta un resumen global generado mediante <code>MultiQC</code>, que integra las métricas de calidad de todas las muestras procesadas.
+</p>
+
+<p>
+  Además del resumen agregado, también se incluyen los informes individuales generados por <code>FastQC</code>. Estos informes detallan aspectos específicos de cada muestra, como la calidad base a base, la longitud de las secuencias, la proporción de contenido GC, y la presencia de secuencias adaptadoras o contaminantes, métricas clave para asegurar la fiabilidad del análisis metagenómico.
+</p>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../../4-javascript/chatbot.js"></script>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Emperor</title>
+    <!-- core dependencies that are otherwise included via the jupyter notebook -->
+<script src="./vendor/js/require-2.1.22.min.js"></script>
+<script src="./vendor/js/jquery-2.1.4.min.js"></script>
+    <meta charset="utf-8">
+
+    <script type="text/javascript">
+
+if ($("#emperor-css").length == 0){{
+    $("head").append([
+
+        '<link id="emperor-css" rel="stylesheet" type="text/css" href="./css/emperor.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/jquery-ui.min.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/slick.grid.min.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/spectrum.min.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/chosen.min.css">',
+        '<link rel="stylesheet" type="text/css" href="./vendor/css/jquery.contextMenu.min.css">'
+    ]);
+}}
+</script>
+
+
+    <style>
+      #emperor-notebook-0xfda0fdd0 {
+        height:100vh !important;
+        padding: 0px !important;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id='emperor-notebook-0xfda0fdd0' style="position: relative; width:100%; height:500px;">
+  <div class='loading' style="position: absolute;top: 50%;left: 50%;margin-left: -229px; margin-top: -59px; z-index: 10000;height:118px;width:458px;padding:0px"><img src='./img/emperor.png' alt='Emperor resources missing. Expected them to be found in .'></div>
+</div>
+</div>
+    <script type="text/javascript">
+    // When running in the Jupyter notebook we've encountered version conflicts
+// with some dependencies. So instead of polluting the global require context,
+// we define a new context.
+var emperorRequire = require.config({
+'context': 'emperor',
+// the left side is the module name, and the right side is the path
+// relative to the baseUrl attribute, do NOT include the .js extension
+'paths': {
+  /* jQuery */
+  'jquery': './vendor/js/jquery-2.1.4.min',
+  'jqueryui': './vendor/js/jquery-ui.min',
+  'jquery_drag': './vendor/js/jquery.event.drag-2.2.min',
+
+  /* jQuery plugins */
+  'chosen': './vendor/js/chosen.jquery.min',
+  'spectrum': './vendor/js/spectrum.min',
+  'position': './vendor/js/jquery.ui.position.min',
+  'contextmenu': './vendor/js/jquery.contextMenu.min',
+
+  /* other libraries */
+  'underscore': './vendor/js/underscore-min',
+  'chroma': './vendor/js/chroma.min',
+  'filesaver': './vendor/js/FileSaver.min',
+  'blob': './vendor/js/Blob',
+  'canvastoblob': './vendor/js/canvas-toBlob',
+  'd3': './vendor/js/d3.min',
+
+  /* THREE.js and plugins */
+  'three': './vendor/js/three.min',
+  'orbitcontrols': './vendor/js/three.js-plugins/OrbitControls',
+  'projector': './vendor/js/three.js-plugins/Projector',
+  'svgrenderer': './vendor/js/three.js-plugins/SVGRenderer',
+  'canvasrenderer': './vendor/js/three.js-plugins/CanvasRenderer',
+  'selectionbox': './vendor/js/three.js-plugins/SelectionBox',
+  'selectionhelper': './vendor/js/three.js-plugins/SelectionHelper',
+
+  /* SlickGrid */
+  'slickcore': './vendor/js/slick.core.min',
+  'slickgrid': './vendor/js/slick.grid.min',
+  'slickformatters': './vendor/js/slick.editors.min',
+  'slickeditors': './vendor/js/slick.formatters.min',
+  'slickdataview': './vendor/js/slick.dataview.min',
+
+  /* Emperor's objects */
+  'util': './js/util',
+  'model': './js/model',
+  'multi-model': './js/multi-model',
+  'view': './js/view',
+  'controller': './js/controller',
+  'draw': './js/draw',
+  'scene3d': './js/sceneplotview3d',
+  'shapes': './js/shapes',
+  'animationdirector': './js/animate',
+  'trajectory': './js/trajectory',
+  'uistate': './js/ui-state',
+
+  /* controllers */
+  'abcviewcontroller': './js/abc-view-controller',
+  'viewcontroller': './js/view-controller',
+  'colorviewcontroller': './js/color-view-controller',
+  'visibilitycontroller': './js/visibility-controller',
+  'opacityviewcontroller': './js/opacity-view-controller',
+  'scaleviewcontroller': './js/scale-view-controller',
+  'shapecontroller': './js/shape-controller',
+  'axescontroller': './js/axes-controller',
+  'animationscontroller': './js/animations-controller',
+
+  /* editors */
+  'shape-editor': './js/shape-editor',
+  'color-editor': './js/color-editor',
+  'scale-editor': './js/scale-editor'
+
+},
+/*
+   Libraries that are not AMD compatible need shim to declare their
+   dependencies.
+ */
+'shim': {
+  'jquery_drag': {
+    'deps': ['jquery', 'jqueryui']
+  },
+  'chosen': {
+    'deps': ['jquery'],
+    'exports': 'jQuery.fn.chosen'
+  },
+  'contextmenu' : {
+    'deps': ['jquery', 'jqueryui', 'position']
+  },
+  'filesaver' : {
+    'deps': ['blob']
+  },
+  'canvastoblob' : {
+    'deps': ['blob']
+  },
+  'slickcore': ['jqueryui'],
+  'slickgrid': ['slickcore', 'jquery_drag', 'slickformatters', 'slickeditors',
+                'slickdataview']
+}
+});
+
+emperorRequire(
+["jquery", "model", "controller"],
+function($, model, EmperorController) {
+  var DecompositionModel = model.DecompositionModel;
+
+  var div = $('#emperor-notebook-0xfda0fdd0');
+
+  var data = {"info": null, "plot": {"decomposition": {"axes_names": [0, 1, 2, 3, 4], "ci": null, "coordinates": [[-0.18740992889241725, -0.22084569986530841, 0.19955632700403883, 0.14013817356252725, 0.14929323252693316], [-0.24404112109346776, -0.4457439237695414, 0.1494323241569915, 0.29963989531539437, -0.004369238127502367], [-0.4444316989837572, 0.144883416272876, -0.0036252639220789138, -0.11867947743557916, -0.18304585961030312], [-0.3762646951215845, -0.22849034762460466, -1.0, 0.30111720165464795, 0.07457345036598483], [0.20217700904195207, -0.330320277356615, 0.056338187456088394, 0.1301175412230083, -0.258199267667393], [-0.3981609987080285, -0.022365491935076115, 0.19839152063954354, 0.03452770251960288, -0.14882394834779192], [-0.09118972536252791, -0.29574648999129116, -0.12270018464716342, -0.7940812359388661, 0.5310294594495406], [-0.24040937105886556, -0.3745848344521997, 0.1414008710804034, 0.12505974514336254, -0.0017442098665792442], [-0.4458377154150137, -0.11341325202417478, 0.13964997729573386, -0.1758627048726235, -0.16133493114898212], [-0.3014262356219924, 0.05486556441316152, 0.126088439185199, -0.10075308338410326, -0.2563795211360766], [0.4197169372563713, -0.272598450617689, -0.015433151251738383, -0.14355920839905162, -0.24231648933527986], [0.3197770145514772, -0.2889404011510597, 0.045334285055170884, -0.28613359987698006, -0.195092977166302], [0.10856265673218934, 0.13444278467080584, 0.18607753722638767, 0.25648454709431867, 0.3555446645705059], [0.09152388439057954, 0.11903009411091627, 0.17423875323901153, 0.2515779195156323, 0.32037338410880556], [0.10850304924129903, 0.10331555052729147, 0.21085061488792173, 0.2321424748980779, 0.3259392486509501], [-0.1400275740603245, 0.6077371064520677, -0.0628870705348112, -0.06257461946116684, -0.027318360720697054], [-0.1624957754134968, 0.5662384423923572, -0.05114444385657276, -0.11354148218292041, -0.05267254693902621], [-0.15565172031476582, 0.5923131810503236, -0.052970469924228075, -0.03626295774099481, -0.07401344776240824], [0.6465565088506021, 0.0905752360944887, -0.1206702531432683, -0.0227084706465902, -0.007873817263314174], [0.6440248787531686, 0.08445063119932417, -0.09650934324570108, 0.04253192274596694, -0.06926178492509985], [0.6465046212286084, 0.09519716160394671, -0.10141865670092814, 0.04081971626633737, -0.07430703965596425]], "edges": [], "percents_explained": [19.914703807417304, 14.743167480135725, 10.111464520727326, 9.326551065355146, 7.413154659508979], "sample_ids": ["NGS001-23_16S_41", "NGS001-23_16S_42", "NGS001-23_16S_43", "NGS001-23_16S_44", "NGS001-23_16S_47", "NGS001-23_16S_48", "NGS069-23_16S_29", "NGS069-23_16S_30", "NGS069-23_16S_31", "NGS069-23_16S_32", "NGS069-23_16S_35", "NGS069-23_16S_36", "NGS069-24-16S-1", "NGS069-24-16S-2", "NGS069-24-16S-3", "NGS069-24-16S-4", "NGS069-24-16S-5", "NGS069-24-16S-6", "NGS069-24-16S-7", "NGS069-24-16S-8", "NGS069-24-16S-9"]}, "metadata": [["NGS001-23_16S_41", "Equine", "Burro_2", "3.0"], ["NGS001-23_16S_42", "Equine", "Burro_3", "3.0"], ["NGS001-23_16S_43", "Ovine", "Oveja_2", "3.0"], ["NGS001-23_16S_44", "Ovine", "Oveja_3", "3.0"], ["NGS001-23_16S_47", "livestock_exclusion", "Control_2", "3.0"], ["NGS001-23_16S_48", "livestock_exclusion", "Control_3", "3.0"], ["NGS069-23_16S_29", "Equine", "Burro_1", "2.0"], ["NGS069-23_16S_30", "Equine", "Burro_4", "2.0"], ["NGS069-23_16S_31", "Ovine", "Oveja_1", "2.0"], ["NGS069-23_16S_32", "Ovine", "Oveja_4", "2.0"], ["NGS069-23_16S_35", "livestock_exclusion", "Control_1", "2.0"], ["NGS069-23_16S_36", "livestock_exclusion", "Control_4", "2.0"], ["NGS069-24-16S-1", "Equine+c", "Burro_8M_1", "4.0"], ["NGS069-24-16S-2", "Equine+c", "Burro_8M_2", "4.0"], ["NGS069-24-16S-3", "Equine+c", "Burro_8M_3", "4.0"], ["NGS069-24-16S-4", "ovine+c", "Oveja_8M_1", "4.0"], ["NGS069-24-16S-5", "ovine+c", "Oveja_8M_2", "4.0"], ["NGS069-24-16S-6", "ovine+c", "Oveja_8M_3", "4.0"], ["NGS069-24-16S-7", "Livestock_exc+c", "control_compost_8M_1", "4.0"], ["NGS069-24-16S-8", "Livestock_exc+c", "control_compost_8M_2", "4.0"], ["NGS069-24-16S-9", "Livestock_exc+c", "control_compost_8M_3", "4.0"]], "metadata_headers": ["SampleID", "Type", "TypeII", "tanda"], "settings": {}, "type": "scatter"}};
+
+  var plot, biplot = null, ec;
+
+  function init() {
+    // Initialize the DecompositionModel for the scatter plot, and optionally
+    // add one for the biplot arrows
+    plot = new DecompositionModel(data.plot.decomposition,
+                                  data.plot.metadata_headers,
+                                  data.plot.metadata,
+                                  data.plot.type);
+
+    if (data.biplot) {
+      biplot = new DecompositionModel(data.biplot.decomposition,
+                                      data.biplot.metadata_headers,
+                                      data.biplot.metadata,
+                                      data.biplot.type);
+    }
+
+    ec = new EmperorController(plot, biplot, "emperor-notebook-0xfda0fdd0", undefined,
+                               data.info);
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    ec.render();
+  }
+  $(window).resize(function() {
+    ec.resize(div.innerWidth(), div.innerHeight());
+  });
+
+  $(function(){
+    init();
+    animate();
+
+    ec.ready = function () {
+      // any other code that needs to be executed when emperor is loaded should
+      // go here
+      ec.loadConfig(data.plot.settings);
+
+      // sets up generic callbacks for 3rd party consumers
+      var plotView = ec.sceneViews[0];
+      /*__custom_on_ready_code__*/
+      
+    }
+  });
+
+}); // END REQUIRE.JS block
+    </script>
+  </body>
+</html>

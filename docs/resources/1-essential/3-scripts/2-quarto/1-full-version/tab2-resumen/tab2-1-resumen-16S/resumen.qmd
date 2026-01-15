@@ -1,0 +1,627 @@
+---
+title: "Metagenomic Report"
+
+include-in-header:
+  text: |
+    <link rel="shortcut icon" href="../../../../../1-images/icons/favicon.svg"/>
+    <link rel="icon" type="image/x-icon" href="../../../../../1-images/icons/favicon.ico">
+
+params:
+  project_path: ""
+  metagenomic_type: ""
+  report_version: ""
+---
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{=html}
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        ¡Hola! Soy <strong>Geni</strong>, el asistente inteligente de <strong>GenoScribe</strong>.  
+        Estoy aquí para ayudarte a explorar de forma interactiva el contenido de este informe bioinformático.
+      </p>
+
+      <p>
+        Cuando me haces una pregunta, primero intento reconocer si coincide con alguno de los patrones o expresiones que conozco.  
+        Si encuentro una coincidencia, te responderé directamente con una respuesta predefinida, diseñada para ser rápida, clara e incluso un poco ingeniosa.  
+        Si no reconozco el patrón, entonces activo mis herramientas de búsqueda: genero representaciones vectoriales (embeddings) y busco los fragmentos más relevantes entre varios documentos —incluyendo el propio informe, archivos PDF y HTML externos, y sesiones de preguntas y respuestas (QA).  
+        A partir de esa información, creo un resumen que intenta ofrecerte una respuesta coherente y útil basada en el contenido existente.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es experimental. No utilizo grandes modelos de lenguaje, por lo que algunas respuestas pueden ser aproximadas o incompletas.  
+        El objetivo principal es facilitar una visualización rápida, comprensible y reproducible de la información contenida en los documentos, permitiendo una exploración más dinámica del informe.
+      </p>
+
+      <p>
+        Actualmente, los resultados pueden variar en precisión, ya que empleo modelos ligeros y locales para asegurar que la aplicación funcione en cualquier entorno sin necesidad de servidores externos.  
+        Sin embargo, la estructura del sistema está preparada para mejorar notablemente su rendimiento en el futuro mediante la integración con modelos más avanzados o APIs externas.  
+        Para comenzar, simplemente escribe tu pregunta en el campo inferior y deja que yo me encargue del resto. ¡Prometo poner todo mi código en ello!
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta..."/>
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+```
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Incluir Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 2: ANÁLISIS | RESUMEN Y VISIÓN GENERAL DEL EXPERIMENTO 16S -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+```{r}
+# Cargar librerías
+library(jsonlite)
+library(dplyr)
+library(stringr)
+library(glue)
+library(fs)
+
+
+# Rutas clave
+ruta_qmd <- getwd()
+ruta_metagenomic_pipeline <- file.path("..", "..", "..", "..", "..", "..", "..")
+ruta_metagenomic_pipeline_absoluta <- normalizePath(ruta_metagenomic_pipeline)
+nombre_proyecto <- basename(params$project_path)
+
+
+# Rutas de resultados Nextflow
+ruta_nextflow_results <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results")
+ruta_proyecto_relativa <- file.path(ruta_metagenomic_pipeline, "resources", "2-nextflow-results", "1-project-data", nombre_proyecto)
+
+
+# Ruta de archivo MultiQC
+ruta_multiqc_data.json <- file.path(ruta_nextflow_results, "2-fastqc-report/results-multiqc-16S/multiqc_data/multiqc_data.json")
+
+# Cargar datos de MultiQC
+data <- fromJSON(ruta_multiqc_data.json, simplifyVector = FALSE)
+
+
+# Extraer datos de FastQC para obtener nombres de muestra
+fastqc_data <- data$report_general_stats_data$fastqc
+df <- bind_rows(fastqc_data, .id = "sample")
+
+# Número de archivos fastq
+n_fastq <- length(df$sample)
+
+# Limpiar nombres de muestra (_R1 / _R2)
+df <- df %>%
+  mutate(clean_sample = str_remove(sample, "_R[12].*$"))
+
+# Redondear columnas con la palabra "percent" a dos decimales
+df <- df %>%
+  mutate(across(contains("percent"), ~ round(., 2)))
+
+# Ruta para guardar archivos
+ruta_archives_tmp_resumen_16S <- file.path(ruta_metagenomic_pipeline, "resources", "1-essential", "2-archives", "2-tmp", "tab2-resumen", "tab2-1-resumen-16S")
+
+# Ruta para guardar el dataframe creado
+ruta_estadisticas_globales_calidad_csv <- file.path(ruta_archives_tmp_resumen_16S, "estadisticas_globales_calidad.csv")
+
+# Guardar el dataframe como CSV
+write.csv(df, file = ruta_estadisticas_globales_calidad_csv, row.names = FALSE)
+
+
+# Número de muestras únicas
+unique_fastq <- unique(df$clean_sample)
+n_unique_fastq <- length(unique_fastq)
+
+# Fecha del reporte (si está en el JSON; si no, ponemos Sys.Date())
+report_date <- if (!is.null(data$report_created)) {
+  data$report_created
+} else {
+  as.character(Sys.Date())
+}
+
+# Tecnología y parámetros (ajustarlo si varía entre experimentos)
+seq_tech <- "Illumina"
+seq_mode <- "Lecturas pareadas (paired-end)"
+read_length <- if ("avg_sequence_length" %in% names(df)) {
+  round(mean(as.numeric(df$avg_sequence_length), na.rm = TRUE), 0)
+} else NA
+
+
+# Rutas de la carpeta Def
+ruta_Def_16S <- file.path(params$project_path, "Resultados", "Def_16S")
+ruta_Def_16S_relativa <- file.path(ruta_proyecto_relativa, "Resultados", "Def_16S")
+
+ruta_Def_16S_sample_metadata <- file.path(ruta_Def_16S, "sample-metadata.tsv")
+ruta_Def_16S_sample_metadata_relativa <- file.path(ruta_Def_16S_relativa, "sample-metadata.tsv")
+
+
+# Leer el archivo TSV de metadatos
+Def_16S_sample_metadata_relativa <- read.delim(
+  ruta_Def_16S_sample_metadata_relativa,
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  fill = TRUE
+)
+
+# Calcular en número de muestras únicas
+n_samples <- dim(Def_16S_sample_metadata_relativa)[1]
+
+# Calcular métricas
+metricas_metadata <- Def_16S_sample_metadata_relativa %>%
+  summarise(
+    n_Type = n_distinct(Type),
+    lista_Type = paste(unique(Type), collapse = ", "),
+    n_TypeII = n_distinct(TypeII),
+    lista_TypeII = paste(unique(TypeII), collapse = ", "),
+    n_tandas = n_distinct(tanda),
+    lista_tandas = paste(unique(tanda), collapse = ", ")
+  )
+```
+
+
+<div class="informe-titulo-tab-unique">
+  <h1>Pestaña</h1>
+  <h2>Resumen 16S del experimento</h2>
+</div>
+
+<div class="flecha-abajo">
+  ▼
+</div>
+
+
+<div class="informe-resumen">
+  <h2>Resumen</h2>
+
+  <p>
+    Esta sección ofrece una <strong>visión general integral</strong> del experimento de <strong>metagenómica 16S</strong> analizado, partiendo del <strong>contexto general</strong> y las características de las <strong>muestras analizadas</strong>, para luego abordar las <strong>estadísticas globales de calidad</strong> derivadas del control de las lecturas obtenidas.
+  </p>
+
+  <p>
+    Inicialmente, se presenta una descripción detallada de las <strong>muestras únicas</strong>, las <strong>categorías principales</strong> (<em>Type</em>) y las <strong>subcategorías</strong> (<em>TypeII</em>), el <strong>número de tandas</strong>, la <strong>tecnología empleada</strong> (<em>Illumina paired-end</em>) y la <strong>longitud media de las lecturas</strong>. Estas métricas permiten comprender el alcance, la diversidad y la estructura del estudio, así como la organización de los datos para posteriores análisis taxonómicos y funcionales.
+  </p>
+
+  <p>
+    A continuación, se resumen las principales <strong>métricas globales de calidad</strong>, tales como el <strong>total de lecturas</strong>, <strong>porcentaje de GC</strong>, <strong>lecturas duplicadas</strong>, <strong>longitud media</strong> y <strong>porcentaje de lecturas fallidas</strong>, con valores representativos calculados como medianas o medias según corresponda. 
+    Estas métricas se muestran tanto en <strong>tarjetas visuales</strong> que facilitan la interpretación rápida como en una <strong>tabla detallada por muestra</strong>, permitiendo identificar variaciones o posibles problemas de calidad.
+  </p>
+
+  <p>
+    En conjunto, esta sección establece las bases para evaluar la <strong>calidad</strong> y la <strong>representatividad</strong> del conjunto de datos antes de abordar análisis más profundos de diversidad, abundancia y predicción funcional, y prepara al usuario para continuar con la exploración exhaustiva del proceso en la pestaña <strong><a href="../../tab3-analisis/tab3-1-analisis-16S/0-contexto.html" class="normalink">Análisis</a></strong>.
+  </p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div style="height: 15px; background-color: transparent;"></div>
+
+<div class="titulo-toc">
+  Tabla de contenidos de esta sección
+</div>
+
+<div class="toc">
+  <ul>
+    <li>
+      <a href="#tab2-seccion1">
+        1<span>.</span> Resumen del experimento
+      </a>
+      <ul>
+        <li>
+          <a href="#tab2-seccion1.1">
+            1.1. Contexto y diseño experimental
+          </a>
+        </li>
+        <li>
+          <a href="#tab2-seccion1.2">
+            1.2. Estadísticas globales de calidad
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<!-- REDACCIÓN -->
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+
+<div style="height: 25px; background-color: transparent;"></div>
+
+<div class="titulo1" id="tab2-seccion1">
+  1<span>.</span> Resumen del experimento
+</div>
+
+<p>
+  Esta sección proporciona una visión general del experimento de <strong>metagenómica 16S</strong>, comenzando con una descripción de las muestras y su organización, seguida del análisis preliminar de la calidad de las lecturas obtenidas. 
+  El objetivo es ofrecer una primera evaluación de la estructura del conjunto de datos y de las métricas globales de calidad, fundamentales para garantizar la fiabilidad de los análisis posteriores.
+</p>
+
+<p>
+  En el apartado <strong>1.1. Contexto y diseño experimental</strong> se detallan las características principales del experimento, incluyendo el número de muestras, las <strong>categorías principales (Type)</strong>, las <strong>subcategorías (TypeII)</strong>, el número de tandas y la tecnología de secuenciación utilizada. 
+  A continuación, en <strong>1.2. Estadísticas globales de calidad</strong>, se resumen las métricas clave obtenidas tras el control de calidad de las lecturas, presentadas tanto de forma visual mediante <strong>tarjetas de métricas</strong> como con tablas de detalle por muestra.
+</p>
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab2-seccion1.1">
+  1.1. Contexto y diseño experimental
+</div>
+
+```{r, results="asis"}
+# Texto descriptivo
+cat(glue::glue('
+<p>
+  Se presenta un resumen inicial del experimento de <strong>metagenómica 16S</strong> generado mediante tecnología de secuenciación <strong>{seq_tech}</strong> en modo <strong>{seq_mode}</strong>. Las lecturas tienen una longitud esperada de <strong>{read_length} pares de bases</strong>, un parámetro clave que influye en la capacidad de mapeo y en la resolución de la diversidad microbiana.
+</p>
+
+<p>
+  Con el fin de ofrecer una visión clara y rápida de los principales parámetros del conjunto de datos, a continuación se presentan, en formato de tarjetas, los indicadores generales más relevantes de las muestras y su distribución según la estructura de metadatos.
+</p>
+'), sep = "\n")
+
+
+# Tarjetas de metadatos
+cat('
+<div class="metric-cards">
+<div class="metric-card blue">
+  <h3>Archivos FASTQ totales</h3>
+  <p>', n_fastq, '</p>
+</div>
+<div class="metric-card green">
+  <h3>Archivos FASTQ únicos</h3>
+  <p>', n_unique_fastq, '</p>
+</div>
+<div class="metric-card yellow">
+  <h3>Muestras únicas</h3>
+  <p>', n_samples, '</p>
+</div>
+<div class="metric-card orange">
+  <h3>Categorías principales</h3>
+  <p>', metricas_metadata$n_Type, '</p>
+</div>
+<div class="metric-card red">
+  <h3>Subcategorías</h3>
+  <p>', metricas_metadata$n_TypeII, '</p>
+</div>
+<div class="metric-card pink">
+  <h3>Número de tandas</h3>
+  <p>', metricas_metadata$n_tandas, '</p>
+</div>
+<div class="metric-card purple">
+  <h3>Longitud esperada</h3>
+  <p>', read_length, ' bp</p>
+</div>
+<div class="metric-card cyan">
+  <h3>Modo de secuenciación</h3>
+  <p>', seq_mode, '</p>
+</div>
+<div class="metric-card gray">
+  <h3>Fecha del reporte</h3>
+  <p>', report_date, '</p>
+</div>
+</div>
+')
+
+
+# Tabla con distribución de muestras por condición
+cat(glue::glue('
+<p>
+  El experimento cuenta con <strong>{n_fastq}</strong> archivos FASTQ, que corresponden a <strong>{n_unique_fastq}</strong> muestras únicas si ignoramos la distinción entre lectura 1 y lectura 2 (R1/R2). Por otra parte, según el archivo de metadatos (<code>sample-metadata.tsv</code>), se registran <strong>{n_samples}</strong> muestras únicas, organizadas según sus <strong>Tipos principales</strong>, <strong>Subtipos</strong> y <strong>Tandas</strong>. 
+  Es importante destacar que no siempre existe una correspondencia directa 1:1 entre las muestras listadas en el TSV y los archivos FASTQ: algunas muestras pueden no tener archivos FASTQ generados, y otros FASTQ pueden corresponder a controles o réplicas no incluidos en el TSV.
+</p>
+
+<p>
+  A continuación se muestran los distintos valores detectados en el archivo de metadatos:
+</p>
+
+<ul>
+  <li><strong>Tipos principales (Type)</strong> <strong>&rArr;</strong> {metricas_metadata$lista_Type}</li>
+  <li><strong>Subtipos (TypeII)</strong> <strong>&rArr;</strong> {metricas_metadata$lista_TypeII}</li>
+  <li><strong>Tandas</strong> <strong>&rArr;</strong> {metricas_metadata$lista_tandas}</li>
+</ul>
+
+<p>
+  La tabla completa de metadatos, que incluye la relación entre cada muestra y sus categorías asignadas, puede consultarse en la siguiente ubicación:
+</p>
+
+<code>{ruta_Def_16S_sample_metadata}</code>
+
+<p>
+  Y esta, vendría dada por:
+</p>
+'), sep = "\n")
+```
+
+```{r, results="asis"}
+# Tabla interactiva de metadatos
+library(DT)
+
+htmltools::div(
+  class = "scroll-y-max-500",
+  DT::datatable(
+    Def_16S_sample_metadata_relativa,
+    options = list(
+      scrollX = TRUE,
+      paging = FALSE,
+      lengthChange = FALSE,
+      language = list(
+        url = '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      )
+    ),
+    class = 'stripe hover compact',
+    rownames = FALSE
+  )
+)
+```
+
+```{r, results='asis'}
+if (file.exists(ruta_Def_16S_sample_metadata_relativa)) {
+
+  cat(glue::glue('
+  <p style="text-align:center; margin-top: 5px;">
+    <a href="{ruta_Def_16S_sample_metadata_relativa}" 
+      download="{basename(ruta_Def_16S_sample_metadata_relativa)}" 
+      class="boton-file-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo "sample-metadata.tsv"
+    </a>
+  </p>
+  \n\n'))
+}
+```
+
+```{r, results="asis"}
+cat(glue::glue('
+<p>
+  La convención de nombres utilizada en los archivos <code>.fastq.gz</code> permite identificar de manera inequívoca cada lectura y emparejar correctamente los pares R1/R2 correspondientes a la misma muestra. 
+  Generalmente, los nombres de archivo incluyen información del proyecto, identificador de muestra y etiqueta de lectura (R1 o R2), lo que facilita la trazabilidad desde los datos crudos hasta los análisis posteriores. 
+  Esta estructura debe mantenerse de forma consistente para evitar emparejamientos incorrectos o pérdidas de muestras durante el flujo de trabajo.
+</p>
+
+<p>
+  Cada archivo <code>.fastq.gz</code> corresponde a un <strong>SampleID</strong> presente en el archivo de metadatos, garantizando la asociación entre la información de secuenciación y las categorías experimentales o de clasificación utilizadas en el estudio. 
+  De esta manera, se asegura que todas las muestras están correctamente representadas y etiquetadas para el análisis de diversidad y abundancia microbiana.
+</p>
+
+<p>
+  La fecha de compilación de este resumen es <strong>{report_date}</strong>. Este dato es relevante para la trazabilidad y la comparación entre análisis, especialmente en caso de repetir el procesamiento con versiones diferentes del pipeline, del genoma de referencia o de la anotación.
+</p>
+
+<p>
+  En conjunto, esta sección proporciona una visión general preliminar del experimento y su organización. 
+</p>
+
+<p>
+  A continuación, en la siguiente sección, se presentarán las estadísticas globales de calidad de las muestras, que facilitarán una evaluación más cuantitativa y detallada.
+</p>
+'), sep = "\n")
+```
+
+
+
+
+
+
+
+
+<div style="height: 20px; background-color: transparent;"></div>
+
+<div class="titulo2" id="tab2-seccion1.2">
+  1.2. Estadísticas globales de calidad
+</div>
+
+```{r}
+library(dplyr)
+library(glue)
+library(purrr)
+
+# Asegurarse de que df tiene las columnas numéricas (si vienen como caracteres, convertir)
+# df$total_sequences <- as.numeric(df$total_sequences)
+# df$percent_gc <- as.numeric(df$percent_gc)
+# df$percent_duplicates <- as.numeric(df$percent_duplicates)
+# df$avg_sequence_length <- as.numeric(df$avg_sequence_length)
+# df$percent_fails <- as.numeric(df$percent_fails)
+
+# Calcular métricas
+metrics <- tibble::tibble(
+  nombre = c("Total de lecturas", "GC (%)", "Lecturas duplicadas",
+            "Longitud media", "Lecturas fallidas"),
+  valor = c(
+    round(median(df$total_sequences, na.rm = TRUE) / 1e6, 1),
+    round(mean(df$percent_gc, na.rm = TRUE), 1),
+    round(mean(df$percent_duplicates, na.rm = TRUE), 1),
+    round(mean(df$avg_sequence_length, na.rm = TRUE), 1),
+    round(mean(df$percent_fails, na.rm = TRUE), 1)
+  ),
+  unidad = c("millones", "%", "%", "bp", "%"),
+  color = c("blue", "green", "red", "orange", "yellow")
+)
+```
+
+<p>
+  En esta sección se presentan las principales métricas derivadas del control de calidad y alineamiento de las lecturas de metagenómica 16S. 
+  Estos indicadores son fundamentales para evaluar la integridad y adecuación de los datos antes de proceder con el análisis de expresión génica.
+</p>
+
+<p>
+  A continuación se muestran, en formato de tarjetas visuales, los valores centrales para el conjunto de muestras de las siguientes métricas clave:
+</p>
+
+```{r, results='asis'}
+cat(glue::glue('
+<ul>
+  <li>
+    <strong>Total de lecturas</strong> <strong>&rArr;</strong> mediana del número total de secuencias obtenidas por muestra, expresada en <code>{metrics$valor[metrics$nombre == "Total de lecturas"]}{metrics$unidad[metrics$nombre == "Total de lecturas"]}</code>, que indica la profundidad de secuenciación.
+  </li>
+  <li>
+    <strong>GC (%)</strong> <strong>&rArr;</strong> contenido medio de guanina y citosina en las lecturas, expresado en <code>{metrics$valor[metrics$nombre == "GC (%)"]}{metrics$unidad[metrics$nombre == "GC (%)"]}</code>, indicador de representatividad de la biblioteca.
+  </li>
+  <li>
+    <strong>Lecturas duplicadas (%)</strong> <strong>&rArr;</strong> porcentaje promedio de secuencias repetidas, de <code>{metrics$valor[metrics$nombre == "Lecturas duplicadas"]}{metrics$unidad[metrics$nombre == "Lecturas duplicadas"]}</code>, que puede indicar artefactos técnicos o baja complejidad.
+  </li>
+  <li>
+    <strong>Longitud media (bp)</strong> <strong>&rArr;</strong> longitud promedio de las lecturas, de <code>{metrics$valor[metrics$nombre == "Longitud media"]} {metrics$unidad[metrics$nombre == "Longitud media"]}</code>, que influye en la capacidad de mapeo y resolución.
+  </li>
+  <li>
+    <strong>Lecturas fallidas (%)</strong> <strong>&rArr;</strong> proporción promedio de lecturas descartadas por baja calidad durante el preprocesamiento, de <code>{metrics$valor[metrics$nombre == "Lecturas fallidas"]}{metrics$unidad[metrics$nombre == "Lecturas fallidas"]}</code>.
+  </li>
+</ul>
+'), sep = "\n")
+```
+
+```{r, results='asis'}
+# Construir tarjetas HTML (cada tarjeta)
+cards <- purrr::pmap_chr(metrics, function(nombre, valor, unidad, color) {
+  glue::glue(
+    '<div class="metric-card {color}">
+      <h3>{nombre}</h3>
+      <p>{valor} {unidad}</p>
+    </div>'
+  )
+})
+
+# Unir y emitir todo con cat(glue::glue(...)) para que Quarto lo interprete como HTML "asis"
+html_all <- paste(cards, collapse = "\n")
+
+cat(glue::glue(
+  '<div class="metric-cards">
+{html_all}
+</div>'
+), sep = "\n")
+```
+
+<p>
+  Para complementar estos indicadores globales, se presenta a continuación una tabla detallada con las métricas calculadas por muestra individual, que permite identificar posibles desviaciones o muestras problemáticas que requieran revisión adicional.
+</p>
+
+```{r, results="asis"}
+# Tabla interactiva de metadatos
+library(DT)
+
+htmltools::div(
+  class = "scroll-y-max-500",
+  DT::datatable(
+    df,
+    options = list(
+      scrollX = TRUE,
+      paging = FALSE,
+      lengthChange = FALSE,
+      language = list(
+        url = '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      )
+    ),
+    class = 'stripe hover compact',
+    rownames = FALSE
+  )
+)
+```
+
+```{r, results='asis'}
+if (file.exists(ruta_estadisticas_globales_calidad_csv)) {
+
+  cat(glue::glue('
+  <p style="text-align:center; margin-top: 5px;">
+    <a href="{ruta_estadisticas_globales_calidad_csv}" 
+      download="{basename(ruta_estadisticas_globales_calidad_csv)}" 
+      class="boton-file-download">
+      <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo "estadisticas_globales_calidad.csv"
+    </a>
+  </p>
+  '), sep = "\n")
+}
+```
+
+<p>
+  Así, una vez revisados en esta pestaña los aspectos generales del resumen y las estadísticas globales de calidad, se recomienda continuar explorando la pestaña <a href="../../tab3-analisis/tab3-1-analisis-16S/0-contexto.html" class="normalink">Análisis</a>. 
+  Allí se ofrece un recorrido detallado y exhaustivo del procesamiento de datos, que permite visualizar paso a paso cada etapa del flujo de trabajo.
+</p>
+
+<p>
+  En la pestaña <a href="../../tab3-analisis/tab3-1-analisis-16S/1-revision-inicial.html#tab3-seccion1" class="normalink">Análisis</a> se incluye desde la revisión inicial de las muestras y metadatos, pasando por el control de calidad individual y conjunto, hasta el alineamiento y la cuantificación de la expresión génica. 
+  También se presentan análisis estadísticos avanzados, normalización, control post-normalización, análisis diferencial y análisis funcional y de enriquecimiento, finalizando con conclusiones y perspectivas del estudio.
+</p>
+
+<p>
+  Esta navegación detallada facilita validar la calidad y la robustez del experimento, identificar posibles problemas y comprender mejor los resultados obtenidos en el resumen general.
+</p>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+
+
+
+
+
+
+
+
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../../4-javascript/chatbot.js"></script>

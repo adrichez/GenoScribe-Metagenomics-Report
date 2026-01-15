@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Metagenomic Report</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../../../">
+<script src="../../../../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../../../site_libs/quarto-html/quarto-syntax-highlighting-54c8f25464f32f8783bd446cee98020d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../../../site_libs/bootstrap/bootstrap-c27fce070f9e1faf5b65ec12c04f7688.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link href="../../../../../../../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../../../../../../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="../../../../../../../site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="../../../../../../../site_libs/datatables-binding-0.34.0/datatables.js"></script>
+<script src="../../../../../../../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="../../../../../../../site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="../../../../../../../site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="../../../../../../../site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="../../../../../../../site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="../../../../../../../site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<link rel="shortcut icon" href="../../../../../1-images/icons/favicon.svg">
+<link rel="icon" type="image/x-icon" href="../../../../../1-images/icons/favicon.ico">
+
+
+<link rel="stylesheet" href="../../../../../../../resources/1-essential/3-scripts/3-css/styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../../../../../../../index.html">
+    <span class="navbar-title"><img class="brand-logo" src="../../../../../../../resources/1-essential/1-images/icons/ipbln.png"> <a class="brand-text" href="https://www.ipb.csic.es/servicios/Bioinformatica/index.html">IPBLN</a></span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../index.html"> <i class="bi bi-house" role="img">
+</i> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab1-metodologia/metodologia.html"> <i class="bi bi-wrench" role="img">
+</i> 
+<span class="menu-text">Metodología</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab2-resumen/tab2-1-resumen-16S/resumen.html"> <i class="bi bi-clipboard-data" role="img">
+</i> 
+<span class="menu-text">Resumen 16S</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-análisis-16s" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-bar-chart" role="img">
+</i> 
+ <span class="menu-text">Análisis 16S</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-análisis-16s">    
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/0-contexto.html">
+ <span class="dropdown-text">➤ Introducción contextual</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/1-revision-inicial.html">
+ <span class="dropdown-text">1. Revisión inicial de muestras y metadatos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/2-control-calidad.html">
+ <span class="dropdown-text">2. Control de calidad y preprocesamiento</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/3-generacion-asvs.html">
+ <span class="dropdown-text">3. Generación de ASVs y tabla de abundancia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/4-taxonomia-filogenia.html">
+ <span class="dropdown-text">4. Asignación taxonómica y filogenia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/5-analisis-diferencial.html">
+ <span class="dropdown-text">5. Análisis diferencial de abundancia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/6-diversidad-microbiana.html">
+ <span class="dropdown-text">6. Diversidad microbiana</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/7-prediccion-funcional.html">
+ <span class="dropdown-text">7. Predicción funcional</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/8-conclusiones.html">
+ <span class="dropdown-text">8. Conclusiones y perspectivas</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-layout-custom page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+<!-- main -->
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Metagenomic Report</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        ¡Hola! Soy <strong>Geni</strong>, el asistente inteligente de <strong>GenoScribe</strong>.  
+        Estoy aquí para ayudarte a explorar de forma interactiva el contenido de este informe bioinformático.
+      </p>
+
+      <p>
+        Cuando me haces una pregunta, primero intento reconocer si coincide con alguno de los patrones o expresiones que conozco.  
+        Si encuentro una coincidencia, te responderé directamente con una respuesta predefinida, diseñada para ser rápida, clara e incluso un poco ingeniosa.  
+        Si no reconozco el patrón, entonces activo mis herramientas de búsqueda: genero representaciones vectoriales (embeddings) y busco los fragmentos más relevantes entre varios documentos —incluyendo el propio informe, archivos PDF y HTML externos, y sesiones de preguntas y respuestas (QA).  
+        A partir de esa información, creo un resumen que intenta ofrecerte una respuesta coherente y útil basada en el contenido existente.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es experimental. No utilizo grandes modelos de lenguaje, por lo que algunas respuestas pueden ser aproximadas o incompletas.  
+        El objetivo principal es facilitar una visualización rápida, comprensible y reproducible de la información contenida en los documentos, permitiendo una exploración más dinámica del informe.
+      </p>
+
+      <p>
+        Actualmente, los resultados pueden variar en precisión, ya que empleo modelos ligeros y locales para asegurar que la aplicación funcione en cualquier entorno sin necesidad de servidores externos.  
+        Sin embargo, la estructura del sistema está preparada para mejorar notablemente su rendimiento en el futuro mediante la integración con modelos más avanzados o APIs externas.  
+        Para comenzar, simplemente escribe tu pregunta en el campo inferior y deja que yo me encargue del resto. ¡Prometo poner todo mi código en ello!
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta...">
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!-- Incluir Font Awesome -->
+<p><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"></p>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 3: ANÁLISIS 16S | 2. CONTROL DE CALIDAD Y PREPROCESAMIENTO -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<div class="informe-titulo-tab">
+<h1>
+Pestaña
+</h1>
+<h2>
+Análisis 16S bioinformático completo
+</h2>
+</div>
+<div class="informe-titulo-seccion-unique">
+<h1>
+Sección 2
+</h1>
+<h2>
+Control de calidad y preprocesamiento
+</h2>
+</div>
+<div class="flecha-abajo">
+<p>▼</p>
+</div>
+<div class="informe-resumen">
+<h2>
+Resumen
+</h2>
+<p>
+En esta sección se presentan los resultados del control de calidad y preprocesamiento aplicados a los archivos <code>.fastq.gz</code> generados tras la secuenciación 16S. La evaluación se ha realizado de manera integral, considerando tanto el conjunto completo de muestras como el detalle de cada una, mediante las herramientas <strong>FastQC</strong> y <strong>MultiQC</strong>, integradas en el pipeline automatizado desarrollado con <strong>Nextflow</strong>.
+</p>
+<p>
+Se comenzó con un <strong>resumen global</strong> de calidad a través de <strong>MultiQC</strong>, que proporciona métricas agregadas para todas las muestras, permitiendo identificar patrones generales, diferencias sistemáticas o posibles anomalías globales. Este informe interactivo facilita la visualización rápida de la calidad general del dataset.
+</p>
+<p>
+A continuación, se generaron los informes individuales de <strong>FastQC</strong> para cada muestra y dirección de lectura (<em>Forward</em> y <em>Reverse</em>). Cada informe incluye métricas clave como calidad por base, contenido GC, niveles de duplicación y presencia de adaptadores, y se presenta embebido mediante <code>iframe</code> para una visualización interactiva. Esto permite una revisión detallada y específica de la calidad de cada muestra.
+</p>
+<p>
+Posteriormente, se realizó la <strong>demultiplexación</strong> mediante QIIME2. Este informe proporciona información esencial sobre la separación de lecturas por muestra, incluyendo la tabla de recuentos por muestra (<code>per-sample-fastq-counts.tsv</code>) y un visor interactivo (<code>index.html</code>) que permite inspeccionar la calidad por posición, distribuciones de longitud y posibles problemas en la asignación de índices. La revisión de esta sección permite identificar muestras con recuentos insuficientes, desequilibrios entre grupos o errores de indexación, y define los parámetros iniciales para el truncado y filtrado.
+</p>
+<p>
+Tras la revisión de la demultiplexación y los informes de calidad, se contempló la posible aplicación de <em>trimming</em> para eliminar adaptadores residuales, primers o bases de baja calidad. La información de las secciones previas guía la selección de parámetros de truncado (<code>trunc_len_f</code> y <code>trunc_len_r</code>) asegurando que se mantenga un solapamiento suficiente entre lecturas forward y reverse para los pasos posteriores.
+</p>
+<p>
+La etapa de <strong>filtrado y depuración de lecturas</strong> se realiza mediante <strong>DADA2</strong> o <strong>Deblur</strong>, generando secuencias representativas únicas, conocidas como ASVs, corrigiendo errores de secuenciación y eliminando quimeras. Esta fase asegura que los datos sean fiables y comparables entre muestras, y se documenta en la <code>stats-dada2.qzv</code>, que resume cuántas lecturas iniciales pasaron por cada paso del proceso.
+</p>
+<p>
+La tabla de abundancia de ASVs (<code>table.qza / table.qzv</code>) y las secuencias representativas (<code>rep-seqs.qza / rep-seqs.qzv</code>) se analizarán en la siguiente sección que detallaremos más adelante: <a href="3-asvs-abundancia.html#tab3-seccion3" class="normalink">3. Generación de ASVs y tabla de abundancia</a>.
+</p>
+<p>
+En conjunto, esta sección proporciona una visión completa del control de calidad, demultiplexación, preprocesamiento y depuración de errores aplicada a las lecturas 16S. La integración de todos estos apartados garantiza que el informe sea <strong>automatizado, reproducible</strong> y adaptable a cualquier conjunto de muestras, manteniendo siempre la trazabilidad de los datos procesados.
+</p>
+</div>
+<div style="height: 15px; background-color: transparent;">
+
+</div>
+<div class="titulo-toc">
+<p>Tabla de contenidos de esta sección</p>
+</div>
+
+<div class="toc">
+  <ul>
+    <li>
+      <a href="#tab3-seccion2">
+        2<span>.</span> Control de calidad y preprocesamiento
+      </a>
+      <ul>
+        <li>
+          <a href="#tab3-seccion2.1">
+            2.1. Informes de calidad externos (FastQC / MultiQC)
+          </a>
+          <ul>
+            <li>
+              <a href="#tab3-seccion2.1.1">
+                2.1.1. Resumen global (MultiQC)
+              </a>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.1.2">
+                2.1.2. Calidad individual (FastQC)
+              </a>
+              <ul>
+                <li>
+                  <a href="#tab3-seccion2.1.2.1">
+                    2.1.2.1. Evaluación de calidad de lecturas Forward
+                  </a>
+                  <ul>
+<li><a href="#tab3-seccion2.1.2.1.1">2.1.2.1.1. Muestra: NGS001-23_16S_41_S6_L001</a></li><li><a href="#tab3-seccion2.1.2.1.2">2.1.2.1.2. Muestra: NGS001-23_16S_42_S12_L001</a></li><li><a href="#tab3-seccion2.1.2.1.3">2.1.2.1.3. Muestra: NGS001-23_16S_43_S18_L001</a></li><li><a href="#tab3-seccion2.1.2.1.4">2.1.2.1.4. Muestra: NGS001-23_16S_44_S24_L001</a></li><li><a href="#tab3-seccion2.1.2.1.5">2.1.2.1.5. Muestra: NGS001-23_16S_45_S30_L001</a></li><li><a href="#tab3-seccion2.1.2.1.6">2.1.2.1.6. Muestra: NGS001-23_16S_46_S36_L001</a></li><li><a href="#tab3-seccion2.1.2.1.7">2.1.2.1.7. Muestra: NGS001-23_16S_47_S42_L001</a></li><li><a href="#tab3-seccion2.1.2.1.8">2.1.2.1.8. Muestra: NGS001-23_16S_48_S48_L001</a></li><li><a href="#tab3-seccion2.1.2.1.9">2.1.2.1.9. Muestra: NGS069-23_16S_29_S42_L001</a></li><li><a href="#tab3-seccion2.1.2.1.10">2.1.2.1.10. Muestra: NGS069-23_16S_30_S50_L001</a></li><li><a href="#tab3-seccion2.1.2.1.11">2.1.2.1.11. Muestra: NGS069-23_16S_31_S59_L001</a></li><li><a href="#tab3-seccion2.1.2.1.12">2.1.2.1.12. Muestra: NGS069-23_16S_32_S68_L001</a></li><li><a href="#tab3-seccion2.1.2.1.13">2.1.2.1.13. Muestra: NGS069-23_16S_33_S5_L001</a></li><li><a href="#tab3-seccion2.1.2.1.14">2.1.2.1.14. Muestra: NGS069-23_16S_34_S14_L001</a></li><li><a href="#tab3-seccion2.1.2.1.15">2.1.2.1.15. Muestra: NGS069-23_16S_35_S23_L001</a></li><li><a href="#tab3-seccion2.1.2.1.16">2.1.2.1.16. Muestra: NGS069-23_16S_36_S32_L001</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#tab3-seccion2.1.2.2">
+                    2.1.2.2. Evaluación de calidad de lecturas Backward
+                  </a>
+                  <ul>
+<li><a href="#tab3-seccion2.1.2.2.1">2.1.2.2.1. Muestra: NGS001-23_16S_41_S6_L001</a></li><li><a href="#tab3-seccion2.1.2.2.2">2.1.2.2.2. Muestra: NGS001-23_16S_42_S12_L001</a></li><li><a href="#tab3-seccion2.1.2.2.3">2.1.2.2.3. Muestra: NGS001-23_16S_43_S18_L001</a></li><li><a href="#tab3-seccion2.1.2.2.4">2.1.2.2.4. Muestra: NGS001-23_16S_44_S24_L001</a></li><li><a href="#tab3-seccion2.1.2.2.5">2.1.2.2.5. Muestra: NGS001-23_16S_45_S30_L001</a></li><li><a href="#tab3-seccion2.1.2.2.6">2.1.2.2.6. Muestra: NGS001-23_16S_46_S36_L001</a></li><li><a href="#tab3-seccion2.1.2.2.7">2.1.2.2.7. Muestra: NGS001-23_16S_47_S42_L001</a></li><li><a href="#tab3-seccion2.1.2.2.8">2.1.2.2.8. Muestra: NGS001-23_16S_48_S48_L001</a></li><li><a href="#tab3-seccion2.1.2.2.9">2.1.2.2.9. Muestra: NGS069-23_16S_29_S42_L001</a></li><li><a href="#tab3-seccion2.1.2.2.10">2.1.2.2.10. Muestra: NGS069-23_16S_30_S50_L001</a></li><li><a href="#tab3-seccion2.1.2.2.11">2.1.2.2.11. Muestra: NGS069-23_16S_31_S59_L001</a></li><li><a href="#tab3-seccion2.1.2.2.12">2.1.2.2.12. Muestra: NGS069-23_16S_32_S68_L001</a></li><li><a href="#tab3-seccion2.1.2.2.13">2.1.2.2.13. Muestra: NGS069-23_16S_33_S5_L001</a></li><li><a href="#tab3-seccion2.1.2.2.14">2.1.2.2.14. Muestra: NGS069-23_16S_34_S14_L001</a></li><li><a href="#tab3-seccion2.1.2.2.15">2.1.2.2.15. Muestra: NGS069-23_16S_35_S23_L001</a></li><li><a href="#tab3-seccion2.1.2.2.16">2.1.2.2.16. Muestra: NGS069-23_16S_36_S32_L001</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.2">
+                2.2. Informe de demultiplexación en QIIME2
+              </a>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.3">
+                2.3. Reflexiones sobre la calidad observada
+              </a>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.4">
+                2.4. Trimming y filtrado inicial
+              </a>
+            </li>
+            <li>
+              <a href="#tab3-seccion2.5">
+                2.5. Denoising y depuración con DADA2 / Deblur
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<!-- REDACCIÓN -->
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<div style="height: 25px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2" class="titulo1">
+<p>2<span>.</span> Control de calidad y preprocesamiento</p>
+</div>
+<p>
+En esta sección se aborda el <strong>control de calidad y preprocesamiento</strong> de los datos de secuenciación 16S, un paso fundamental para garantizar la fiabilidad de los análisis posteriores. Se comienza evaluando la calidad de las lecturas mediante <strong>FastQC</strong> y <strong>MultiQC</strong>, proporcionando una visión tanto global de todas las muestras como detallada de cada una de ellas por dirección de lectura (<em>Forward</em> y <em>Backward</em>).
+</p>
+<p>
+Tras la revisión de calidad, se procederá a la etapa de <strong>filtrado y depuración de lecturas</strong> utilizando <strong>DADA2</strong> o <strong>Deblur</strong>. Este paso asegura la eliminación de secuencias de baja calidad, quimeras y otras lecturas problemáticas, generando un conjunto de ASVs confiables que servirán como base para los análisis de diversidad y composición taxonómica.
+</p>
+<p>
+A continuación, se presenta la primera subsección que describe detalladamente los <strong>informes de calidad generados por FastQC y MultiQC</strong>, incluyendo tanto el resumen global como la evaluación individual de cada muestra.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1" class="titulo2">
+<p>2.1. Informes de calidad externos (FastQC / MultiQC)</p>
+</div>
+<p>
+La calidad de las lecturas en un experimento de metagenómica 16S es un factor determinante para la fiabilidad de los análisis posteriores, como la asignación taxonómica, la estimación de abundancias relativas y la identificación de posibles contaminantes. Por ello, uno de los primeros pasos fundamentales en cualquier pipeline de procesamiento es la evaluación de la calidad de los archivos <code>.fastq.gz</code> generados tras la secuenciación.
+</p>
+<p>
+En este estudio, el control de calidad se aplicó a <strong>todas las muestras disponibles inicialmente</strong>, independientemente de si fueron seleccionadas o no para el análisis principal. Este enfoque garantiza una evaluación exhaustiva del conjunto completo de datos, permitiendo detectar posibles problemas antes de la selección definitiva de las muestras a analizar.
+</p>
+<p>
+El control de calidad se llevó a cabo utilizando la herramienta <strong>FastQC</strong>, la cual genera informes detallados por muestra sobre diversos aspectos de la calidad de las secuencias. Posteriormente, todos estos informes individuales fueron integrados mediante <strong>MultiQC</strong>, generando un único informe resumen interactivo. Este informe consolidado permite inspeccionar de forma global y comparativa el estado de las lecturas en todas las muestras procesadas.
+</p>
+<p>
+Las métricas clave incluidas en el informe de MultiQC son, entre otras:
+</p>
+<ul>
+<li>
+Calidad de las bases a lo largo de las lecturas (per base sequence quality).
+</li>
+<li>
+Contenido de GC.
+</li>
+<li>
+Presencia de adaptadores o secuencias no deseadas.
+</li>
+<li>
+Nivel de duplicación de las secuencias.
+</li>
+<li>
+Distribución de la longitud de las lecturas.
+</li>
+</ul>
+<p>
+Estas métricas permiten identificar posibles problemas técnicos, como errores en la amplificación por PCR, contaminación cruzada, presencia de adaptadores o sesgos sistemáticos de la secuenciación. Esta información es esencial para tomar decisiones informadas sobre la necesidad de aplicar pasos de filtrado o recorte antes de proceder con la inferencia taxonómica y el análisis de diversidad.
+</p>
+<p>
+Es importante señalar que <strong>no todas las muestras presentes en el informe de MultiQC están incluidas en el análisis principal</strong>. La tabla de metadatos presentada anteriormente recoge únicamente las muestras seleccionadas para las etapas posteriores de análisis taxonómico y de diversidad, por lo que puede haber discrepancias entre ambas.
+</p>
+<div style="height: 15px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.1" class="titulo3">
+<p>2.1.1. Resumen global (MultiQC)</p>
+</div>
+<p>
+El análisis conjunto de calidad se ha llevado a cabo mediante la herramienta <strong>MultiQC</strong>, la cual agrega y resume de forma interactiva los informes individuales generados previamente por <strong>FastQC</strong> para cada una de las muestras procesadas. Este enfoque permite visualizar en un único informe consolidado todas las métricas relevantes, facilitando la comparación entre muestras y la identificación de posibles anomalías sistemáticas, errores técnicos o patrones comunes.
+</p>
+<p>
+El informe MultiQC incluye gráficos y tablas que resumen aspectos clave como la calidad por base, el contenido GC, la longitud de las lecturas, la presencia de adaptadores o contaminantes y otros indicadores de calidad. Esta visión global resulta especialmente útil para tomar decisiones sobre la limpieza y filtrado de las lecturas antes del alineamiento.
+</p>
+<p>
+A continuación, se muestra el informe interactivo integrado directamente en este documento. También se proporciona un botón para abrirlo en una nueva pestaña, lo cual permite una visualización más cómoda y detallada si se desea explorar el informe en mayor profundidad.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/2-fastqc-report/results-multiqc-16S/multiqc_report.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/2-fastqc-report/results-multiqc-16S/multiqc_report.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de MultiQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/2-fastqc-report/results-multiqc-16S/multiqc_report.html" download="multiqc_report.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<p>
+En la siguiente sección se detallará el análisis individual de la calidad de cada muestra, diferenciando entre lecturas <em>forward</em> y <em>backward</em>, mediante la incorporación directa de los informes <strong>FastQC</strong> individuales generados automáticamente por la herramienta <strong>miARma‑Seq</strong>.
+</p>
+<div style="height: 15px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2" class="titulo3">
+<p>2.1.2. Calidad individual (FastQC)</p>
+</div>
+<p>
+Tras la evaluación conjunta mediante <strong>MultiQC</strong>, esta subsección se centra en el análisis individualizado de cada una de las muestras a través de los informes generados por <strong>FastQC</strong>. Este enfoque permite inspeccionar con mayor nivel de detalle los distintos parámetros de calidad, identificando posibles incidencias específicas que podrían no ser evidentes en el análisis global.
+</p>
+<p>
+En el contexto de un análisis <strong>metagenómico 16S</strong>, la fase de control de calidad es especialmente relevante, dado que el posterior procesamiento con herramientas como <strong>QIIME2</strong> o <strong>DADA2</strong> se basa en la precisión de las lecturas de amplicones. <strong>FastQC</strong> proporciona una evaluación visual e interactiva de aspectos fundamentales como la calidad por base a lo largo de las lecturas, el contenido de GC, la presencia de adaptadores o primers, la sobre-representación de secuencias y la longitud de las lecturas, parámetros que pueden influir directamente en la correcta inferencia de variantes de secuencia (ASVs/OTUs).
+</p>
+<p>
+En este informe, cada muestra dispone de una sección dedicada organizada por tipo de lectura <em>(forward y reverse)</em>, donde se presenta su correspondiente informe <code>.html</code> de FastQC. Los informes han sido generados automáticamente por el pipeline <strong>miARma-Seq</strong> y se integran en este documento mediante una ventana interactiva para facilitar su visualización directa, junto con un botón de acceso para abrirlos en una pestaña nueva y explorar los resultados en mayor detalle.
+</p>
+<p>
+Todos los informes individuales utilizados para generar el resumen de MultiQC se encontraban almacenados en el siguiente directorio en el momento de la generación de este informe:
+</p>
+<p><code>/workspace/data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results</code></p>
+<p>
+A continuación, se muestra el listado completo de los archivos de salida generados por <code>FastQC</code> para cada una de las muestras procesadas. Para cada muestra se generan dos archivos principales: un informe en formato <code>.html</code>, que ofrece una visualización interactiva de los resultados del control de calidad, y un archivo comprimido <code>.zip</code>, que contiene los archivos fuente utilizados para construir dicho informe, incluyendo datos tabulados, gráficos en formato <code>.png</code> y un resumen en texto plano.
+</p>
+<p>
+Aunque es posible acceder a estos archivos directamente desde el visor interactivo que se presenta a continuación, se recomienda utilizar las secciones específicas por muestra situadas más abajo. En dichas secciones, los informes <code>.html</code> se integran directamente en el documento mediante <code>iframe</code>, junto con un botón de acceso para su visualización ampliada. Además, se proporciona contexto adicional para facilitar la interpretación de los resultados individuales.
+</p>
+<div class="box-files">
+<ul>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R1_001_fastqc.html" target="_blank">NGS001-23_16S_41_S6_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R1_001_fastqc.zip" target="_blank">NGS001-23_16S_41_S6_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R2_001_fastqc.html" target="_blank">NGS001-23_16S_41_S6_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R2_001_fastqc.zip" target="_blank">NGS001-23_16S_41_S6_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R1_001_fastqc.html" target="_blank">NGS001-23_16S_42_S12_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R1_001_fastqc.zip" target="_blank">NGS001-23_16S_42_S12_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R2_001_fastqc.html" target="_blank">NGS001-23_16S_42_S12_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R2_001_fastqc.zip" target="_blank">NGS001-23_16S_42_S12_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R1_001_fastqc.html" target="_blank">NGS001-23_16S_43_S18_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R1_001_fastqc.zip" target="_blank">NGS001-23_16S_43_S18_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R2_001_fastqc.html" target="_blank">NGS001-23_16S_43_S18_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R2_001_fastqc.zip" target="_blank">NGS001-23_16S_43_S18_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R1_001_fastqc.html" target="_blank">NGS001-23_16S_44_S24_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R1_001_fastqc.zip" target="_blank">NGS001-23_16S_44_S24_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R2_001_fastqc.html" target="_blank">NGS001-23_16S_44_S24_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R2_001_fastqc.zip" target="_blank">NGS001-23_16S_44_S24_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R1_001_fastqc.html" target="_blank">NGS001-23_16S_45_S30_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R1_001_fastqc.zip" target="_blank">NGS001-23_16S_45_S30_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R2_001_fastqc.html" target="_blank">NGS001-23_16S_45_S30_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R2_001_fastqc.zip" target="_blank">NGS001-23_16S_45_S30_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R1_001_fastqc.html" target="_blank">NGS001-23_16S_46_S36_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R1_001_fastqc.zip" target="_blank">NGS001-23_16S_46_S36_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R2_001_fastqc.html" target="_blank">NGS001-23_16S_46_S36_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R2_001_fastqc.zip" target="_blank">NGS001-23_16S_46_S36_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R1_001_fastqc.html" target="_blank">NGS001-23_16S_47_S42_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R1_001_fastqc.zip" target="_blank">NGS001-23_16S_47_S42_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R2_001_fastqc.html" target="_blank">NGS001-23_16S_47_S42_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R2_001_fastqc.zip" target="_blank">NGS001-23_16S_47_S42_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R1_001_fastqc.html" target="_blank">NGS001-23_16S_48_S48_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R1_001_fastqc.zip" target="_blank">NGS001-23_16S_48_S48_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R2_001_fastqc.html" target="_blank">NGS001-23_16S_48_S48_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R2_001_fastqc.zip" target="_blank">NGS001-23_16S_48_S48_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R1_001_fastqc.html" target="_blank">NGS069-23_16S_29_S42_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R1_001_fastqc.zip" target="_blank">NGS069-23_16S_29_S42_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R2_001_fastqc.html" target="_blank">NGS069-23_16S_29_S42_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R2_001_fastqc.zip" target="_blank">NGS069-23_16S_29_S42_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R1_001_fastqc.html" target="_blank">NGS069-23_16S_30_S50_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R1_001_fastqc.zip" target="_blank">NGS069-23_16S_30_S50_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R2_001_fastqc.html" target="_blank">NGS069-23_16S_30_S50_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R2_001_fastqc.zip" target="_blank">NGS069-23_16S_30_S50_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R1_001_fastqc.html" target="_blank">NGS069-23_16S_31_S59_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R1_001_fastqc.zip" target="_blank">NGS069-23_16S_31_S59_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R2_001_fastqc.html" target="_blank">NGS069-23_16S_31_S59_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R2_001_fastqc.zip" target="_blank">NGS069-23_16S_31_S59_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R1_001_fastqc.html" target="_blank">NGS069-23_16S_32_S68_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R1_001_fastqc.zip" target="_blank">NGS069-23_16S_32_S68_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R2_001_fastqc.html" target="_blank">NGS069-23_16S_32_S68_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R2_001_fastqc.zip" target="_blank">NGS069-23_16S_32_S68_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R1_001_fastqc.html" target="_blank">NGS069-23_16S_33_S5_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R1_001_fastqc.zip" target="_blank">NGS069-23_16S_33_S5_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R2_001_fastqc.html" target="_blank">NGS069-23_16S_33_S5_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R2_001_fastqc.zip" target="_blank">NGS069-23_16S_33_S5_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R1_001_fastqc.html" target="_blank">NGS069-23_16S_34_S14_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R1_001_fastqc.zip" target="_blank">NGS069-23_16S_34_S14_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R2_001_fastqc.html" target="_blank">NGS069-23_16S_34_S14_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R2_001_fastqc.zip" target="_blank">NGS069-23_16S_34_S14_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R1_001_fastqc.html" target="_blank">NGS069-23_16S_35_S23_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R1_001_fastqc.zip" target="_blank">NGS069-23_16S_35_S23_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R2_001_fastqc.html" target="_blank">NGS069-23_16S_35_S23_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R2_001_fastqc.zip" target="_blank">NGS069-23_16S_35_S23_L001_R2_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R1_001_fastqc.html" target="_blank">NGS069-23_16S_36_S32_L001_R1_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R1_001_fastqc.zip" target="_blank">NGS069-23_16S_36_S32_L001_R1_001_fastqc.zip</a>
+</li>
+<li class="file-html">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R2_001_fastqc.html" target="_blank">NGS069-23_16S_36_S32_L001_R2_001_fastqc.html</a>
+</li>
+<li class="file-zip">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R2_001_fastqc.zip" target="_blank">NGS069-23_16S_36_S32_L001_R2_001_fastqc.zip</a>
+</li>
+</ul>
+</div>
+<p style="text-align:center;">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results" target="_blank" class="boton-files"> <i class="fa-solid fa-folder-open"></i> Explorar los archivos de la carpeta “Pre_fastqc_results” aquí </a>
+</p>
+<p>
+Así, estos informes individuales generados por <strong>FastQC</strong> ofrecen una evaluación visual e interactiva de diversos aspectos clave de la calidad de las lecturas de secuenciación. Cada informe está estructurado en módulos que resumen métricas específicas, facilitando así la identificación de posibles problemas técnicos o artefactos introducidos durante la preparación de las librerías o el proceso de secuenciación.
+</p>
+<div class="divider">
+
+</div>
+<p>
+A continuación se describe brevemente la información incluida en estos informes, accesibles, como ya hemos comentado, desde el visor interactivo anterior o más adelante desde cada apartado específico.
+</p>
+<ul>
+<li>
+<strong>Basic Statistics [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Información general sobre las secuencias, incluyendo el número total de lecturas, su longitud media y el contenido GC. Estos parámetros permiten confirmar que los datos cumplen con los criterios básicos de calidad esperados por la plataforma de secuenciación.
+</li>
+<li>
+<strong>Per base sequence quality [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Evalúa la calidad de las bases en cada posición de las lecturas. Una baja calidad al principio o final de las lecturas puede requerir recorte (trimming) para evitar errores en etapas posteriores.
+</li>
+<li>
+<strong>Per tile sequence quality [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Detecta anomalías en regiones específicas del flujo óptico del secuenciador. Problemas en este módulo pueden indicar fallos mecánicos o de iluminación que afectan localmente la calidad.
+</li>
+<li>
+<strong>Per sequence quality scores [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Muestra la distribución de puntuaciones de calidad para todas las lecturas. Una alta proporción de lecturas con baja calidad puede comprometer el análisis.
+</li>
+<li>
+<strong>Per base sequence content [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Analiza la proporción de nucleótidos (A, T, G, C) en cada posición. Desequilibrios importantes pueden reflejar sesgos de la librería o contaminación.
+</li>
+<li>
+<strong>Per sequence GC content [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Evalúa el contenido GC promedio por lectura. Desviaciones respecto al esperado para el organismo estudiado pueden indicar presencia de contaminantes o problemas en la preparación de la librería.
+</li>
+<li>
+<strong>Sequence Length Distribution [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Muestra la distribución de longitudes de las lecturas. Una distribución uniforme o acorde con el protocolo indica buena calidad, mientras que distribuciones anómalas pueden sugerir errores en el proceso de fragmentación o secuenciación.
+</li>
+<li>
+<strong>Sequence Duplication Levels [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Informa sobre la proporción de lecturas duplicadas. Un alto nivel puede deberse a sobre-secuenciación, baja complejidad de la muestra o problemas en la PCR.
+</li>
+<li>
+<strong>Overrepresented sequences [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Identifica secuencias que aparecen con frecuencia anormalmente alta, como adaptadores no eliminados, contaminantes o secuencias ribosomales.
+</li>
+<li>
+<strong>Adapter Content [<span style="color: green;">PASS</span> | <span style="color: orange;">WARNING</span> | <span style="color: red;">FAIL</span>]</strong>: Detecta la presencia de secuencias adaptadoras dentro de las lecturas. Si se detectan, es necesario aplicar un paso de recorte (trimming) antes de continuar con el análisis.
+</li>
+</ul>
+<p>
+Cada módulo es evaluado individualmente y clasificado como <span style="color: green;"><strong>PASS</strong></span>, <span style="color: orange;"><strong>WARNING</strong></span> o <span style="color: red;"><strong>FAIL</strong></span>. Un resultado <strong>PASS</strong> indica que el módulo cumple con los criterios de calidad recomendados. <strong>WARNING</strong> señala que se ha detectado una desviación leve o moderada que podría afectar algunos análisis dependiendo de la sensibilidad del downstream. <strong>FAIL</strong>, en cambio, indica problemas importantes que deberían ser corregidos o, al menos, tenidos en cuenta antes de continuar con el procesamiento de los datos.
+</p>
+<p>
+Dicho esto, en las siguientes subsecciones se analizarán en detalle los resultados de calidad, distinguiendo entre lecturas <em>forward</em> y <em>backward</em>. Dentro de cada una, se presentará el informe individual correspondiente a cada muestra, integrado directamente en el documento para facilitar su consulta. Esta estructura permite una revisión ordenada y completa del estado de las lecturas, asegurando que cada muestra sea evaluada con el nivel de detalle necesario antes de proceder con las etapas posteriores del análisis.
+</p>
+<div style="height: 13px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1" class="titulo4">
+<p>2.1.2.1. Evaluación de calidad de lecturas Forward</p>
+</div>
+<p>
+En este apartado se muestran los resultados del análisis de calidad correspondientes a las lecturas <strong>forward</strong> <em>(read 1)</em> de cada una de las muestras. Estas lecturas representan el primer extremo de los fragmentos secuenciados en protocolos <em>paired-end</em>, y su calidad es especialmente relevante para asegurar una alineación precisa y una cuantificación fiable en los pasos posteriores del análisis transcriptómico.
+</p>
+<p>
+A continuación, se incluyen las evaluaciones individuales para cada muestra, organizadas de forma estructurada para facilitar su revisión. Esta presentación permite detectar con claridad posibles incidencias específicas en las lecturas <em>read 1</em>, como caídas de calidad en posiciones terminales, contaminación por adaptadores, sesgos en la composición de bases o niveles anómalos de duplicación. Identificar estos problemas a tiempo es crucial para garantizar la robustez y validez de los resultados obtenidos en las siguientes etapas del pipeline.
+</p>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.1" class="titulo5">
+<p>2.1.2.1.1. Muestra: NGS001-23_16S_41_S6_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS001-23_16S_41_S6_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R1_001_fastqc.html" download="NGS001-23_16S_41_S6_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.2" class="titulo5">
+<p>2.1.2.1.2. Muestra: NGS001-23_16S_42_S12_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS001-23_16S_42_S12_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R1_001_fastqc.html" download="NGS001-23_16S_42_S12_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.3" class="titulo5">
+<p>2.1.2.1.3. Muestra: NGS001-23_16S_43_S18_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS001-23_16S_43_S18_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R1_001_fastqc.html" download="NGS001-23_16S_43_S18_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.4" class="titulo5">
+<p>2.1.2.1.4. Muestra: NGS001-23_16S_44_S24_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS001-23_16S_44_S24_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R1_001_fastqc.html" download="NGS001-23_16S_44_S24_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.5" class="titulo5">
+<p>2.1.2.1.5. Muestra: NGS001-23_16S_45_S30_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS001-23_16S_45_S30_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R1_001_fastqc.html" download="NGS001-23_16S_45_S30_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.6" class="titulo5">
+<p>2.1.2.1.6. Muestra: NGS001-23_16S_46_S36_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS001-23_16S_46_S36_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R1_001_fastqc.html" download="NGS001-23_16S_46_S36_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.7" class="titulo5">
+<p>2.1.2.1.7. Muestra: NGS001-23_16S_47_S42_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS001-23_16S_47_S42_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R1_001_fastqc.html" download="NGS001-23_16S_47_S42_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.8" class="titulo5">
+<p>2.1.2.1.8. Muestra: NGS001-23_16S_48_S48_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS001-23_16S_48_S48_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R1_001_fastqc.html" download="NGS001-23_16S_48_S48_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.9" class="titulo5">
+<p>2.1.2.1.9. Muestra: NGS069-23_16S_29_S42_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS069-23_16S_29_S42_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R1_001_fastqc.html" download="NGS069-23_16S_29_S42_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.10" class="titulo5">
+<p>2.1.2.1.10. Muestra: NGS069-23_16S_30_S50_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS069-23_16S_30_S50_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R1_001_fastqc.html" download="NGS069-23_16S_30_S50_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.11" class="titulo5">
+<p>2.1.2.1.11. Muestra: NGS069-23_16S_31_S59_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS069-23_16S_31_S59_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R1_001_fastqc.html" download="NGS069-23_16S_31_S59_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.12" class="titulo5">
+<p>2.1.2.1.12. Muestra: NGS069-23_16S_32_S68_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS069-23_16S_32_S68_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R1_001_fastqc.html" download="NGS069-23_16S_32_S68_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.13" class="titulo5">
+<p>2.1.2.1.13. Muestra: NGS069-23_16S_33_S5_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS069-23_16S_33_S5_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R1_001_fastqc.html" download="NGS069-23_16S_33_S5_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.14" class="titulo5">
+<p>2.1.2.1.14. Muestra: NGS069-23_16S_34_S14_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS069-23_16S_34_S14_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R1_001_fastqc.html" download="NGS069-23_16S_34_S14_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.15" class="titulo5">
+<p>2.1.2.1.15. Muestra: NGS069-23_16S_35_S23_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS069-23_16S_35_S23_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R1_001_fastqc.html" download="NGS069-23_16S_35_S23_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.1.16" class="titulo5">
+<p>2.1.2.1.16. Muestra: NGS069-23_16S_36_S32_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>forward</strong> <em>(read 1)</em> de la muestra <strong>NGS069-23_16S_36_S32_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R1_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R1_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una pestaña nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R1_001_fastqc.html" download="NGS069-23_16S_36_S32_L001_R1_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 13px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2" class="titulo4">
+<p>2.1.2.2. Evaluación de calidad de lecturas Backward</p>
+</div>
+<p>
+En esta sección se presentan los resultados del análisis de calidad correspondientes a las lecturas <strong>backward</strong> <em>(read 2)</em> de cada muestra. Estas lecturas representan el segundo extremo de los fragmentos secuenciados en protocolos <em>paired-end</em>, y complementan la información proporcionada por las lecturas <em>forward</em> para una reconstrucción más completa de las transcripciones.
+</p>
+<p>
+A continuación, se muestran las evaluaciones individuales de calidad para las lecturas <em>read 2</em> por muestra, siguiendo el mismo formato estructurado que en el apartado anterior. Revisar cuidadosamente estos informes permite identificar posibles deficiencias específicas en las lecturas <em>backward</em>, como una menor calidad en las regiones finales, errores de secuenciación acumulativos o patrones inusuales en la distribución de bases. Estos aspectos son fundamentales para garantizar que ambas lecturas de cada fragmento contribuyan de forma fiable al análisis global.
+</p>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.1" class="titulo5">
+<p>2.1.2.2.1. Muestra: NGS001-23_16S_41_S6_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS001-23_16S_41_S6_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_41_S6_L001_R2_001_fastqc.html" download="NGS001-23_16S_41_S6_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.2" class="titulo5">
+<p>2.1.2.2.2. Muestra: NGS001-23_16S_42_S12_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS001-23_16S_42_S12_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_42_S12_L001_R2_001_fastqc.html" download="NGS001-23_16S_42_S12_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.3" class="titulo5">
+<p>2.1.2.2.3. Muestra: NGS001-23_16S_43_S18_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS001-23_16S_43_S18_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_43_S18_L001_R2_001_fastqc.html" download="NGS001-23_16S_43_S18_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.4" class="titulo5">
+<p>2.1.2.2.4. Muestra: NGS001-23_16S_44_S24_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS001-23_16S_44_S24_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_44_S24_L001_R2_001_fastqc.html" download="NGS001-23_16S_44_S24_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.5" class="titulo5">
+<p>2.1.2.2.5. Muestra: NGS001-23_16S_45_S30_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS001-23_16S_45_S30_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_45_S30_L001_R2_001_fastqc.html" download="NGS001-23_16S_45_S30_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.6" class="titulo5">
+<p>2.1.2.2.6. Muestra: NGS001-23_16S_46_S36_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS001-23_16S_46_S36_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_46_S36_L001_R2_001_fastqc.html" download="NGS001-23_16S_46_S36_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.7" class="titulo5">
+<p>2.1.2.2.7. Muestra: NGS001-23_16S_47_S42_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS001-23_16S_47_S42_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_47_S42_L001_R2_001_fastqc.html" download="NGS001-23_16S_47_S42_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.8" class="titulo5">
+<p>2.1.2.2.8. Muestra: NGS001-23_16S_48_S48_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS001-23_16S_48_S48_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS001-23_16S_48_S48_L001_R2_001_fastqc.html" download="NGS001-23_16S_48_S48_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.9" class="titulo5">
+<p>2.1.2.2.9. Muestra: NGS069-23_16S_29_S42_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS069-23_16S_29_S42_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_29_S42_L001_R2_001_fastqc.html" download="NGS069-23_16S_29_S42_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.10" class="titulo5">
+<p>2.1.2.2.10. Muestra: NGS069-23_16S_30_S50_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS069-23_16S_30_S50_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_30_S50_L001_R2_001_fastqc.html" download="NGS069-23_16S_30_S50_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.11" class="titulo5">
+<p>2.1.2.2.11. Muestra: NGS069-23_16S_31_S59_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS069-23_16S_31_S59_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_31_S59_L001_R2_001_fastqc.html" download="NGS069-23_16S_31_S59_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.12" class="titulo5">
+<p>2.1.2.2.12. Muestra: NGS069-23_16S_32_S68_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS069-23_16S_32_S68_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_32_S68_L001_R2_001_fastqc.html" download="NGS069-23_16S_32_S68_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.13" class="titulo5">
+<p>2.1.2.2.13. Muestra: NGS069-23_16S_33_S5_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS069-23_16S_33_S5_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_33_S5_L001_R2_001_fastqc.html" download="NGS069-23_16S_33_S5_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.14" class="titulo5">
+<p>2.1.2.2.14. Muestra: NGS069-23_16S_34_S14_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS069-23_16S_34_S14_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_34_S14_L001_R2_001_fastqc.html" download="NGS069-23_16S_34_S14_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.15" class="titulo5">
+<p>2.1.2.2.15. Muestra: NGS069-23_16S_35_S23_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS069-23_16S_35_S23_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_35_S23_L001_R2_001_fastqc.html" download="NGS069-23_16S_35_S23_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.1.2.2.16" class="titulo5">
+<p>2.1.2.2.16. Muestra: NGS069-23_16S_36_S32_L001</p>
+</div>
+<p>
+A continuación se muestra el informe de control de calidad correspondiente a la lectura <strong>backward</strong> <em>(read 2)</em> de la muestra <strong>NGS069-23_16S_36_S32_L001</strong>. Este informe permite revisar visualmente diversos aspectos relacionados con la calidad de las secuencias obtenidas en el segundo extremo de los fragmentos, facilitando la detección de posibles incidencias que puedan comprometer el análisis posterior.
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R2_001_fastqc.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R2_001_fastqc.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe interactivo de FASTQC en una nueva página </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Analisis/miARma_16S/Pre_fastqc_results/NGS069-23_16S_36_S32_L001_R2_001_fastqc.html" download="NGS069-23_16S_36_S32_L001_R2_001_fastqc.html" class="boton-iframe-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar informe </a></p>
+</div>
+<div id="tab3-seccion2.2" class="titulo2">
+<p>2.2. Informe de demultiplexación en QIIME2</p>
+</div>
+<p>
+Tras la evaluación inicial de calidad con <strong>FastQC / MultiQC</strong>, el siguiente paso del análisis consiste en revisar el informe de <em>demultiplexación</em> generado por QIIME2 (<code>demux.qzv</code>). Este archivo contiene información esencial sobre cómo se han separado las lecturas en función de los índices asignados a cada muestra y permite una primera inspección detallada del número de lecturas y de su calidad antes de aplicar procesos de filtrado o depuración. El archivo correspondiente se encuentra en el siguiente directorio:
+</p>
+<p><code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/demux.qzv</code></p>
+<p>
+Al descomprimir <code>demux.qzv</code> se obtienen varios resultados intermedios. Entre ellos destaca el archivo <code>per-sample-fastq-counts.tsv</code>, que resume el número de lecturas forward y reverse asignadas a cada muestra tras la separación. La estructura de esta tabla es sencilla: en la primera columna aparecen los identificadores de las muestras y, en las dos siguientes, el número de secuencias detectadas para las lecturas forward y reverse, respectivamente. Por ejemplo:
+</p>
+<div style="text-align: center;">
+<table style="border-collapse: collapse; margin: 0 auto; width: 60%;">
+<thead>
+<tr style="background-color: #055379; color: white;">
+<th style="border: 1px solid #ccc; padding: 6px;">
+Sample ID
+</th>
+<th style="border: 1px solid #ccc; padding: 6px;">
+Forward sequence count
+</th>
+<th style="border: 1px solid #ccc; padding: 6px;">
+Backward sequence count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #ccc; padding: 6px;">
+NGS069-24-16S-1
+</td>
+<td style="border: 1px solid #ccc; padding: 6px;">
+146241
+</td>
+<td style="border: 1px solid #ccc; padding: 6px;">
+146241
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc; padding: 6px;">
+NGS069-24-16S-8
+</td>
+<td style="border: 1px solid #ccc; padding: 6px;">
+129633
+</td>
+<td style="border: 1px solid #ccc; padding: 6px;">
+129633
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc; padding: 6px;">
+NGS069-24-16S-9
+</td>
+<td style="border: 1px solid #ccc; padding: 6px;">
+128854
+</td>
+<td style="border: 1px solid #ccc; padding: 6px;">
+128854
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="height: 15px; background-color: transparent;">
+
+</div>
+<p>
+Este tipo de información resulta crítica porque permite identificar rápidamente si todas las muestras cuentan con un número suficiente de lecturas para los análisis posteriores. Muestras con un número muy bajo de secuencias pueden carecer de potencia estadística y comprometer la calidad de los resultados. Además, la tabla ayuda a comprobar la coherencia entre las lecturas forward y reverse: en condiciones normales los recuentos deben coincidir o diferir mínimamente, como se observa en el ejemplo, lo que confirma que la demultiplexación se realizó correctamente y que cada muestra dispone de sus pares de secuencias completos.
+</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="scroll-y-max-500">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-63c5e086d1b5bb7c8e77" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-63c5e086d1b5bb7c8e77">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"],["NGS069-24-16S-1","NGS069-24-16S-8","NGS069-24-16S-9","NGS069-24-16S-6","NGS001-23_16S_42","NGS001-23_16S_41","NGS001-23_16S_47","NGS001-23_16S_48","NGS001-23_16S_44","NGS069-24-16S-2","NGS001-23_16S_43","NGS069-23_16S_36","NGS069-24-16S-4","NGS069-23_16S_32","NGS069-24-16S-3","NGS069-23_16S_35","NGS069-24-16S-5","NGS069-24-16S-7","NGS069-23_16S_31","NGS069-23_16S_30","NGS069-23_16S_29"],[146241,129633,128854,115410,110784,109642,107948,107254,106599,97181,96595,94384,86398,81306,80508,77484,70939,68791,66578,50045,40406],[146241,129633,128854,115410,110784,109642,107948,107254,106599,97181,96595,94384,86398,81306,80508,77484,70939,68791,66578,50045,40406]],"container":"<table class=\"stripe hover compact\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>sample ID<\/th>\n      <th>forward sequence count<\/th>\n      <th>reverse sequence count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":false,"lengthChange":false,"language":{"url":"//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"},"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"sample ID","targets":1},{"name":"forward sequence count","targets":2},{"name":"reverse sequence count","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<p style="text-align:center;">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/unzip/demux/54146e53-2fd4-4bbe-93b7-b4fa96264e11/data/per-sample-fastq-counts.tsv" download="per-sample-fastq-counts.tsv" class="boton-file-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo “per-sample-fastq-counts.tsv” original </a>
+</p>
+<p>
+Junto con esta tabla, el informe genera también un archivo <code>index.html</code> que contiene una representación interactiva de la información. Este visor es especialmente útil porque ofrece gráficas de calidad de las lecturas a lo largo de cada posición, tanto para forward como para reverse. Dichas gráficas permiten localizar con claridad los puntos en los que la calidad media y la mediana comienzan a descender, lo que constituye la referencia principal para establecer los parámetros de truncamiento (<code>trunc_len_f</code> y <code>trunc_len_r</code>) en los pasos posteriores de filtrado y depuración con DADA2 o Deblur. Además, incluye resúmenes de las longitudes de las secuencias y distribuciones estadísticas que permiten comprobar si la mayoría de las lecturas se ajustan a la región de amplicón esperada. En definitiva, el <code>index.html</code> actúa como una guía visual que facilita la toma de decisiones informadas sobre recortes, exclusión de muestras problemáticas y verificación del solapamiento mínimo necesario para el ensamblaje de pares de lectura.
+</p>
+<p>
+Dicho esto, incluimos dicho informe a continuación mediante un <code>iframe</code> para poder visualizarlo de forma interactiva así como mediante un botón para poder abrirlo en pantalla completa en una nueva pestaña para explorarlo con más detalle:
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/unzip/demux/54146e53-2fd4-4bbe-93b7-b4fa96264e11/data/index.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<p style="text-align:center;">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/unzip/demux/54146e53-2fd4-4bbe-93b7-b4fa96264e11/data/index.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe en nueva pestaña </a>
+</p>
+<p>
+A partir de este informe, el analista puede decidir si es necesario descartar muestras con una cobertura insuficiente, revisar posibles errores de indexación en aquellas que no presentan lecturas, o bien establecer de forma justificada los valores de truncado que maximicen la calidad de los datos sin perder la capacidad de ensamblar las lecturas forward y reverse. Todas estas decisiones deben documentarse cuidadosamente en el informe junto con las rutas a los archivos generados (<code>demux.qzv</code>, <code>per-sample-fastq-counts.tsv</code> e <code>index.html</code>), lo que asegura la trazabilidad del análisis y refuerza su reproducibilidad.
+</p>
+<p>
+En resumen, el informe de demultiplexación constituye el puente entre el control de calidad inicial y los pasos de trimming y depuración. Gracias a la combinación de tablas cuantitativas y visualizaciones interactivas, ofrece una visión clara de la calidad y cantidad de las lecturas disponibles y orienta las decisiones críticas que determinarán la robustez de las etapas posteriores del pipeline.
+</p>
+<div id="tab3-seccion2.3" class="titulo2">
+<p>2.3. Reflexiones finales sobre el control de calidad</p>
+</div>
+<p>
+<strong>¿Por qué es fundamental realizar un control de calidad en metagenómica 16S?</strong><br>
+</p>
+<p>
+En estudios de <strong>secuenciación de amplicones 16S</strong>, la fiabilidad de los análisis posteriores depende críticamente de la calidad de las lecturas. Detectar tempranamente problemas como baja calidad en posiciones específicas, sesgos nucleotídicos, presencia de adaptadores residuales, primers no eliminados o contaminación cruzada es esencial para asegurar resultados precisos en etapas posteriores como el filtrado, la inferencia de variantes de secuencia (ASVs), la construcción de tablas de abundancia y los análisis taxonómicos o funcionales.
+</p>
+<p>
+Una extensión clave de este control de calidad es el análisis de <strong>demultiplexación</strong> descrito en la <a href="#tab3-seccion2.2" class="normalink">sección 2.2. Informe de demultiplexación en QIIME2</a>. Allí se revisa la separación de lecturas por muestra, se comprueba que cada muestra dispone de un número adecuado de lecturas forward y reverse y se inspeccionan las gráficas de calidad y las distribuciones de longitud. Este paso permite identificar muestras con cobertura insuficiente, errores en los índices o solapamientos problemáticos antes de iniciar los procesos de trimming y depuración, asegurando que los datos que ingresan al pipeline son consistentes y fiables.
+</p>
+<p>
+La presencia de lecturas de baja calidad o secuencias duplicadas puede introducir sesgos que afectan la estimación de diversidad microbiana y la identificación de OTUs o ASVs, generando posibles falsos positivos o negativos en la composición del microbioma. Por ello, un control de calidad riguroso —que ahora incluye tanto la inspección inicial con FastQC/MultiQC como la revisión del informe de demultiplexación— permite definir filtros adecuados para la limpieza de datos y garantiza la reproducibilidad de los análisis.
+</p>
+<div style="height: 5px; background-color: transparent;">
+
+</div>
+<p>
+<strong>Conceptos clave a recordar:</strong>
+</p>
+<ul>
+<li>
+<strong>Lecturas forward (read 1) y reverse (read 2)</strong> <strong>⇒</strong> fragmentos secuenciados desde ambos extremos en la técnica paired-end, que aportan información complementaria para mejorar la resolución de variantes de secuencia y la detección de errores de secuenciación.
+</li>
+<li>
+<strong>Módulos de FastQC</strong> <strong>⇒</strong> métricas que evalúan calidad por base, contenido de GC, secuencias sobre-representadas, duplicaciones y adaptadores, permitiendo identificar problemas técnicos o biológicos específicos de cada muestra.
+</li>
+<li>
+<strong>MultiQC</strong> <strong>⇒</strong> herramienta que integra los informes individuales de FastQC, proporcionando una visión global que facilita la identificación de anomalías consistentes entre múltiples muestras y lotes de secuenciación.
+</li>
+<li>
+<strong>Informe de demultiplexación (2.2)</strong> <strong>⇒</strong> asegura que cada muestra posee un número suficiente de lecturas, verifica la coherencia entre forward y reverse y permite identificar problemas de indexación o de solapamiento que puedan afectar la depuración y ensamblaje posterior.
+</li>
+<li>
+<strong>Importancia para 16S</strong> <strong>⇒</strong> un control de calidad adecuado garantiza que la inferencia de ASVs/OTUs sea confiable, evitando errores en la taxonomía y en los análisis de diversidad alfa y beta.
+</li>
+</ul>
+<p>
+En conjunto, este control de calidad integral constituye un pilar indispensable en cualquier pipeline de análisis de metagenómica 16S. La combinación de FastQC, MultiQC y la revisión de demultiplexación maximiza la confianza en los datos, reduce la introducción de artefactos y asegura que los resultados biológicos reflejen de manera precisa la composición y estructura real de las comunidades microbianas estudiadas.
+</p>
+<p>
+Tras haber completado estas inspecciones y validaciones, se está preparado para proceder con la siguiente fase del flujo de trabajo, que consiste en el <a href="#tab3-seccion2.4" class="normalink">trimming y filtrado inicial</a>, donde se aplicarán los recortes de longitud y los filtros de calidad definidos a partir de la información obtenida en los pasos previos.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.4" class="titulo2">
+<p>2.4. Trimming y filtrado inicial</p>
+</div>
+<p>
+Tras la evaluación de la calidad de las lecturas, tanto a nivel global con <a href="#tab3-seccion2.1.1" class="normalink">MultiQC</a> como individual para cada muestra y dirección de lectura con <a href="#tab3-seccion2.1.2" class="normalink">FastQC</a>, y considerando la información detallada en el <a href="#tab3-seccion2.2" class="normalink">Informe de demultiplexación en QIIME2</a> y las <a href="#tab3-seccion2.3" class="normalink">reflexiones finales sobre el control de calidad</a>, se plantea la fase de <em>trimming</em> y filtrado inicial de las secuencias.
+</p>
+<p>
+Este paso consiste en recortar regiones potencialmente problemáticas de las lecturas, tales como adaptadores residuales, <em>primers</em> no deseados o bases de baja calidad en los extremos. La información obtenida del informe de demultiplexación —como la distribución de lecturas por muestra, la calidad por posición y la longitud de las lecturas— permite definir de forma justificada los parámetros de truncado (<code>trunc_len_f</code> y <code>trunc_len_r</code>) y asegurar que se mantiene un solapamiento adecuado entre lecturas forward y reverse.
+</p>
+<p>
+Para orientar la decisión sobre qué recortes realizar, es fundamental observar patrones concretos en los informes de calidad y en el análisis de demultiplexación: caídas de calidad en posiciones específicas, picos anómalos de composición de nucleótidos, duplicaciones excesivas, muestras con recuentos muy bajos o indicios de errores de indexación o contaminación. Estos indicadores guían la selección de parámetros de trimming y permiten equilibrar la limpieza de las lecturas con la preservación de suficiente información para el análisis.
+</p>
+<p>
+En conjunto, el <em>trimming</em> y filtrado inicial constituyen una preparación crítica para la siguiente fase, en la que se aplicará un filtrado más exhaustivo y la depuración de errores mediante <strong>DADA2</strong>. Gracias a la integración de la revisión de demultiplexación, FastQC y MultiQC, se asegura que las secuencias utilizadas para generar las ASVs sean de alta calidad, representativas y consistentes, lo que garantiza la fiabilidad de los análisis de abundancia y diversidad microbiana que se desarrollarán en las secciones posteriores.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion2.5" class="titulo2">
+<p>2.5. Denoising y depuración con DADA2 / Deblur</p>
+</div>
+<p>
+Tras la evaluación de la calidad de las lecturas y la posible aplicación de <em>trimming</em> para eliminar adaptadores, primers o bases de baja calidad, se procede a la depuración de errores mediante <strong>DADA2</strong> (o <strong>Deblur</strong>). El objetivo de este paso es generar secuencias representativas únicas, conocidas como ASVs (Amplicon Sequence Variants), corrigiendo errores de secuenciación y eliminando quimeras. Esta depuración asegura que los datos que se utilicen en los análisis posteriores sean fiables y comparables entre muestras.
+</p>
+<p>
+DADA2/Deblur toma como entrada las lecturas filtradas y produce varios outputs fundamentales. Entre ellos se incluyen:
+</p>
+<ul>
+<li>
+<strong>Tabla de estadísticas de filtrado y depuración</strong> (<code>stats-dada2.qzv</code>) <strong>⇒</strong> este archivo contiene información detallada por muestra sobre cada paso del procesamiento de las lecturas. Incluye el número de lecturas iniciales, las que pasaron los filtros de calidad, las que fueron <em>denoised</em>, las que se <em>merged</em> correctamente y las libres de quimeras. En esta sección nos centraremos en <em>analizar estas métricas</em>, ya que permiten evaluar cuantitativamente la eficiencia del filtrado y depuración, detectar posibles pérdidas de datos excesivas y asegurar que las lecturas que pasan a la etapa de generación de ASVs son fiables y representativas.
+</li>
+<li>
+<strong>Tabla de abundancia de ASVs</strong> (<code>table.qza / table.qzv</code>) <strong>⇒</strong> esta tabla resume la frecuencia con la que cada ASV aparece en cada muestra, constituyendo la base cuantitativa para todos los análisis de diversidad y composición taxonómica. Cada fila representa un ASV y cada columna una muestra, con valores que reflejan el número de lecturas asignadas a esa variante. Aunque en esta sección solo se menciona su existencia, su análisis detallado se realiza en la sección siguiente: <a href="3-asvs-abundancia.html#tab3-seccion3" class="normalink">3. Generación de ASVs y tabla de abundancia</a>. Entender esta tabla es clave para interpretar la abundancia relativa de cada variante y la comparabilidad entre muestras.
+</li>
+<li>
+<strong>Secuencias representativas de cada ASV</strong> (<code>rep-seqs.qza / rep-seqs.qzv</code>) <strong>⇒</strong> estas secuencias contienen la información exacta de cada variante encontrada tras el proceso de depuración y son fundamentales para la identificación taxonómica y la construcción de filogenias. Cada ASV se representa por una secuencia única que, junto con la tabla de abundancia, permite analizar la diversidad y composición microbiana. Su estudio también se realiza en la sección siguiente, ya que complementa la información cuantitativa con la información de secuencia precisa de cada variante.
+</li>
+</ul>
+<p>
+El archivo <code>stats-dada2.qzv</code> es fundamental para documentar y comprender el proceso de depuración de lecturas. Proporciona información cuantitativa por muestra sobre cada etapa del procesamiento, incluyendo:
+</p>
+<ul>
+<li>
+Número total de lecturas iniciales.
+</li>
+<li>
+Lecturas que pasaron los filtros de calidad.
+</li>
+<li>
+Lecturas <em>denoised</em> y correctamente <em>merged</em>.
+</li>
+<li>
+Lecturas libres de quimeras.
+</li>
+</ul>
+<p>
+Analizar estos datos permite responder preguntas clave, como: ¿Qué porcentaje de lecturas iniciales pasó por todas las etapas de filtrado y depuración? ¿Cuántas se descartaron por baja calidad o por ser quimeras? ¿Cuántas lecturas quedan disponibles para la construcción de ASVs? Esta evaluación es esencial para garantizar la fiabilidad de los análisis de abundancia y diversidad que se presentan posteriormente.
+</p>
+<p>
+Dicho archivo <code>stats-dada2.qzv</code> a partir del cuál se extraerán los datos mencionados anteriormente, se puede encontrar en el siguiente directorio que se muestra a continuación:
+</p>
+<p><code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/stats-dada2.qzv</code></p>
+<p>
+Una vez evaluados estos datos, se puede proceder a la generación de la tabla de abundancia de ASVs y al análisis de diversidad microbiana, que se describen en la sección siguiente.
+</p>
+<p>
+A modo de resumen, la siguiente tabla (extraída de <code>stats-dada2.qzv</code>) sintetiza, por muestra, el número de lecturas procesadas en cada paso y el porcentaje correspondiente respecto al total de lecturas de entrada, proporcionando una visión clara de la eficiencia del filtrado y depuración.
+</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="scroll-y-max-500">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-8912010b0bcdc043a80b" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8912010b0bcdc043a80b">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"],["NGS001-23_16S_41","NGS001-23_16S_42","NGS001-23_16S_43","NGS001-23_16S_44","NGS001-23_16S_47","NGS001-23_16S_48","NGS069-23_16S_29","NGS069-23_16S_30","NGS069-23_16S_31","NGS069-23_16S_32","NGS069-23_16S_35","NGS069-23_16S_36","NGS069-24-16S-1","NGS069-24-16S-2","NGS069-24-16S-3","NGS069-24-16S-4","NGS069-24-16S-5","NGS069-24-16S-6","NGS069-24-16S-7","NGS069-24-16S-8","NGS069-24-16S-9"],[109642,110784,96595,106599,107948,107254,40406,50045,66578,81306,77484,94384,146241,97181,80508,86398,70939,115410,68791,129633,128854],[81674,82704,72248,77818,80038,80366,19472,41650,56179,68295,65281,80788,106795,77479,63371,66529,56173,90453,52544,101641,102211],[74.48999999999999,74.65000000000001,74.79000000000001,73,74.14,74.93000000000001,48.19,83.23,84.38,84,84.25,85.59999999999999,73.03,79.73,78.70999999999999,77,79.18000000000001,78.38,76.38,78.41,79.31999999999999],[76463,77254,67459,71984,75586,75090,17001,37487,50867,61420,61205,75606,99571,71738,58349,61323,50943,84233,48300,95458,95564],[63702,65274,55748,57649,66028,62459,10959,31037,41863,51182,52459,64588,82059,58901,46663,49015,39724,69741,39027,82005,80977],[58.1,58.92,57.71,54.08,61.17,58.23,27.12,62.02,62.88,62.95,67.7,68.43000000000001,56.11,60.61,57.96,56.73,56,60.43,56.73,63.26,62.84],[61701,63359,53871,55390,64087,60500,10348,30217,40553,49709,49735,59472,78445,56704,45002,46886,38048,66627,37496,77877,77342],[56.27,57.19,55.77,51.96,59.37,56.41,25.61,60.38,60.91,61.14,64.19,63.01,53.64,58.35,55.9,54.27,53.63,57.73,54.51,60.07,60.02]],"container":"<table class=\"stripe hover compact\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>sample-id<\/th>\n      <th>input<\/th>\n      <th>filtered<\/th>\n      <th>percentage of input passed filter<\/th>\n      <th>denoised<\/th>\n      <th>merged<\/th>\n      <th>percentage of input merged<\/th>\n      <th>non-chimeric<\/th>\n      <th>percentage of input non-chimeric<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":false,"lengthChange":false,"language":{"url":"//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"},"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6,7,8,9]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"sample-id","targets":1},{"name":"input","targets":2},{"name":"filtered","targets":3},{"name":"percentage of input passed filter","targets":4},{"name":"denoised","targets":5},{"name":"merged","targets":6},{"name":"percentage of input merged","targets":7},{"name":"non-chimeric","targets":8},{"name":"percentage of input non-chimeric","targets":9}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<p style="text-align:center;">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/unzip/stats-dada2/151f8616-7bff-4bee-bb0a-41d4c9a8526d/data/metadata.tsv" download="metadata.tsv" class="boton-file-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar archivo “metadata.tsv” original </a>
+</p>
+<p>
+De forma análoga, si se desea obtener más detalle, el archivo <code>index.html</code> generado dentro del <code>stats-dada2.qzv</code> proporciona una visualización interactiva de los datos, permitiendo explorar cada paso del filtrado y depuración.
+</p>
+<p>
+Mediante el siguiente visor interactivo se puede explorar dicha información o para una mejor visualización se puede hacer uso del botón que se encuentra justo debajo para abrir el informe en una página nueva en tamaño completo:
+</p>
+<div class="iframe-container">
+<p><iframe src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/unzip/stats-dada2/151f8616-7bff-4bee-bb0a-41d4c9a8526d/data/index.html" frameborder="0" style="height: 700px;"></iframe></p>
+</div>
+<p style="text-align:center;">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/unzip/stats-dada2/151f8616-7bff-4bee-bb0a-41d4c9a8526d/data/index.html" target="_blank" class="boton-iframe"> <i class="fa-solid fa-file-lines"></i> Abrir informe en nueva pestaña </a>
+</p>
+<p>
+Con la depuración completada y las ASVs definidas, los datos quedan listos para construir la tabla de abundancia (<code>table.qza / table.qzv</code>) y para realizar los análisis de diversidad microbiana, que se detallan en la siguiente sección. Esta etapa garantiza que las secuencias utilizadas sean de alta fidelidad y comparables entre todas las muestras del experimento.
+</p>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../../4-javascript/chatbot.js"></script>
+
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="../../../../../../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

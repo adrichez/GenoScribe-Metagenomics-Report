@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Metagenomic Report</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../../../">
+<script src="../../../../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../../../site_libs/quarto-html/quarto-syntax-highlighting-54c8f25464f32f8783bd446cee98020d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../../../site_libs/bootstrap/bootstrap-c27fce070f9e1faf5b65ec12c04f7688.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="shortcut icon" href="../../../../../1-images/icons/favicon.svg">
+<link rel="icon" type="image/x-icon" href="../../../../../1-images/icons/favicon.ico">
+
+
+<link rel="stylesheet" href="../../../../../../../resources/1-essential/3-scripts/3-css/styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../../../../../../../index.html">
+    <span class="navbar-title"><img class="brand-logo" src="../../../../../../../resources/1-essential/1-images/icons/ipbln.png"> <a class="brand-text" href="https://www.ipb.csic.es/servicios/Bioinformatica/index.html">IPBLN</a></span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../index.html"> <i class="bi bi-house" role="img">
+</i> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab1-metodologia/metodologia.html"> <i class="bi bi-wrench" role="img">
+</i> 
+<span class="menu-text">Metodología</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab2-resumen/tab2-1-resumen-16S/resumen.html"> <i class="bi bi-clipboard-data" role="img">
+</i> 
+<span class="menu-text">Resumen 16S</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-análisis-16s" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-bar-chart" role="img">
+</i> 
+ <span class="menu-text">Análisis 16S</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-análisis-16s">    
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/0-contexto.html">
+ <span class="dropdown-text">➤ Introducción contextual</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/1-revision-inicial.html">
+ <span class="dropdown-text">1. Revisión inicial de muestras y metadatos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/2-control-calidad.html">
+ <span class="dropdown-text">2. Control de calidad y preprocesamiento</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/3-generacion-asvs.html">
+ <span class="dropdown-text">3. Generación de ASVs y tabla de abundancia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/4-taxonomia-filogenia.html">
+ <span class="dropdown-text">4. Asignación taxonómica y filogenia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/5-analisis-diferencial.html">
+ <span class="dropdown-text">5. Análisis diferencial de abundancia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/6-diversidad-microbiana.html">
+ <span class="dropdown-text">6. Diversidad microbiana</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/7-prediccion-funcional.html">
+ <span class="dropdown-text">7. Predicción funcional</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../../../../../resources/1-essential/3-scripts/2-quarto/1-full-version/tab3-analisis/tab3-1-analisis-16S/8-conclusiones.html">
+ <span class="dropdown-text">8. Conclusiones y perspectivas</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-layout-custom page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+<!-- main -->
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Metagenomic Report</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!-- Contenedor del chat -->
+<div id="chat-container">
+  <button id="chat-toggle"></button>
+  <div id="chat-box">
+    <div id="chat-info" class="chat-info">
+      <h1>
+        Mini Chat RAG (beta)
+      </h1>
+
+      <p>
+        ¡Hola! Soy <strong>Geni</strong>, el asistente inteligente de <strong>GenoScribe</strong>.  
+        Estoy aquí para ayudarte a explorar de forma interactiva el contenido de este informe bioinformático.
+      </p>
+
+      <p>
+        Cuando me haces una pregunta, primero intento reconocer si coincide con alguno de los patrones o expresiones que conozco.  
+        Si encuentro una coincidencia, te responderé directamente con una respuesta predefinida, diseñada para ser rápida, clara e incluso un poco ingeniosa.  
+        Si no reconozco el patrón, entonces activo mis herramientas de búsqueda: genero representaciones vectoriales (embeddings) y busco los fragmentos más relevantes entre varios documentos —incluyendo el propio informe, archivos PDF y HTML externos, y sesiones de preguntas y respuestas (QA).  
+        A partir de esa información, creo un resumen que intenta ofrecerte una respuesta coherente y útil basada en el contenido existente.
+      </p>
+
+      <p>
+        Se debe tener en cuenta que este entorno es experimental. No utilizo grandes modelos de lenguaje, por lo que algunas respuestas pueden ser aproximadas o incompletas.  
+        El objetivo principal es facilitar una visualización rápida, comprensible y reproducible de la información contenida en los documentos, permitiendo una exploración más dinámica del informe.
+      </p>
+
+      <p>
+        Actualmente, los resultados pueden variar en precisión, ya que empleo modelos ligeros y locales para asegurar que la aplicación funcione en cualquier entorno sin necesidad de servidores externos.  
+        Sin embargo, la estructura del sistema está preparada para mejorar notablemente su rendimiento en el futuro mediante la integración con modelos más avanzados o APIs externas.  
+        Para comenzar, simplemente escribe tu pregunta en el campo inferior y deja que yo me encargue del resto. ¡Prometo poner todo mi código en ello!
+      </p>
+    </div>
+    <div id="chat-log"></div>
+    <input id="chat-input" type="text" placeholder="Escribe tu pregunta...">
+    <button id="chat-send" title="Enviar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  IMPORTACIONES
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!-- Incluir Font Awesome -->
+<p><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"></p>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  TAB 3: ANÁLISIS | 7. PREDICCIÓN FUNCIONAL (PICRUSt2 / Pycrust) -->
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<div class="informe-titulo-tab">
+<h1>
+Pestaña
+</h1>
+<h2>
+Análisis 16S bioinformático completo
+</h2>
+</div>
+<div class="informe-titulo-seccion-unique">
+<h1>
+Sección 7
+</h1>
+<h2>
+Predicción funcional (PICRUSt2 / Pycrust)
+</h2>
+</div>
+<div class="flecha-abajo">
+<p>▼</p>
+</div>
+<div class="informe-resumen">
+<h2>
+Resumen
+</h2>
+<p>
+En esta sección se presentan los resultados de la <strong>predicción funcional</strong> de las comunidades microbianas a partir de los datos de metagenómica 16S, utilizando las herramientas <strong>PICRUSt2</strong> y <strong>Pycrust</strong>. El objetivo principal es inferir la abundancia de rutas metabólicas (<em>pathways</em>) y funciones biológicas presentes en las muestras, proporcionando una visión integral de la funcionalidad microbiana y permitiendo identificar diferencias entre los grupos experimentales.
+</p>
+<p>
+La sección se estructura en cuatro bloques principales:
+</p>
+<ul>
+<li>
+<strong>7.1. PCA global de pathways</strong> <strong>⇒</strong> Se realiza un análisis de componentes principales (PCA) sobre las abundancias relativas de pathways predichos. Esto permite visualizar la variación funcional global entre todas las muestras del estudio, identificando patrones de agrupamiento y posibles similitudes o diferencias funcionales entre grupos. La representación incluye los primeros componentes principales (PC1 y PC2), puntos coloreados según el grupo experimental, elipses de confianza y distribuciones marginales, facilitando una interpretación rápida y clara de la estructura funcional global.
+</li>
+<li>
+<strong>7.2. Análisis diferencial global (ALDEx2)</strong> <strong>⇒</strong> Se aplican métodos estadísticos globales para identificar pathways diferencialmente abundantes entre todos los grupos experimentales. Se incluyen mapas de calor basados en el test de Kruskal-Wallis y en modelos lineales generalizados (GLM), así como gráficos de p-values que resaltan las rutas con diferencias significativas. Este análisis permite detectar patrones funcionales globales y establecer una base para comparaciones más detalladas entre grupos específicos.
+</li>
+<li>
+<strong>7.3. Comparaciones específicas por pares (MetagenomeSeq)</strong> <strong>⇒</strong> Se realizan comparaciones dirigidas entre pares de grupos experimentales utilizando MetagenomeSeq. Cada gráfico de esta subsección muestra la abundancia relativa de pathways seleccionados según criterios de significancia estadística para esa comparación específica. Esto permite identificar funciones metabólicas que distinguen a un grupo de otro de forma más focalizada y detalla las rutas responsables de diferencias funcionales o fenotípicas específicas.
+</li>
+<li>
+<strong>7.4. PCA funcional por pares (<code>pathway_pca_MetagenomeSeq_*</code>)</strong> <strong>⇒</strong> Se realizan PCA sobre las abundancias relativas de pathways para cada comparación por pares. Estas figuras muestran cómo se agrupan las muestras de dos grupos específicos, permitiendo visualizar la separación funcional entre ellos y la consistencia de los patrones observados en los análisis de MetagenomeSeq. En algunos casos, los PCA pueden aparecer vacíos si no se detectan pathways diferencialmente abundantes o si la variabilidad funcional es insuficiente para generar una representación informativa.
+</li>
+</ul>
+<p>
+En conjunto, esta sección proporciona una visión integral de la funcionalidad metabólica de las comunidades microbianas estudiadas. Se combinan análisis globales y específicos, representaciones estadísticas y visualizaciones gráficas para permitir interpretar patrones funcionales generales, detectar rutas clave que diferencian grupos y explorar agrupamientos funcionales por pares. El propósito final es facilitar la comprensión de las funciones metabólicas potenciales asociadas a cada grupo experimental y servir como base para futuras interpretaciones biológicas o experimentales.
+</p>
+</div>
+<div style="height: 15px; background-color: transparent;">
+
+</div>
+<div class="titulo-toc">
+<p>Tabla de contenidos de esta sección</p>
+</div>
+<div class="toc">
+<ul>
+<li>
+<a href="#tab3-seccion7"> 7<span>.</span> Predicción funcional (PICRUSt2 / Pycrust) </a>
+<ul>
+<li>
+<a href="#tab3-seccion7.1"> 7.1. PCA global de pathways </a>
+</li>
+<li>
+<a href="#tab3-seccion7.2"> 7.2. Análisis diferencial global (ALDEx2) </a>
+</li>
+<li>
+<a href="#tab3-seccion7.3"> 7.3. Comparaciones específicas por pares (MetagenomeSeq) </a>
+</li>
+<li>
+<a href="#tab3-seccion7.4"> 7.4. PCA funcional por pares (<code>pathway_pca_MetagenomeSeq_*</code>) </a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<!-- REDACCIÓN -->
+<!-- #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<div style="height: 25px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion7" class="titulo1">
+<p>7<span>.</span> Predicción funcional (PICRUSt2 / Pycrust)</p>
+</div>
+<p>
+En esta sección se presentan los resultados del análisis de <strong>predicción funcional</strong> de las comunidades microbianas utilizando <strong>PICRUSt2</strong> (Phylogenetic Investigation of Communities by Reconstruction of Unobserved States, versión 2). Esta herramienta permite inferir el potencial funcional de las comunidades microbianas a partir de datos de secuenciación 16S rRNA, complementando así la información taxonómica obtenida previamente con una perspectiva funcional.
+</p>
+<p>
+El enfoque de PICRUSt2 se basa en la <em>inferencia filogenética</em> y en el uso de bases de datos funcionales de referencia. A partir de los ASVs (Amplicon Sequence Variants) obtenidos en la etapa de análisis taxonómico, se predice la presencia y abundancia de genes y rutas metabólicas mediante su proyección sobre genomas de referencia filogenéticamente cercanos. De esta forma, es posible estimar el repertorio funcional potencial de las comunidades microbianas sin necesidad de disponer de datos metagenómicos completos.
+</p>
+<p>
+Las rutas metabólicas predichas se anotan utilizando la base de datos <strong>MetaCyc</strong>, que contiene información estructurada sobre vías metabólicas y reacciones bioquímicas. A partir de esta anotación se generan tablas de abundancia de pathways para cada muestra, que sirven como base para distintos análisis estadísticos y visualizaciones.
+</p>
+<p>
+El objetivo principal de esta sección es <strong>explorar y visualizar la variación funcional</strong> entre grupos experimentales, identificando pathways diferencialmente abundantes y patrones de agrupamiento funcional. Para ello, los resultados se presentan en los siguientes subapartados, mostrando de manera clara y ordenada las figuras generadas durante el análisis:
+</p>
+<ul>
+<li>
+<strong>7.1. PCA global de pathways</strong> <strong>⇒</strong> Permite evaluar la variación funcional global entre todas las muestras mediante un Análisis de Componentes Principales (PCA). Se visualiza la estructura general de agrupamiento de las comunidades microbianas a nivel funcional.<br>
+<span class="soft-strong">Figura asociada</span> <strong>→</strong> <code>pathway_pca_p_0.05_all.png</code>.
+</li>
+<li>
+<strong>7.2. Análisis diferencial global (ALDEx2)</strong> <strong>⇒</strong> Se identifican pathways diferencialmente abundantes entre grupos experimentales mediante <code>ALDEx2</code>, utilizando transformaciones centradas log-ratio (clr) y pruebas estadísticas no paramétricas. Las figuras incluyen mapas de calor y distribuciones de p-values.<br>
+<span class="soft-strong">Figuras asociadas</span> <strong>→</strong> <code>pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png</code>, <code>pathway_ALDEx2_glm_test_heatmap.png</code>, <code>pathway_ALDEx2_glm_test_p_values.png</code>.
+</li>
+<li>
+<strong>7.3. Comparaciones específicas por pares (MetagenomeSeq)</strong> <strong>⇒</strong> Se realizan análisis de abundancia diferencial entre pares de grupos mediante <code>MetagenomeSeq</code>, permitiendo identificar rutas metabólicas específicas asociadas a cada condición experimental.<br>
+<span class="soft-strong">Figuras asociadas</span> <strong>→</strong> todos los archivos <code>pathway_MetagenomeSeq_*</code>.
+</li>
+<li>
+<strong>7.4. PCA funcional por pares (<code>pathway_pca_MetagenomeSeq_<em></em></code><em>)</em></strong><em> <strong>⇒</strong> Se visualizan PCA específicos para cada comparación por pares de grupos, mostrando la separación funcional en función de sus perfiles de pathways. Esto complementa el análisis de abundancia diferencial, resaltando la consistencia y divergencia funcional entre grupos.<br>
+<span class="soft-strong">Figuras asociadas</span> <strong>→</strong> todos los archivos <code>pathway_pca_MetagenomeSeq_</code></em>.
+</li>
+</ul>
+<p>
+Para facilitar la revisión y exploración de los resultados generados en esta sección, a continuación se incluye un listado de todas las imágenes relacionadas con la predicción funcional. Cada archivo corresponde a una figura generada durante los análisis de PCA global, análisis diferencial global con ALDEx2, comparaciones por pares con MetagenomeSeq y PCA funcional por pares. Los nombres de los archivos reflejan el tipo de análisis y, en el caso de comparaciones por pares, los grupos involucrados. Haciendo clic en cada enlace, el lector podrá abrir la figura correspondiente en una ventana nueva y examinar los resultados de forma detallada.
+</p>
+<div class="box-files">
+<ul>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_heatmap.png" target="_blank">pathway_ALDEx2_glm_test_heatmap.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_p_values.png" target="_blank">pathway_ALDEx2_glm_test_p_values.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png" target="_blank">pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Equineplusc.png" target="_blank">pathway_MetagenomeSeq_Equine_vs_Equineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_livestock_exclusion.png" target="_blank">pathway_MetagenomeSeq_Equine_vs_livestock_exclusion.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" target="_blank">pathway_MetagenomeSeq_Equine_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Ovine.png" target="_blank">pathway_MetagenomeSeq_Equine_vs_Ovine.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_ovineplusc.png" target="_blank">pathway_MetagenomeSeq_Equine_vs_ovineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" target="_blank">pathway_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" target="_blank">pathway_MetagenomeSeq_Equineplusc_vs_ovineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" target="_blank">pathway_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" target="_blank">pathway_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" target="_blank">pathway_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Equineplusc.png" target="_blank">pathway_MetagenomeSeq_Ovine_vs_Equineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" target="_blank">pathway_MetagenomeSeq_Ovine_vs_livestock_exclusion.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" target="_blank">pathway_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_ovineplusc.png" target="_blank">pathway_MetagenomeSeq_Ovine_vs_ovineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" target="_blank">pathway_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Equineplusc.png" target="_blank">pathway_pca_MetagenomeSeq_Equine_vs_Equineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_livestock_exclusion.png" target="_blank">pathway_pca_MetagenomeSeq_Equine_vs_livestock_exclusion.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" target="_blank">pathway_pca_MetagenomeSeq_Equine_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Ovine.png" target="_blank">pathway_pca_MetagenomeSeq_Equine_vs_Ovine.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_ovineplusc.png" target="_blank">pathway_pca_MetagenomeSeq_Equine_vs_ovineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_livestock_exclusion.png" target="_blank">pathway_pca_MetagenomeSeq_Equineplusc_vs_livestock_exclusion.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" target="_blank">pathway_pca_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Ovine.png" target="_blank">pathway_pca_MetagenomeSeq_Equineplusc_vs_Ovine.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" target="_blank">pathway_pca_MetagenomeSeq_Equineplusc_vs_ovineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" target="_blank">pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" target="_blank">pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Ovine.png" target="_blank">pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Ovine.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" target="_blank">pathway_pca_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_livestock_exclusion.png" target="_blank">pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_livestock_exclusion.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_Ovine.png" target="_blank">pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_Ovine.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_ovineplusc.png" target="_blank">pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_ovineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Equineplusc.png" target="_blank">pathway_pca_MetagenomeSeq_Ovine_vs_Equineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" target="_blank">pathway_pca_MetagenomeSeq_Ovine_vs_livestock_exclusion.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" target="_blank">pathway_pca_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_ovineplusc.png" target="_blank">pathway_pca_MetagenomeSeq_Ovine_vs_ovineplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" target="_blank">pathway_pca_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png</a>
+</li>
+<li class="file-img">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_p_0.05_all.png" target="_blank">pathway_pca_p_0.05_all.png</a>
+</li>
+</ul>
+</div>
+<p style="text-align:center;">
+<a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S" target="_blank" class="boton-files"> <i class="fa-solid fa-folder-open"></i> Explorar todos los archivos pathway*.png de la carpeta “Def_16S” aquí </a>
+</p>
+<p>
+En conjunto, esta sección integra los análisis funcionales globales y específicos, proporcionando al lector una visión completa del potencial metabólico de las comunidades microbianas estudiadas. Las figuras permiten comparar perfiles funcionales, identificar pathways relevantes y observar agrupamientos que reflejan diferencias y similitudes entre los grupos experimentales.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion7.1" class="titulo2">
+<p>7.1. PCA global de pathways</p>
+</div>
+<p>
+En esta subsección se presenta un <strong>análisis de componentes principales (PCA) global</strong> basado en las rutas metabólicas (<em>pathways</em>) predichas a partir de los datos de metagenómica 16S mediante <strong>PICRUSt2</strong>. Un <strong>pathway</strong> representa una ruta bioquímica interconectada dentro de un organismo o comunidad microbiana, compuesta por un conjunto de reacciones que contribuyen a funciones metabólicas específicas, como la degradación de carbohidratos, la biosíntesis de aminoácidos, la producción de energía o rutas de señalización celular. Cada pathway se asigna utilizando la base de datos <strong>MetaCyc</strong>, que proporciona una referencia estandarizada para mapear funciones metabólicas a los microorganismos presentes en las muestras.
+</p>
+<p>
+El objetivo de esta sección es ofrecer una <strong>visión global de la variabilidad funcional</strong> de todas las muestras del estudio. Dado que la abundancia relativa de pathways puede ser extremadamente alta y compleja, el PCA permite reducir la dimensionalidad de los datos y representar las relaciones entre muestras en un espacio bidimensional (PC1 y PC2) que captura la mayor parte de la variabilidad funcional.
+</p>
+<p>
+La figura mostrada a continuación se construyó considerando únicamente los pathways con <em>p</em> &lt; 0.05, es decir, aquellos que presentan diferencias estadísticamente significativas en al menos una comparación entre grupos. Este filtrado permite centrar la visualización en las rutas más relevantes y reducir el ruido de fondo que podrían introducir pathways con poca variabilidad.
+</p>
+<p>
+Para generar esta imagen, primero se predijo la funcionalidad metabólica de cada muestra utilizando PICRUSt2 a partir de la tabla de ASVs obtenida en el análisis de metagenómica 16S. Esto produjo una tabla de abundancia de pathways por muestra. Posteriormente, se seleccionaron los pathways significativos y se aplicó PCA sobre las abundancias relativas, obteniendo un gráfico que resume de manera clara y visual la estructura funcional global de la comunidad microbiana.
+</p>
+<p>
+La imagen generada se encuentra en el siguiente directorio:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_p_0.05_all.png</code>
+</p>
+<p>
+A continuación se visualiza la figura, la cual se puede explorar con más detalle, si se considerara necesario, haciendo click en el botón que se proporciona justo debajo.
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_p_0.05_all.png" alt="Imagen pathway_pca_p_0.05_all.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_p_0.05_all.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_p_0.05_all.png" download="pathway_pca_p_0.05_all.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<p>
+Esta figura representa cada muestra como un punto dentro de un espacio bidimensional definido por las componentes principales PC1 (eje X) y PC2 (eje Y). Los puntos se colorean según el grupo experimental al que pertenece cada muestra, y se incluyen <strong>elipses de confianza</strong> que resumen la dispersión funcional dentro de cada grupo. Además, en los ejes se muestran distribuciones marginales de los puntos por grupo, lo que facilita observar cómo se distribuye la abundancia de pathways a lo largo de cada componente principal.
+</p>
+<p>
+La interpretación de esta figura permite identificar <strong>patrones de agrupamiento funcional</strong> entre las muestras. Un agrupamiento compacto de muestras del mismo grupo indica que poseen perfiles funcionales similares, mientras que la separación clara entre grupos sugiere diferencias metabólicas significativas. Los solapamientos entre elipses pueden reflejar similitudes funcionales o redundancias entre grupos.
+</p>
+<p>
+En resumen, el PCA global de pathways proporciona una <strong>visión inicial y completa de la estructura funcional</strong> de las comunidades microbianas del estudio. Esta visualización sirve como base antes de analizar comparaciones más específicas mediante métodos estadísticos. En el siguiente apartado se presentará el <strong>análisis diferencial global con ALDEx2</strong>, que permitirá identificar qué pathways muestran cambios significativos de abundancia entre los diferentes grupos experimentales.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion7.2" class="titulo2">
+<p>7.2. Análisis diferencial global (ALDEx2)</p>
+</div>
+<p>
+En esta subsección se presentan los resultados del <strong>análisis diferencial global</strong> de pathways utilizando <strong>ALDEx2</strong>. ALDEx2 es un paquete estadístico diseñado para estudios de abundancia relativa de datos de secuenciación, que permite identificar features (en este caso, pathways) que difieren significativamente entre grupos experimentales, considerando la naturaleza composicional de los datos microbiológicos.
+</p>
+<p>
+Mientras que el PCA global resume la variación funcional general, ALDEx2 permite <strong>evaluar de manera estadística qué pathways muestran diferencias significativas</strong> en abundancia relativa entre todos los grupos del estudio. Los resultados se presentan principalmente mediante mapas de calor y gráficos de p-values.
+</p>
+<p>
+En esta sección se incluyen las siguientes figuras generadas previamente:
+</p>
+<ul>
+<li>
+<code>pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png</code> <strong>⇒</strong> Mapa de calor basado en el test de Kruskal-Wallis para identificar pathways con diferencias globales.
+</li>
+<li>
+<code>pathway_ALDEx2_glm_test_heatmap.png</code> <strong>⇒</strong> Mapa de calor basado en el modelo lineal generalizado (GLM), mostrando la abundancia relativa de pathways entre grupos.
+</li>
+<li>
+<code>pathway_ALDEx2_glm_test_p_values.png</code> <strong>⇒</strong> Gráfico de p-values de GLM, destacando las rutas con diferencias estadísticamente significativas.
+</li>
+</ul>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div class="titulo4">
+<p>➤ Figura 1: pathway_ALDEx2_glm_test_heatmap.png</p>
+</div>
+<p>
+La siguiente figura corresponde al <strong>Mapa de calor basado en el modelo lineal generalizado (GLM)</strong> generado a partir del análisis funcional global. Este tipo de representación permite observar de manera visual y comparativa cómo varía la abundancia relativa de distintos pathways entre los grupos experimentales, facilitando la identificación de patrones y posibles diferencias funcionales relevantes.
+</p>
+<p>
+A continuación, se indica la ubicación exacta en la que se encuentra almacenado este archivo de salida dentro del flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_heatmap.png</code>
+</p>
+<p>
+Seguidamente se muestra la figura generada:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_heatmap.png" alt="Imagen pathway_ALDEx2_glm_test_heatmap.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_heatmap.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_heatmap.png" download="pathway_ALDEx2_glm_test_heatmap.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div class="titulo4">
+<p>➤ Figura 2: pathway_ALDEx2_glm_test_p_values.png</p>
+</div>
+<p>
+La siguiente figura corresponde al <strong>Gráfico de p-values asociados al test GLM</strong> generado a partir del análisis funcional global. Este tipo de representación permite observar de manera visual y comparativa cómo varía la abundancia relativa de distintos pathways entre los grupos experimentales, facilitando la identificación de patrones y posibles diferencias funcionales relevantes.
+</p>
+<p>
+A continuación, se indica la ubicación exacta en la que se encuentra almacenado este archivo de salida dentro del flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_p_values.png</code>
+</p>
+<p>
+Seguidamente se muestra la figura generada:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_p_values.png" alt="Imagen pathway_ALDEx2_glm_test_p_values.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_p_values.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_glm_test_p_values.png" download="pathway_ALDEx2_glm_test_p_values.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div style="height: 10px; background-color: transparent;">
+
+</div>
+<div class="titulo4">
+<p>➤ Figura 3: pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png</p>
+</div>
+<p>
+La siguiente figura corresponde al <strong>Mapa de calor basado en el test de Kruskal–Wallis</strong> generado a partir del análisis funcional global. Este tipo de representación permite observar de manera visual y comparativa cómo varía la abundancia relativa de distintos pathways entre los grupos experimentales, facilitando la identificación de patrones y posibles diferencias funcionales relevantes.
+</p>
+<p>
+A continuación, se indica la ubicación exacta en la que se encuentra almacenado este archivo de salida dentro del flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png</code>
+</p>
+<p>
+Seguidamente se muestra la figura generada:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png" alt="Imagen pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png" download="pathway_ALDEx2_Kruskal-Wallace_test_heatmap.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<p>
+Los <strong>mapas de calor</strong> permiten visualizar la abundancia relativa de pathways a lo largo de todos los grupos experimentales. Cada fila corresponde a un pathway y cada columna a un grupo o muestra, con colores que representan la magnitud relativa de abundancia. Esto facilita identificar patrones generales de expresión funcional y pathways que se comportan de manera similar entre distintos grupos.
+</p>
+<p>
+El gráfico de <strong>p-values</strong> proporciona información complementaria, destacando las rutas metabólicas cuya abundancia relativa difiere de manera significativa según el modelo estadístico aplicado. Los pathways con p-values bajos son aquellos que muestran cambios más consistentes entre grupos y, por lo tanto, son de mayor interés para la interpretación biológica.
+</p>
+<p>
+En conjunto, el análisis global con ALDEx2 permite <strong>identificar rutas metabólicas clave</strong> que diferencian las comunidades microbianas de los distintos grupos del estudio, sirviendo como base antes de explorar comparaciones más específicas entre pares de grupos, que se presentan en el siguiente apartado mediante <strong>MetagenomeSeq</strong>.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion7.3" class="titulo2">
+<p>7.3. Comparaciones específicas por pares (MetagenomeSeq)</p>
+</div>
+<p>
+En esta subsección se presentan los resultados de las <strong>comparaciones funcionales específicas por pares de grupos</strong> obtenidos mediante <strong>MetagenomeSeq</strong>. Esta herramienta estadística está especialmente diseñada para analizar datos de abundancia relativa en estudios de metagenómica, teniendo en cuenta características propias de este tipo de datos, como su dispersión, su naturaleza censurada (por la gran cantidad de ceros) y la variabilidad entre muestras.
+</p>
+<p>
+A diferencia del análisis global realizado con <strong>ALDEx2</strong>, que resume diferencias considerando todos los grupos simultáneamente, MetagenomeSeq permite realizar <strong>comparaciones dirigidas entre pares de grupos específicos</strong>. Esto hace posible detectar rutas metabólicas (pathways) cuya abundancia relativa difiere significativamente únicamente en esa comparación concreta, proporcionando una visión más focalizada de los cambios funcionales asociados a cada condición experimental.
+</p>
+<p>
+Cada figura mostrada a continuación representa el resultado de una de estas comparaciones. En ellas se visualizan los pathways que superan los umbrales definidos de significancia estadística y abundancia relativa, lo que facilita identificar funciones biológicas potencialmente relevantes que diferencian a un grupo del otro.
+</p>
+<p>
+Las imágenes incluidas en esta sección provienen de los archivos generados previamente y nombrados con el prefijo <code>pathway_MetagenomeSeq_</code>, cada uno correspondiente a una comparación específica entre dos grupos experimentales.
+</p>
+<p>
+Es importante señalar que, en algunos casos, <strong>una figura puede aparecer vacía o sin contenido visible</strong>. Esto suele deberse a que <strong>no se han detectado pathways diferencialmente abundantes</strong> para esa comparación bajo los criterios estadísticos establecidos (por ejemplo, valores de p ajustados por debajo del umbral definido). También puede ocurrir cuando las diferencias entre los grupos son muy pequeñas o no se dispone de un número suficiente de muestras para alcanzar significancia estadística.
+</p>
+<div class="titulo4">
+<p>➤ Figura 1: pathway_MetagenomeSeq_Equine_vs_Equineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Equine</strong> y <strong>Equineplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Equineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Equineplusc.png" alt="Imagen pathway_MetagenomeSeq_Equine_vs_Equineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Equineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Equineplusc.png" download="pathway_MetagenomeSeq_Equine_vs_Equineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 2: pathway_MetagenomeSeq_Equine_vs_livestock_exclusion.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Equine</strong> y <strong>Livestock exclusion</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_livestock_exclusion.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_livestock_exclusion.png" alt="Imagen pathway_MetagenomeSeq_Equine_vs_livestock_exclusion.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_livestock_exclusion.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_livestock_exclusion.png" download="pathway_MetagenomeSeq_Equine_vs_livestock_exclusion.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 3: pathway_MetagenomeSeq_Equine_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Equine</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" alt="Imagen pathway_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" download="pathway_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 4: pathway_MetagenomeSeq_Equine_vs_Ovine.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Equine</strong> y <strong>Ovine</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Ovine.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Ovine.png" alt="Imagen pathway_MetagenomeSeq_Equine_vs_Ovine.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Ovine.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_Ovine.png" download="pathway_MetagenomeSeq_Equine_vs_Ovine.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 5: pathway_MetagenomeSeq_Equine_vs_ovineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Equine</strong> y <strong>Ovineplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_ovineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_ovineplusc.png" alt="Imagen pathway_MetagenomeSeq_Equine_vs_ovineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_ovineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equine_vs_ovineplusc.png" download="pathway_MetagenomeSeq_Equine_vs_ovineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 6: pathway_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Equineplusc</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" alt="Imagen pathway_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" download="pathway_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 7: pathway_MetagenomeSeq_Equineplusc_vs_ovineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Equineplusc</strong> y <strong>Ovineplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_ovineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" alt="Imagen pathway_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" download="pathway_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 8: pathway_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Livestock exclusion</strong> y <strong>Equineplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" alt="Imagen pathway_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" download="pathway_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 9: pathway_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Livestock exclusion</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" alt="Imagen pathway_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" download="pathway_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 10: pathway_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Livestock exclusion</strong> y <strong>Ovineplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" alt="Imagen pathway_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" download="pathway_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 11: pathway_MetagenomeSeq_Ovine_vs_Equineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Ovine</strong> y <strong>Equineplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Equineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Equineplusc.png" alt="Imagen pathway_MetagenomeSeq_Ovine_vs_Equineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Equineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Equineplusc.png" download="pathway_MetagenomeSeq_Ovine_vs_Equineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 12: pathway_MetagenomeSeq_Ovine_vs_livestock_exclusion.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Ovine</strong> y <strong>Livestock exclusion</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_livestock_exclusion.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" alt="Imagen pathway_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" download="pathway_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 13: pathway_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Ovine</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" alt="Imagen pathway_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" download="pathway_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 14: pathway_MetagenomeSeq_Ovine_vs_ovineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Ovine</strong> y <strong>Ovineplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_ovineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_ovineplusc.png" alt="Imagen pathway_MetagenomeSeq_Ovine_vs_ovineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_ovineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_Ovine_vs_ovineplusc.png" download="pathway_MetagenomeSeq_Ovine_vs_ovineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 15: pathway_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra los resultados del análisis diferencial de pathways realizado con <strong>MetagenomeSeq</strong> para la comparación específica entre los grupos <strong>Ovineplusc</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite identificar rutas metabólicas cuya abundancia relativa difiere significativamente entre ambos grupos, revelando posibles funciones biológicas que caracterizan a cada uno.
+</p>
+<p>
+A continuación, se muestra la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" alt="Imagen pathway_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" download="pathway_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<p>
+Cada gráfico de MetagenomeSeq muestra la <strong>abundancia relativa de pathways</strong> para la comparación específica entre dos grupos. En los gráficos de barras, cada barra representa un pathway, con su altura indicando la abundancia relativa y el color o marcador señalando la significancia estadística. Esto permite identificar pathways que están sobre- o subrepresentados en un grupo en comparación con otro.
+</p>
+<p>
+La interpretación de estas figuras permite detectar <strong>rutas metabólicas clave asociadas a diferencias entre grupos específicos</strong>. Al analizar estas comparaciones por pares, se puede identificar funcionalidad metabólica particular de ciertos grupos experimentales y posibles rutas responsables de diferencias fenotípicas o de la respuesta a tratamientos.
+</p>
+<p>
+En conjunto, las comparaciones por pares de MetagenomeSeq complementan los análisis globales de ALDEx2, proporcionando un detalle más fino sobre las diferencias funcionales. A continuación, en la subsección 7.4, se mostrarán los <strong>PCA funcionales por pares</strong>, que permiten visualizar patrones de agrupamiento de pathways en cada comparación individual.
+</p>
+<div style="height: 20px; background-color: transparent;">
+
+</div>
+<div id="tab3-seccion7.4" class="titulo2">
+<p>7.4. PCA funcional por pares (<code>pathway_pca_MetagenomeSeq_*</code>)</p>
+</div>
+<p>
+En esta subsección se presentan los resultados del <strong>Análisis de Componentes Principales (PCA) funcional</strong> realizado de forma específica para cada par de grupos experimentales. A diferencia del PCA global mostrado en la sección 7.1, aquí se analiza únicamente la variación funcional entre <strong>dos grupos concretos</strong>, utilizando los perfiles de pathways obtenidos tras el análisis con <strong>MetagenomeSeq</strong>.
+</p>
+<p>
+Cada figura de PCA por pares permite evaluar visualmente cómo se agrupan las muestras de los dos grupos comparados en función de su perfil funcional. Los puntos representan muestras individuales, coloreadas según el grupo, mientras que las elipses muestran la dispersión y el patrón central de cada grupo. Los ejes PC1 y PC2 reflejan las dos componentes principales que capturan la mayor parte de la variabilidad funcional entre las muestras de cada comparación.
+</p>
+<p>
+Los archivos mostrados en esta sección tienen nombres que comienzan con <code>pathway_pca_MetagenomeSeq_</code>, cada uno correspondiente a una comparación específica entre dos grupos experimentales. Estas representaciones gráficas permiten identificar de manera visual <strong>separaciones o solapamientos funcionales</strong> entre los grupos, evaluando la consistencia de los patrones observados en los análisis de MetagenomeSeq.
+</p>
+<p>
+Es importante mencionar que algunas figuras pueden aparecer vacías o sin contenido visible. Esto ocurre cuando no se detecta suficiente variabilidad funcional entre los grupos para generar un PCA informativo, o cuando la generación de la imagen se omitió en el flujo de análisis de R. La ausencia de señal gráfica no implica un error, sino que refleja <strong>la falta de patrones estadísticamente relevantes</strong> en esa comparación específica.
+</p>
+<div class="titulo4">
+<p>➤ Figura 1: pathway_pca_MetagenomeSeq_Equine_vs_Equineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Equine</strong> y <strong>Equineplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Equineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Equineplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_Equine_vs_Equineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Equineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Equineplusc.png" download="pathway_pca_MetagenomeSeq_Equine_vs_Equineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 2: pathway_pca_MetagenomeSeq_Equine_vs_livestock_exclusion.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Equine</strong> y <strong>Livestock exclusion</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_livestock_exclusion.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_livestock_exclusion.png" alt="Imagen pathway_pca_MetagenomeSeq_Equine_vs_livestock_exclusion.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_livestock_exclusion.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_livestock_exclusion.png" download="pathway_pca_MetagenomeSeq_Equine_vs_livestock_exclusion.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 3: pathway_pca_MetagenomeSeq_Equine_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Equine</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" download="pathway_pca_MetagenomeSeq_Equine_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 4: pathway_pca_MetagenomeSeq_Equine_vs_Ovine.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Equine</strong> y <strong>Ovine</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Ovine.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Ovine.png" alt="Imagen pathway_pca_MetagenomeSeq_Equine_vs_Ovine.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Ovine.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_Ovine.png" download="pathway_pca_MetagenomeSeq_Equine_vs_Ovine.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 5: pathway_pca_MetagenomeSeq_Equine_vs_ovineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Equine</strong> y <strong>Ovineplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_ovineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_ovineplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_Equine_vs_ovineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_ovineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equine_vs_ovineplusc.png" download="pathway_pca_MetagenomeSeq_Equine_vs_ovineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 6: pathway_pca_MetagenomeSeq_Equineplusc_vs_livestock_exclusion.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Equineplusc</strong> y <strong>Livestock exclusion</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_livestock_exclusion.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_livestock_exclusion.png" alt="Imagen pathway_pca_MetagenomeSeq_Equineplusc_vs_livestock_exclusion.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_livestock_exclusion.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_livestock_exclusion.png" download="pathway_pca_MetagenomeSeq_Equineplusc_vs_livestock_exclusion.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 7: pathway_pca_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Equineplusc</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" download="pathway_pca_MetagenomeSeq_Equineplusc_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 8: pathway_pca_MetagenomeSeq_Equineplusc_vs_Ovine.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Equineplusc</strong> y <strong>Ovine</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Ovine.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Ovine.png" alt="Imagen pathway_pca_MetagenomeSeq_Equineplusc_vs_Ovine.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Ovine.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_Ovine.png" download="pathway_pca_MetagenomeSeq_Equineplusc_vs_Ovine.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 9: pathway_pca_MetagenomeSeq_Equineplusc_vs_ovineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Equineplusc</strong> y <strong>Ovineplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_ovineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" download="pathway_pca_MetagenomeSeq_Equineplusc_vs_ovineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 10: pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Livestock exclusion</strong> y <strong>Equineplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" download="pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Equineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 11: pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Livestock exclusion</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" download="pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 12: pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Ovine.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Livestock exclusion</strong> y <strong>Ovine</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Ovine.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Ovine.png" alt="Imagen pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Ovine.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Ovine.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Ovine.png" download="pathway_pca_MetagenomeSeq_livestock_exclusion_vs_Ovine.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 13: pathway_pca_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Livestock exclusion</strong> y <strong>Ovineplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" download="pathway_pca_MetagenomeSeq_livestock_exclusion_vs_ovineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 14: pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_livestock_exclusion.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Livestock excplusc</strong> y <strong>Livestock exclusion</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_livestock_exclusion.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_livestock_exclusion.png" alt="Imagen pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_livestock_exclusion.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_livestock_exclusion.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_livestock_exclusion.png" download="pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_livestock_exclusion.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 15: pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_Ovine.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Livestock excplusc</strong> y <strong>Ovine</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_Ovine.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_Ovine.png" alt="Imagen pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_Ovine.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_Ovine.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_Ovine.png" download="pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_Ovine.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 16: pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_ovineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Livestock excplusc</strong> y <strong>Ovineplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_ovineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_ovineplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_ovineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_ovineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_ovineplusc.png" download="pathway_pca_MetagenomeSeq_Livestock_excplusc_vs_ovineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 17: pathway_pca_MetagenomeSeq_Ovine_vs_Equineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Ovine</strong> y <strong>Equineplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Equineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Equineplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_Ovine_vs_Equineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Equineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Equineplusc.png" download="pathway_pca_MetagenomeSeq_Ovine_vs_Equineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 18: pathway_pca_MetagenomeSeq_Ovine_vs_livestock_exclusion.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Ovine</strong> y <strong>Livestock exclusion</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_livestock_exclusion.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" alt="Imagen pathway_pca_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" download="pathway_pca_MetagenomeSeq_Ovine_vs_livestock_exclusion.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 19: pathway_pca_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Ovine</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" download="pathway_pca_MetagenomeSeq_Ovine_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 20: pathway_pca_MetagenomeSeq_Ovine_vs_ovineplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Ovine</strong> y <strong>Ovineplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_ovineplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_ovineplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_Ovine_vs_ovineplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_ovineplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_Ovine_vs_ovineplusc.png" download="pathway_pca_MetagenomeSeq_Ovine_vs_ovineplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<div class="titulo4">
+<p>➤ Figura 21: pathway_pca_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png</p>
+</div>
+<p>
+La siguiente figura muestra el <strong>PCA funcional por pares</strong> correspondiente a la comparación entre los grupos <strong>Ovineplusc</strong> y <strong>Livestock excplusc</strong>. Este tipo de análisis permite visualizar cómo se agrupan las muestras según su perfil funcional y evaluar la separación o solapamiento entre ambos grupos.
+</p>
+<p>
+A continuación, se indica la ruta en la que se encuentra almacenado el archivo generado durante el flujo de análisis:
+</p>
+<p>
+<code>/workspace/data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png</code>
+</p>
+<p>
+Seguidamente se presenta la figura correspondiente a esta comparación:
+</p>
+<div class="box-images">
+<p><img src="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" alt="Imagen pathway_pca_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" style="width: 575px; max-width: 100%;"></p>
+</div>
+<div style="display: flex; justify-content: center; gap: 25px;">
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" target="_blank" class="boton-image"> <i class="fa-solid fa-chart-column"></i> Visualizar gráfico en una página nueva </a></p>
+<p><a href="../../../../../../../resources/2-nextflow-results/1-project-data/03-EXT-25-Metagenomic/Resultados/Def_16S/pathway_pca_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" download="pathway_pca_MetagenomeSeq_ovineplusc_vs_Livestock_excplusc.png" class="boton-image-download"> <i class="fa-solid fa-file-arrow-down"></i> Descargar imagen </a></p>
+</div>
+<p>
+Cada PCA funcional por pares resume de forma visual la distribución de las muestras según sus perfiles de pathways. La interpretación permite detectar <strong>separaciones funcionales claras</strong> entre los grupos, identificar posibles solapamientos y evaluar la consistencia de los patrones observados en los análisis de MetagenomeSeq.
+</p>
+<p>
+En conjunto, estos PCA por pares complementan los análisis de MetagenomeSeq realizados en la sección 7.3, proporcionando una <strong>visión visual detallada</strong> de la separación funcional entre grupos específicos. Esta información puede ayudar a priorizar pathways relevantes para análisis posteriores o experimentos de validación.
+</p>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  FOOTER
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<footer>
+<a href="#" class="arriba"><i class="fa-solid fa-angles-up"></i></a>
+</footer>
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!--  CARGAR JAVASCRIPT PARA CHATBOT
+<!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+<!-- Script exclusivo del chat -->
+<script type="module" src="../../../../4-javascript/chatbot.js"></script>
+
+
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="../../../../../../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
