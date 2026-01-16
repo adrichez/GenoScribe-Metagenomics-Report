@@ -1,0 +1,80 @@
+GenoScribe License (Academic & Institutional Use)
+
+Copyright (c) 2025–2026 Adrián Sánchez Carrión
+
+This software, including its source code and documentation (the "Software"),
+has been developed by Adrián Sánchez Carrión as part of a Master's Thesis (TFM)
+project and is primarily intended for use within the Instituto de Parasitología
+y Biomedicina López-Neyra (IPBLN-CSIC).
+
+
+-----------------------------------------------------------------------------------
+1. PERMISSIONS
+-----------------------------------------------------------------------------------
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+the Software, to use, study, copy, and modify the source code for academic,
+research, or internal institutional purposes.
+
+The Software may be adapted, extended, or used as inspiration for the
+development of similar tools, provided that proper attribution to the original
+author is given.
+
+
+-----------------------------------------------------------------------------------
+2. RESTRICTIONS
+-----------------------------------------------------------------------------------
+
+a) Institutional Scope  
+The Software is not intended to be used, deployed, or redistributed as a
+production-ready external service or commercial product without explicit
+written permission from the author.
+
+b) Data and Examples  
+Any datasets, example files, reports, images, or other materials included in
+this repository that originate from IPBLN-CSIC or related projects are provided
+for demonstration purposes only.
+
+Such data:
+- MUST NOT be reused, redistributed, published, or shared.
+- MUST NOT be used outside the context of this project.
+- Are NOT covered by the permissions granted for the Software itself.
+
+c) No Commercial Use  
+Commercial use of the Software, in whole or in part, is strictly prohibited
+without prior written authorization from the author.
+
+
+-----------------------------------------------------------------------------------
+3. ATTRIBUTION
+-----------------------------------------------------------------------------------
+
+Any use, modification, or adaptation of the Software must include clear
+acknowledgment of the original author:
+
+"Developed by Adrián Sánchez Carrión — GenoScribe Project"
+
+
+-----------------------------------------------------------------------------------
+4. OWNERSHIP
+-----------------------------------------------------------------------------------
+
+All intellectual property rights to the Software remain the sole property of
+Adrián Sánchez Carrión.
+
+This license does not imply any transfer of ownership or authorship to third
+parties or institutions.
+
+
+-----------------------------------------------------------------------------------
+5. DISCLAIMER
+-----------------------------------------------------------------------------------
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM,
+OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
